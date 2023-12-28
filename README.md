@@ -102,7 +102,12 @@ pip install decord opencv-python git+https://github.com/facebookresearch/pytorch
 ## 🤖 API
 **We open source all codes.** If you want to load the model (e.g. ```LanguageBind/MoE-LLaVA```) on local, you can use the following code snippets.
 
-### Inference for image
+**Using the following command to run the code.**
+
+```bash
+    deepspeed predict.py
+```
+
 ```python
 import torch
 from moellava.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN
@@ -127,8 +132,9 @@ def main():
 
     image_tensor = image_processor.preprocess(image, return_tensors='pt')['pixel_values'].to(model.device, dtype=torch.float16)
 
+
     print(f"{roles[1]}: {inp}")
-    inp = DEFAULT_IMAGE_TOKEN['IMAGE'] + '\n' + inp
+    inp = DEFAULT_IMAGE_TOKEN + '\n' + inp
     conv.append_message(conv.roles[0], inp)
     conv.append_message(conv.roles[1], None)
     prompt = conv.get_prompt()
@@ -147,7 +153,7 @@ def main():
             use_cache=True,
             stopping_criteria=[stopping_criteria])
 
-    outputs = tokenizer.decode(output_ids[0, input_ids.shape[1]:]).strip()
+    outputs = tokenizer.decode(output_ids[0, input_ids.shape[1]:], skip_special_tokens=True).strip()
     print(outputs)
 
 if __name__ == '__main__':
