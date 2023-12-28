@@ -105,7 +105,7 @@ pip install decord opencv-python git+https://github.com/facebookresearch/pytorch
 **Using the following command to run the code.**
 
 ```bash
-    deepspeed predict.py
+deepspeed predict.py
 ```
 
 ```python
