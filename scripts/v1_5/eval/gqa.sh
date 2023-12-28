@@ -5,16 +5,18 @@ IFS=',' read -ra GPULIST <<< "$gpu_list"
 
 CHUNKS=${#GPULIST[@]}
 
-CKPT="llava-v1.5-13b"
+CKPT_NAME="Video-LLaVA-7B"
+CKPT="checkpoints/${CKPT_NAME}"
 SPLIT="llava_gqa_testdev_balanced"
-GQADIR="./playground/data/eval/gqa/data"
+EVAL="eval"
+GQADIR="${EVAL}/gqa/data"
 
 for IDX in $(seq 0 $((CHUNKS-1))); do
-    CUDA_VISIBLE_DEVICES=${GPULIST[$IDX]} python -m llava.eval.model_vqa_loader \
-        --model-path liuhaotian/llava-v1.5-13b \
-        --question-file ./playground/data/eval/gqa/$SPLIT.jsonl \
-        --image-folder ./playground/data/eval/gqa/data/images \
-        --answers-file ./playground/data/eval/gqa/answers/$SPLIT/$CKPT/${CHUNKS}_${IDX}.jsonl \
+    CUDA_VISIBLE_DEVICES=${GPULIST[$IDX]} python3 -m moellava.eval.model_vqa_loader \
+        --model-path ${CKPT} \
+        --question-file ${EVAL}/gqa/$SPLIT.jsonl \
+        --image-folder ${EVAL}/gqa/data/images \
+        --answers-file ${EVAL}/gqa/answers/$SPLIT/${CKPT_NAME}/${CHUNKS}_${IDX}.jsonl \
         --num-chunks $CHUNKS \
         --chunk-idx $IDX \
         --temperature 0 \
@@ -23,17 +25,19 @@ done
 
 wait
 
-output_file=./playground/data/eval/gqa/answers/$SPLIT/$CKPT/merge.jsonl
+output_file=${EVAL}/gqa/answers/$SPLIT/${CKPT_NAME}/merge.jsonl
 
 # Clear out the output file if it exists.
 > "$output_file"
 
 # Loop through the indices and concatenate each file.
 for IDX in $(seq 0 $((CHUNKS-1))); do
-    cat ./playground/data/eval/gqa/answers/$SPLIT/$CKPT/${CHUNKS}_${IDX}.jsonl >> "$output_file"
+    cat ${EVAL}/gqa/answers/$SPLIT/${CKPT_NAME}/${CHUNKS}_${IDX}.jsonl >> "$output_file"
 done
 
-python scripts/convert_gqa_for_eval.py --src $output_file --dst $GQADIR/testdev_balanced_predictions.json
+mkdir -p $GQADIR/$SPLIT/${CKPT_NAME}
+python3 scripts/convert_gqa_for_eval.py --src $output_file --dst $GQADIR/$SPLIT/${CKPT_NAME}/testdev_balanced_predictions.json
 
 cd $GQADIR
-python eval/eval.py --tier testdev_balanced
+python3 eval/eval_gqa.py --tier $SPLIT/${CKPT_NAME}/testdev_balanced \
+                         --questions ${EVAL}/gqa/data/questions1.2/testdev_balanced_questions.json

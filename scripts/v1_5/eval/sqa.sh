@@ -1,16 +1,20 @@
 #!/bin/bash
 
-python -m llava.eval.model_vqa_science \
-    --model-path liuhaotian/llava-v1.5-13b \
-    --question-file ./playground/data/eval/scienceqa/llava_test_CQM-A.json \
-    --image-folder ./playground/data/eval/scienceqa/images/test \
-    --answers-file ./playground/data/eval/scienceqa/answers/llava-v1.5-13b.jsonl \
+
+CKPT_NAME="Video-LLaVA-7B"
+CKPT="checkpoints/${CKPT_NAME}"
+EVAL="eval"
+python3 -m moellava.eval.model_vqa_science \
+    --model-path ${CKPT} \
+    --question-file ${EVAL}/scienceqa/llava_test_CQM-A.json \
+    --image-folder ${EVAL}/scienceqa/images/test \
+    --answers-file ${EVAL}/scienceqa/answers/${CKPT_NAME}.jsonl \
     --single-pred-prompt \
     --temperature 0 \
     --conv-mode vicuna_v1
 
-python llava/eval/eval_science_qa.py \
-    --base-dir ./playground/data/eval/scienceqa \
-    --result-file ./playground/data/eval/scienceqa/answers/llava-v1.5-13b.jsonl \
-    --output-file ./playground/data/eval/scienceqa/answers/llava-v1.5-13b_output.jsonl \
-    --output-result ./playground/data/eval/scienceqa/answers/llava-v1.5-13b_result.json
+python3 moellava/eval/eval_science_qa.py \
+    --base-dir ${EVAL}/scienceqa \
+    --result-file ${EVAL}/scienceqa/answers/${CKPT_NAME}.jsonl \
+    --output-file ${EVAL}/scienceqa/answers/${CKPT_NAME}_output.jsonl \
+    --output-result ${EVAL}/scienceqa/answers/${CKPT_NAME}_result.json
