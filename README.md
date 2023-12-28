@@ -18,7 +18,7 @@
 
 </h5>
 
-<details open><summary>💡 I also have other video-language projects that may interest you ✨. </summary><p>
+<details open><summary>💡 I also have other vision-language projects that may interest you ✨. </summary><p>
 <!--  may -->
 
 > [**Video-LLaVA: Learning United Visual Representation by Alignment Before Projection**](https://arxiv.org/abs/2311.10122) <br>
