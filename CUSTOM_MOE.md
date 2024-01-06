@@ -67,5 +67,5 @@ Remember the key for the registered dialogue conversation, such as `v1_qwen`. An
 
 ## Modeling
 
-
+Refer to [llava_qwen_moe.py](moellava/model/language_model/llava_llama_moe.py) and [llava_llama_moe.py](moellava/model/language_model/llava_llama_moe.py)
 
