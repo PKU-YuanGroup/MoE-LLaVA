@@ -35,6 +35,35 @@ This is what we do with the `QWenTokenizer`. After add special tokens to `QWenTo
     'attention_mask': tensor([[1, 1, 1, 1, 1], [1, 1, 0, 0, 0]])
 }
 ```
+## Conversation
+
+Add a new conversation template such as `conv_v1_qwen` [here](), replacing `sep2` with `eos_token`, and modify the value of `version`.
+
+```python
+conv_v1_qwen = Conversation(
+    system="A chat between a curious user and an artificial intelligence assistant. "
+    "The assistant gives helpful, detailed, and polite answers to the user's questions.",
+    roles=("USER", "ASSISTANT"),
+    version="v1_qwen",  # replace
+    messages=(),
+    offset=0,
+    sep_style=SeparatorStyle.TWO,
+    sep=" ",
+    sep2="<|endoftext|>",  # replace
+)
+```
+
+Don't forget to register the newly defined conversation template [here]().
+
+```python
+conv_templates = {
+    ...
+    "v1_qwen": conv_v1_qwen,  # the key is "v1_qwen"
+    ...
+}
+```
+
+Remember the key for the registered dialogue conversation, such as `v1_qwen`. And modify the `--version` in the commands for Stage 2 and Stage 3. **No need to modify the `--version` in Stage 1.**
 
 ## Modeling
 
