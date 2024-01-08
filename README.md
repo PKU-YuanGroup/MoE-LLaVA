@@ -14,7 +14,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-yellow)](https://github.com/PKU-YuanGroup/MoE-LLaVA/blob/main/LICENSE) 
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FPKU-YuanGroup%2FMoE-LLaVA&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=Visitor&edge_flat=false)](https://hits.seeyoufarm.com)
 [![GitHub issues](https://img.shields.io/github/issues/PKU-YuanGroup/MoE-LLaVA?color=critical&label=Issues)](https://github.com/PKU-YuanGroup/MoE-LLaVA/issues?q=is%3Aopen+is%3Aissue)
-[![GitHub closed issues](https://img.shields.io/github/issues-closed/PKU-YuanGroup/MoE-LLaVA?color=success&label=Issues)](https://github.com/PKU-YuanGroup/Video-LLaVA/issues?q=is%3Aissue+is%3Aclosed)  <br>
+[![GitHub closed issues](https://img.shields.io/github/issues-closed/PKU-YuanGroup/MoE-LLaVA?color=success&label=Issues)](https://github.com/PKU-YuanGroup/MoE-LLaVA/issues?q=is%3Aissue+is%3Aclosed)  <br>
 
 </h5>
 
@@ -38,12 +38,12 @@
 
 ## 😮 Highlights
 
-Video-LLaVA exhibits remarkable interactive capabilities between images and videos, despite the absence of image-video pairs in the dataset.
+MoE-LLaVA shows excellent performance in multimodal learning.
 
-### 💡 Simple baseline, learning united visual representation by alignment before projection
+### 💡 Simple baseline, learning multi-modal interactions with sparse pathways.
 - With **the binding of unified visual representations to the language feature space**, we enable an LLM to perform visual reasoning capabilities on both images and videos simultaneously.
 
-### 🔥 High performance, complementary learning with video and image
+### 🔥 High performance, but with fewer parameters
 - Extensive experiments demonstrate **the complementarity of modalities**, showcasing significant superiority when compared to models specifically designed for either images or videos. 
 
 <img src="assets/main.jpg"/>
@@ -52,15 +52,10 @@ Video-LLaVA exhibits remarkable interactive capabilities between images and vide
 
 * **Gradio Web UI**
 
-Highly recommend trying out our web demo by the following command, which incorporates all features currently supported by Video-LLaVA. We also provide [online demo](https://huggingface.co/spaces/LanguageBind/Video-LLaVA) in Huggingface Spaces.
+Highly recommend trying out our web demo by the following command, which incorporates all features currently supported by MoE-LLaVA. We also provide [online demo](https://huggingface.co/spaces/LanguageBind/MoE-LLaVA) in Huggingface Spaces.
 ```bash
 deepspeed moellava/serve/gradio_web_server.py --model-path "LanguageBind/MoE-LLaVA" 
 ```
-
-
-https://github.com/PKU-YuanGroup/Video-LLaVA/assets/62638829/71ab15ac-105e-4b18-b0b5-e1b35d70607b
-
-
 
 * **CLI Inference**
 
@@ -82,7 +77,7 @@ deepspeed moellava/serve/cli.py --model-path "LanguageBind/MoE-LLaVA"  --image-f
 <img src="assets/res_vi.jpg" width=80%>
 </p>
 
-## 🛠️ Requirements and Installation
+## ⚙️ Requirements and Installation
 * Python >= 3.10
 * Pytorch == 2.0.1
 * CUDA Version >= 11.7
@@ -98,6 +93,12 @@ pip install -e ".[train]"
 pip install flash-attn --no-build-isolation
 pip install decord opencv-python git+https://github.com/facebookresearch/pytorchvideo.git@28fe037d212663c6a24f373b94cc5d478c8c1a1d
 ```
+
+## 🗝️ Training & Validating
+The training & validating instruction is in [TRAIN_AND_VALIDATE.md](TRAIN_AND_VALIDATE.md).
+
+## 🛠️ Customizing your MoE
+The instruction is in [CUSTOM_MOE.md](CUSTOM_MOE.md).
 
 ## 🤖 API
 **We open source all codes.** If you want to load the model (e.g. ```LanguageBind/MoE-LLaVA```) on local, you can use the following code snippets.
@@ -160,9 +161,6 @@ if __name__ == '__main__':
     main()
 ```
 
-## 🗝️ Training & Validating
-The training & validating instruction is in [TRAIN_AND_VALIDATE.md](TRAIN_AND_VALIDATE.md).
-
 ## 🙌 Related Projects
 * [Video-LLaVA](https://github.com/PKU-YuanGroup/Video-LLaVA) This framework empowers the model to efficiently utilize the united visual tokens.
 * [LanguageBind](https://github.com/PKU-YuanGroup/LanguageBind) An open source five modalities language-based retrieval framework.
@@ -200,11 +198,11 @@ If you find our paper and code useful in your research, please consider giving a
 
 <!--
 ## ✨ Star History
-[![Star History](https://api.star-history.com/svg?repos=PKU-YuanGroup/Video-LLaVA&type=Date)](https://star-history.com/#PKU-YuanGroup/Video-LLaVA&Date)
+[![Star History](https://api.star-history.com/svg?repos=PKU-YuanGroup/MoE-LLaVA&type=Date)](https://star-history.com/#PKU-YuanGroup/MoE-LLaVA&Date)
 -->
 
 ## 🤝 Contributors
 
-<a href="https://github.com/PKU-YuanGroup/Video-LLaVA/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=PKU-YuanGroup/Video-LLaVA" />
+<a href="https://github.com/PKU-YuanGroup/MoE-LLaVA/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=PKU-YuanGroup/MoE-LLaVA" />
 </a>
