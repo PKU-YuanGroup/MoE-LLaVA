@@ -38,15 +38,17 @@
 
 ## 😮 Highlights
 
-MoE-LLaVA shows excellent performance in multimodal learning.
+MoE-LLaVA shows excellent performance in multi-modal learning.
 
-### 💡 Simple baseline, learning multi-modal interactions with sparse pathways.
-- With **the binding of unified visual representations to the language feature space**, we enable an LLM to perform visual reasoning capabilities on both images and videos simultaneously.
+### 🚀 Simple baseline, learning multi-modal interactions with sparse pathways.
+- With the addition of **a simple MoE tuning stage**, we can complete the training of MoE-LLaVA on **8 V100 GPUs** within 2 days.
 
 ### 🔥 High performance, but with fewer parameters
-- Extensive experiments demonstrate **the complementarity of modalities**, showcasing significant superiority when compared to models specifically designed for either images or videos. 
+- The sparse model with **2 billion parameters** outperformed the dense model with 7 billion parameters, demonstrating significant superiority in multi-modal learning.
 
-<img src="assets/main.jpg"/>
+<p align="left">
+<img src="assets/res_img.jpg" width=80%>
+</p>
 
 ## 🤗 Demo
 
@@ -65,17 +67,6 @@ deepspeed moellava/serve/cli.py --model-path "LanguageBind/MoE-LLaVA"  --image-f
 
 <img src="assets/imagecli.gif" width="500" />
 
-## 🚀 Main Results
-
-### Image understanding
-<p align="left">
-<img src="assets/res_img.jpg" width=80%>
-</p>
-
-### Video understanding
-<p align="left">
-<img src="assets/res_vi.jpg" width=80%>
-</p>
 
 ## ⚙️ Requirements and Installation
 * Python >= 3.10
@@ -97,7 +88,7 @@ pip install decord opencv-python git+https://github.com/facebookresearch/pytorch
 ## 🗝️ Training & Validating
 The training & validating instruction is in [TRAIN_AND_VALIDATE.md](TRAIN_AND_VALIDATE.md).
 
-## 🛠️ Customizing your MoE
+## 💡 Customizing your MoE
 The instruction is in [CUSTOM_MOE.md](CUSTOM_MOE.md).
 
 ## 🤖 API
