@@ -34,3 +34,5 @@ DATA_ROOT
 Specify your `DATA_ROOT` according to the data preparation.
 - Stage 1 pretraining script: [pretrain.sh](scripts/v1_5/pretrain.sh). 
 - Stage 2 tuning script: [finetune.sh](scripts/v1_5/finetune.sh).
+Make sure you understand the behavior of the tokenizer.
+- Stage 3 moe-tuning script: [moe-finetune.sh]().
