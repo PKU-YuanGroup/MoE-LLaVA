@@ -1,6 +1,6 @@
 ## Data preparation
 
-- For image, follow LLaVA's instructions. ***You MUST first download [eval.zip](https://drive.google.com/file/d/1atZSBBrAX54yYpxtVVW33zFvcnaHeFPy/view?usp=sharing)**.
+- Following LLaVA's instructions. ***You MUST first download [eval.zip](https://drive.google.com/file/d/1atZSBBrAX54yYpxtVVW33zFvcnaHeFPy/view?usp=sharing)**.
 - It contains custom annotations, scripts, and the prediction files with LLaVA v1.5. Extract to `eval`. This also provides a general structure for all datasets.
 
 After downloading all of them, organize the data as follows in `eval`.
