@@ -4,24 +4,37 @@
 - We provide some samples on how different tokenizer behaviors should be changed. 
 - At the end it describes how to convert LLaVA style models to the MoE architecture.
 
-### Don't have special tokens, but can add special tokens
+## Don't have special tokens, but can add special tokens
 
 For those tokenizers that don't have special tokens, but can add special tokens, such as QWenTokenizer or PhiTokenizer. You need to add special tokens.
 
-#### QWenTokenizer
+### QWenTokenizer
 
-Insert the following code after initializing the tokenizer:
+#### Tokenizer
+
+Insert the following code after initializing the tokenizer [here]():
 ```python
 tokenizer.add_special_tokens({
     'unk_token': '<|extra_0|>',
     'eos_token': '<|endoftext|>'
 })
 ```
+
+#### `preprocess_qwen` function
+
 Copy the `preprocess_qwen` function from the `preprocess_v1` function and modify the following:
 ```
 round_len = len(tokenizer_image_token(rou, tokenizer)) + 1  # for eos_token
 instruction_len = len(tokenizer_image_token(parts[0], tokenizer)) - 1  # instruction_len is before the answer
 ```
+
+Defining the use of `preprocess_qwen` in the `preprocess` function [here]().
+```
+if conversation_lib.default_conversation.version.startswith("qwen"):  # for qwen
+    return preprocess_qwen(sources, tokenizer, has_image=has_image)
+```
+
+#### `conv_qwen` conversation template
 
 Add a new conversation template such as `conv_qwen` [here](), replacing `sep2` with `eos_token`, and modify the value of `version`.
 
@@ -51,19 +64,33 @@ conv_templates = {
 
 Remember the key for the registered dialogue conversation, such as `qwen`. And modify the `--version qwen` in the commands for Stage 2 and Stage 3. **DO NOT need to modify the `--version plain` in Stage 1.**
 
-#### PhiTokenizer
-Insert the following code after initializing the tokenizer:
+### PhiTokenizer
+
+#### Tokenizer
+
+Insert the following code after initializing the tokenizer [here]():
 ```python
 tokenizer.add_special_tokens({
     'unk_token': '<|extra_0|>',
 #    'eos_token': '<|endoftext|>'  Not needed because it already exists.
 })
 ```
+
+#### `preprocess_phi` function
+
 Copy the `preprocess_phi` function from the `preprocess_v1` function and modify the following:
 ```
 round_len = len(tokenizer_image_token(rou, tokenizer)) + 1  # for eos_token
 instruction_len = len(tokenizer_image_token(parts[0], tokenizer)) - 1  # instruction_len is before the answer
 ```
+
+Defining the use of `preprocess_phi` in the `preprocess` function [here]().
+```
+if conversation_lib.default_conversation.version.startswith("phi"):  # for phi
+    return preprocess_phi(sources, tokenizer, has_image=has_image)
+```
+
+#### `conv_phi` conversation template
 
 Add a new conversation template such as `conv_phi` [here](), replacing `sep2` with `eos_token`, and modify the value of `version`.
 
@@ -94,15 +121,20 @@ conv_templates = {
 Remember the key for the registered dialogue conversation, such as `phi`. And modify the `--version phi` in the commands for Stage 2 and Stage 3. **DO NOT need to modify the `--version plain` in Stage 1.**
 
 
-### Don't have special tokens, but can NOT add special tokens
+## Don't have special tokens, but can NOT add special tokens
 
-#### StableLMTokenizer
+### StableLMTokenizer
 
-For those tokenizers that don't have special tokens, but can add special tokens, such as StableLMTokenizer. You need to make sure the tokenizer has `unk_token`. Generally, this type of tokenizer will have `pad_token`.
+#### Tokenizer
+
+For those tokenizers that don't have special tokens, but can add special tokens, such as StableLMTokenizer. You need to make sure the tokenizer has `unk_token` [here](). Generally, this type of tokenizer will have `pad_token`.
 
 ```
 tokenizer.unk_token = tokenizer.pad_token 
 ```
+
+#### `preprocess_stablelm` function
+
 Copy the `preprocess_stablelm` function from the `preprocess_v1` function and modify the following:
 ```
 total_len = int(target.ne(tokenizer.pad_token_id).sum()) + conversation.count(conv.sep2)  # pad_token_id == eos_token_id
@@ -110,6 +142,14 @@ total_len = int(target.ne(tokenizer.pad_token_id).sum()) + conversation.count(co
 round_len = len(tokenizer_image_token(rou, tokenizer)) + 1  # for eos_token
 instruction_len = len(tokenizer_image_token(parts[0], tokenizer)) - 1  # instruction_len is before the answer
 ```
+
+Defining the use of `preprocess_stablelm` in the `preprocess` function [here]().
+```
+if conversation_lib.default_conversation.version.startswith("stablelm"):  # for stablelm
+    return preprocess_stablelm(sources, tokenizer, has_image=has_image)
+```
+
+#### `conv_stablelm` conversation template
 
 Add a new conversation template such as `conv_stablelm` [here](), replacing `sep2` with `eos_token`, and modify the value of `version`.
 
@@ -139,9 +179,10 @@ conv_templates = {
 
 Remember the key for the registered dialogue conversation, such as `stablelm`. And modify the `--version stablelm` in the commands for Stage 2 and Stage 3. **DO NOT need to modify the `--version plain` in Stage 1.**
 
-### The behavior of the tokenizer is consistent with `LlamaTokenizer`
+## The behavior of the tokenizer is consistent with `LlamaTokenizer`
 
-#### LlamaTokenizer
+### LlamaTokenizer
+
 If the behavior of your tokenizer is consistent with `LlamaTokenizer`. You can just use the already defined conversation template. Beware of the differences brought about by different transformers versions, we recommend using `LlamaTokenizer` on version 4.31.0.
 
 For example, for the `LlamaTokenizer`, `bos_token` is `<s>`, `eos_token` is `</s>`, and `unk_token` is `<unk>`.
@@ -158,7 +199,7 @@ tokenizer(['This is first sentence', 'Test'], return_tensors='pt', padding=True)
 ```
 Passing the `--version v1` in the commands for Stage 2 and Stage 3. **DO NOT need to modify the `--version plain` in Stage 1.**
 
-### Converting models to MoE architectures
+## Converting models to MoE architectures
 
 Refer to [llava_qwen_moe.py](moellava/model/language_model/llava_llama_moe.py) and [llava_llama_moe.py](moellava/model/language_model/llava_llama_moe.py)
 
