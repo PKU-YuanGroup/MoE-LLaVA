@@ -30,7 +30,7 @@
 
 ## 📰 News
 
-* **[2024.1.1]**  🤗[Hugging Face demo](https://huggingface.co/spaces/LanguageBind/MoE-LLaVA) and **all codes & datasets** are available now! Welcome to **watch** 👀 this repository for the latest updates.
+* **[2024.02.01]**  🤗[Hugging Face demo](https://huggingface.co/spaces/LanguageBind/MoE-LLaVA) and **all codes & datasets** are available now! Welcome to **watch** 👀 this repository for the latest updates.
 
 ## 😮 Highlights
 
@@ -40,7 +40,7 @@ MoE-LLaVA shows excellent performance in multi-modal learning.
 - With the addition of **a simple MoE tuning stage**, we can complete the training of MoE-LLaVA on **8 V100 GPUs** within 2 days.
 
 ### 🔥 High performance, but with fewer parameters
-- The sparse model with **2 billion parameters** outperformed the dense model with 7 billion parameters, demonstrating significant superiority in multi-modal learning.
+- The sparse model with **3 billion parameters** outperformed the dense model with 7 billion parameters, demonstrating significant superiority in multi-modal learning.
 
 <p align="left">
 <img src="assets/res_img.jpg" width=80%>
@@ -77,7 +77,7 @@ pip install --upgrade pip  # enable PEP 660 support
 pip install -e .
 pip install -e ".[train]"
 pip install flash-attn --no-build-isolation
-pip install decord opencv-python git+https://github.com/facebookresearch/pytorchvideo.git@28fe037d212663c6a24f373b94cc5d478c8c1a1d
+
 # Below are optional. For Qwen model.
 git clone https://github.com/Dao-AILab/flash-attention
 cd flash-attention && pip install .
@@ -88,10 +88,10 @@ cd flash-attention && pip install .
 ```
 
 ## 🗝️ Training & Validating
-The training & validating instruction is in [TRAIN_AND_VALIDATE.md](TRAIN_AND_VALIDATE.md).
+The training & validating instruction is in [TRAIN.md](docs/TRAIN.md) & [EVAL.md](docs/EVAL.md).
 
-## 💡 Customizing your MoE
-The instruction is in [CUSTOM_MOE.md](CUSTOM_MOE.md).
+## 💡 Customizing your MoE-LLaVA
+The instruction is in [CUSTOM.md](docs/CUSTOM.md).
 
 ## 🤖 API
 **We open source all codes.** If you want to load the model (e.g. ```LanguageBind/MoE-LLaVA```) on local, you can use the following code snippets.
