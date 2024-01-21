@@ -23,7 +23,7 @@ round_len = len(tokenizer_image_token(rou, tokenizer)) + 1  # for eos_token
 instruction_len = len(tokenizer_image_token(parts[0], tokenizer)) - 1  # instruction_len is before the answer
 ```
 
-Add a new conversation template such as `conv_v1_qwen` [here](), replacing `sep2` with `eos_token`, and modify the value of `version`.
+Add a new conversation template such as `conv_qwen` [here](), replacing `sep2` with `eos_token`, and modify the value of `version`.
 
 ```python
 conv_qwen = Conversation(
@@ -65,7 +65,7 @@ round_len = len(tokenizer_image_token(rou, tokenizer)) + 1  # for eos_token
 instruction_len = len(tokenizer_image_token(parts[0], tokenizer)) - 1  # instruction_len is before the answer
 ```
 
-Add a new conversation template such as `conv_v1_phi` [here](), replacing `sep2` with `eos_token`, and modify the value of `version`.
+Add a new conversation template such as `conv_phi` [here](), replacing `sep2` with `eos_token`, and modify the value of `version`.
 
 ```python
 conv_phi = Conversation(
