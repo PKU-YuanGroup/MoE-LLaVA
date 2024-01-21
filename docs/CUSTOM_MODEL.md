@@ -26,11 +26,11 @@ instruction_len = len(tokenizer_image_token(parts[0], tokenizer)) - 1  # instruc
 Add a new conversation template such as `conv_v1_qwen` [here](), replacing `sep2` with `eos_token`, and modify the value of `version`.
 
 ```python
-conv_v1_qwen = Conversation(
+conv_qwen = Conversation(
     system="A chat between a curious user and an artificial intelligence assistant. "
     "The assistant gives helpful, detailed, and polite answers to the user's questions.",
     roles=("USER", "ASSISTANT"),
-    version="v1_qwen",  # replace
+    version="qwen",  # replace
     messages=(),
     offset=0,
     sep_style=SeparatorStyle.TWO,
@@ -44,12 +44,12 @@ Don't forget to register the newly defined conversation template [here]().
 ```python
 conv_templates = {
     ...
-    "v1_qwen": conv_v1_qwen,  # the key is "v1_qwen"
+    "qwen": conv_qwen,  # the key is "qwen"
     ...
 }
 ```
 
-Remember the key for the registered dialogue conversation, such as `v1_qwen`. And modify the `--version v1_qwen` in the commands for Stage 2 and Stage 3. **DO NOT need to modify the `--version plain` in Stage 1.**
+Remember the key for the registered dialogue conversation, such as `qwen`. And modify the `--version qwen` in the commands for Stage 2 and Stage 3. **DO NOT need to modify the `--version plain` in Stage 1.**
 
 #### PhiTokenizer
 Insert the following code after initializing the tokenizer:
@@ -68,11 +68,11 @@ instruction_len = len(tokenizer_image_token(parts[0], tokenizer)) - 1  # instruc
 Add a new conversation template such as `conv_v1_phi` [here](), replacing `sep2` with `eos_token`, and modify the value of `version`.
 
 ```python
-conv_v1_phi = Conversation(
+conv_phi = Conversation(
     system="A chat between a curious user and an artificial intelligence assistant. "
     "The assistant gives helpful, detailed, and polite answers to the user's questions.",
     roles=("USER", "ASSISTANT"),
-    version="v1_phi",  # replace
+    version="phi",  # replace
     messages=(),
     offset=0,
     sep_style=SeparatorStyle.TWO,
@@ -86,12 +86,12 @@ Don't forget to register the newly defined conversation template [here]().
 ```python
 conv_templates = {
     ...
-    "v1_phi": conv_v1_phi,  # the key is "v1_phi"
+    "phi": conv_phi,  # the key is "phi"
     ...
 }
 ```
 
-Remember the key for the registered dialogue conversation, such as `v1_phi`. And modify the `--version v1_phi` in the commands for Stage 2 and Stage 3. **DO NOT need to modify the `--version plain` in Stage 1.**
+Remember the key for the registered dialogue conversation, such as `phi`. And modify the `--version phi` in the commands for Stage 2 and Stage 3. **DO NOT need to modify the `--version plain` in Stage 1.**
 
 
 ### Don't have special tokens, but can NOT add special tokens
@@ -111,14 +111,14 @@ round_len = len(tokenizer_image_token(rou, tokenizer)) + 1  # for eos_token
 instruction_len = len(tokenizer_image_token(parts[0], tokenizer)) - 1  # instruction_len is before the answer
 ```
 
-Add a new conversation template such as `conv_v1_stablelm` [here](), replacing `sep2` with `eos_token`, and modify the value of `version`.
+Add a new conversation template such as `conv_stablelm` [here](), replacing `sep2` with `eos_token`, and modify the value of `version`.
 
 ```python
-conv_v1_stablelm = Conversation(
+conv_stablelm = Conversation(
     system="A chat between a curious user and an artificial intelligence assistant. "
     "The assistant gives helpful, detailed, and polite answers to the user's questions.",
     roles=("USER", "ASSISTANT"),
-    version="v1_stablelm",  # replace
+    version="stablelm",  # replace
     messages=(),
     offset=0,
     sep_style=SeparatorStyle.TWO,
@@ -132,12 +132,12 @@ Don't forget to register the newly defined conversation template [here]().
 ```python
 conv_templates = {
     ...
-    "v1_stablelm": conv_v1_stablelm,  # the key is "v1_stablelm"
+    "stablelm": conv_stablelm,  # the key is "stablelm"
     ...
 }
 ```
 
-Remember the key for the registered dialogue conversation, such as `v1_stablelm`. And modify the `--version v1_stablelm` in the commands for Stage 2 and Stage 3. **DO NOT need to modify the `--version plain` in Stage 1.**
+Remember the key for the registered dialogue conversation, such as `stablelm`. And modify the `--version stablelm` in the commands for Stage 2 and Stage 3. **DO NOT need to modify the `--version plain` in Stage 1.**
 
 ### The behavior of the tokenizer is consistent with `LlamaTokenizer`
 
