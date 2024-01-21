@@ -24,6 +24,8 @@ We also provide the processed data as follows.
 </table>
 </div>
 
+For those who don't have easy access to BaiDu disk, you can download it from [Hugging Face](https://huggingface.co/datasets/LanguageBind/MoE-LLaVA).
+
 After downloading all of them, organize the data as follows in ```DATA_ROOT```. 
 
 ```Shell
