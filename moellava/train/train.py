@@ -27,10 +27,6 @@ from typing import Dict, Optional, Sequence, List
 import torch
 import transformers
 
-from moellava.model.language_model.llava_llama_moe import MoELLaVALlamaForCausalLM
-from moellava.model.language_model.llava_qwen_moe import MoELLaVAQWenForCausalLM
-from moellava.model.language_model.llava_llama import LlavaLlamaForCausalLM
-from moellava.model.language_model.llava_qwen import LlavaQWenForCausalLM
 from moellava.constants import IGNORE_INDEX, IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN, DEFAULT_IM_START_TOKEN, \
     DEFAULT_IM_END_TOKEN, DEFAULT_VIDEO_TOKEN, DEFAULT_VID_START_TOKEN, DEFAULT_VID_END_TOKEN, MAX_IMAGE_LENGTH, \
     MAX_VIDEO_LENGTH
@@ -76,6 +72,7 @@ class ModelArguments:
     # =============================================================
     only_lora_ffn: bool = True
     moe_enable: bool = False
+    train_modules: Optional[List[str]] = field(default=None, metadata={"help": ""})
     moe_mode: str = field(
         default="second_half",
         metadata={
@@ -94,8 +91,8 @@ class ModelArguments:
         },
     )
     capacity_factor: float = 1.
-    eval_capacity_factor: float = 1.
-    min_capacity: int = 4
+    eval_capacity_factor: float = 2.
+    min_capacity: int = 0
     use_residual: bool = False
     router_aux_loss_coef: float = 0.01
     # =============================================================
@@ -564,6 +561,198 @@ def preprocess_v1(
     )
 
 
+def preprocess_phi(
+    sources,
+    tokenizer: transformers.PreTrainedTokenizer,
+    has_image: bool = False
+) -> Dict:
+    conv = conversation_lib.default_conversation.copy()
+    roles = {"human": conv.roles[0], "gpt": conv.roles[1]}
+
+    # print('00000000000', sources)
+    # Apply prompt templates
+    conversations = []
+    # sys.exit()
+
+    # import ipdb
+    # ipdb.set_trace()
+    for i, source in enumerate(sources):
+        if roles[source[0]["from"]] != conv.roles[0]:
+            # Skip the first one if it is not from human
+            source = source[1:]
+
+        conv.messages = []
+        for j, sentence in enumerate(source):
+            role = roles[sentence["from"]]
+            assert role == conv.roles[j % 2], f"{i}"
+            conv.append_message(role, sentence["value"])
+        conversations.append(conv.get_prompt())
+    # print(11111111, conversations)
+    # Tokenize conversations
+    # print('before tokenizer_image_token', conversations)
+    if has_image:
+        input_ids = torch.stack([tokenizer_image_token(prompt, tokenizer, return_tensors='pt') for prompt in conversations], dim=0)
+        # print(2222222222222, input_ids.shape)
+    else:
+        input_ids = tokenizer(
+            conversations,
+            return_tensors="pt",
+            padding="longest",
+            max_length=tokenizer.model_max_length,
+            truncation=True,
+        ).input_ids
+
+    # print('after tokenizer_image_token input_ids targets', input_ids)
+    targets = input_ids.clone()
+
+    assert conv.sep_style == conversation_lib.SeparatorStyle.TWO
+    # print(tokenizer)
+    # Mask targets
+    sep = conv.sep + conv.roles[1] + ": "
+    # print('sep', sep)
+    for conversation, target in zip(conversations, targets):
+        total_len = int(target.ne(tokenizer.pad_token_id).sum())
+        # print('total_len', total_len)
+        rounds = conversation.split(conv.sep2)
+        # print('len(rounds)', len(rounds))
+        cur_len = 0
+        target[:cur_len] = IGNORE_INDEX
+        for i, rou in enumerate(rounds):
+            if rou == "":
+                break
+
+            parts = rou.split(sep)
+            # print('i rou, parts', i, rou, parts)
+            if len(parts) != 2:
+                break
+            parts[0] += sep
+            # print('after add sep rou, parts', rou, parts)
+
+            if has_image:
+                round_len = len(tokenizer_image_token(rou, tokenizer)) + 1  # for eos_token
+                instruction_len = len(tokenizer_image_token(parts[0], tokenizer)) - 1
+            else:
+                round_len = len(tokenizer(rou).input_ids) + 1  # for eos_token
+                instruction_len = len(tokenizer(parts[0]).input_ids) - 1
+            # print('round_len, instruction_len, target[cur_len : cur_len + instruction_len]',
+            #       round_len, instruction_len, target[cur_len : cur_len + instruction_len], target[cur_len : cur_len + round_len])
+            target[cur_len : cur_len + instruction_len] = IGNORE_INDEX  # instruction_len is before the answer
+
+            cur_len += round_len
+        target[cur_len:] = IGNORE_INDEX
+
+        if cur_len < tokenizer.model_max_length:
+            # import ipdb
+            # ipdb.set_trace()
+            if cur_len != total_len:
+                target[:] = IGNORE_INDEX
+                print(
+                    f"WARNING: tokenization mismatch: {cur_len} vs. {total_len}."
+                    f" (ignored)"
+                )
+    # print(input_ids, target)
+    return dict(
+        input_ids=input_ids,
+        labels=targets,
+    )
+
+
+
+def preprocess_stablelm(
+    sources,
+    tokenizer: transformers.PreTrainedTokenizer,
+    has_image: bool = False
+) -> Dict:
+    conv = conversation_lib.default_conversation.copy()
+    roles = {"human": conv.roles[0], "gpt": conv.roles[1]}
+
+    # print('00000000000', sources)
+    # Apply prompt templates
+    conversations = []
+    # sys.exit()
+
+    # import ipdb
+    # ipdb.set_trace()
+    for i, source in enumerate(sources):
+        if roles[source[0]["from"]] != conv.roles[0]:
+            # Skip the first one if it is not from human
+            source = source[1:]
+
+        conv.messages = []
+        for j, sentence in enumerate(source):
+            role = roles[sentence["from"]]
+            assert role == conv.roles[j % 2], f"{i}"
+            conv.append_message(role, sentence["value"])
+        conversations.append(conv.get_prompt())
+    # print(11111111, conversations)
+    # Tokenize conversations
+    # print('before tokenizer_image_token', conversations)
+    if has_image:
+        input_ids = torch.stack([tokenizer_image_token(prompt, tokenizer, return_tensors='pt') for prompt in conversations], dim=0)
+        # print(2222222222222, input_ids.shape)
+    else:
+        input_ids = tokenizer(
+            conversations,
+            return_tensors="pt",
+            padding="longest",
+            max_length=tokenizer.model_max_length,
+            truncation=True,
+        ).input_ids
+
+    # print('after tokenizer_image_token input_ids targets', input_ids)
+    targets = input_ids.clone()
+
+    assert conv.sep_style == conversation_lib.SeparatorStyle.TWO
+    # print(tokenizer)
+    # Mask targets
+    sep = conv.sep + conv.roles[1] + ": "
+    # print('sep', sep)
+    for conversation, target in zip(conversations, targets):
+        total_len = int(target.ne(tokenizer.pad_token_id).sum()) + conversation.count(conv.sep2)  # pad_token_id == eos_token_id
+        # print('total_len', total_len)
+        rounds = conversation.split(conv.sep2)
+        # print('len(rounds)', len(rounds))
+        cur_len = 0
+        target[:cur_len] = IGNORE_INDEX
+        for i, rou in enumerate(rounds):
+            if rou == "":
+                break
+
+            parts = rou.split(sep)
+            # print('i rou, parts', i, rou, parts)
+            if len(parts) != 2:
+                break
+            parts[0] += sep
+            # print('after add sep rou, parts', rou, parts)
+
+            if has_image:
+                round_len = len(tokenizer_image_token(rou, tokenizer)) + 1  # for eos_token
+                instruction_len = len(tokenizer_image_token(parts[0], tokenizer)) - 1
+            else:
+                round_len = len(tokenizer(rou).input_ids) + 1  # for eos_token
+                instruction_len = len(tokenizer(parts[0]).input_ids) - 1
+            # print('round_len, instruction_len, target[cur_len : cur_len + instruction_len]',
+            #       round_len, instruction_len, target[cur_len : cur_len + instruction_len], target[cur_len : cur_len + round_len])
+            target[cur_len : cur_len + instruction_len] = IGNORE_INDEX  # instruction_len is before the answer
+
+            cur_len += round_len
+        target[cur_len:] = IGNORE_INDEX
+
+        if cur_len < tokenizer.model_max_length:
+            # import ipdb
+            # ipdb.set_trace()
+            if cur_len != total_len:
+                target[:] = IGNORE_INDEX
+                print(
+                    f"WARNING: tokenization mismatch: {cur_len} vs. {total_len}."
+                    f" (ignored)"
+                )
+    # print(input_ids, target)
+    return dict(
+        input_ids=input_ids,
+        labels=targets,
+    )
+
 def preprocess_mpt(
     sources,
     tokenizer: transformers.PreTrainedTokenizer,
@@ -671,10 +860,13 @@ def preprocess(
         return preprocess_plain(sources, tokenizer)
     if conversation_lib.default_conversation.sep_style == conversation_lib.SeparatorStyle.LLAMA_2:
         return preprocess_llama_2(sources, tokenizer, has_image=has_image)
+    if conversation_lib.default_conversation.version.startswith("phi") or \
+            conversation_lib.default_conversation.version.startswith("qwen"):  # for phi and qwen
+        return preprocess_phi(sources, tokenizer, has_image=has_image)
+    if conversation_lib.default_conversation.version.startswith("stablelm"):  # for stablelm
+        return preprocess_stablelm(sources, tokenizer, has_image=has_image)
     if conversation_lib.default_conversation.version.startswith("v1"):
         return preprocess_v1(sources, tokenizer, has_image=has_image)
-    # if conversation_lib.default_conversation.version.startswith("qwen_v1"):
-    #     return preprocess_qwen_v1(sources, tokenizer, has_image=has_image)
     if conversation_lib.default_conversation.version == "mpt":
         return preprocess_mpt(sources, tokenizer)
     # add end signal and concatenate together
@@ -703,6 +895,7 @@ def preprocess(
         _mask_targets(target, tokenized_lens, speakers)
 
     return dict(input_ids=input_ids, labels=targets)
+
 
 
 def expand2square(pil_img, background_color):
@@ -778,11 +971,13 @@ class LazySupervisedDataset(Dataset):
                 image_file = order_pick_k(image_file, MAX_IMAGE_LENGTH)
                 # print(f"total {len(self.list_data_dict[i]['image'])} now {len(image_file)}")
                 image = [Image.open(os.path.join(image_folder, file)).convert('RGB') for file in image_file]
+                # print(image[0])
                 if self.data_args.image_aspect_ratio == 'pad':
                     image = [expand2square(i, tuple(int(x * 255) for x in image_processor.image_mean)) for i in image]
                     image = [image_processor.preprocess(i, return_tensors='pt')['pixel_values'][0] for i in image]
                 else:
                     image = [image_processor.preprocess(i, return_tensors='pt')['pixel_values'][0] for i in image]
+                # print(image[0].shape)
                 sources = preprocess_multimodal(copy.deepcopy([e["conversations"] for e in sources]), self.data_args)
                 data_dict = preprocess(sources, self.tokenizer, has_image=True)
 
@@ -844,8 +1039,8 @@ class LazySupervisedDataset(Dataset):
                 data_dict['image'] = image
             elif self.data_args.is_multimodal:
                 # image does not exist in the data, but the model is multimodal
-                # crop_size = self.data_args.image_processor.crop_size
-                crop_size = {'height': 224, 'width': 224}  # dummy image
+                crop_size = self.data_args.image_processor.crop_size
+                # crop_size = {'height': 224, 'width': 224}  # dummy image
                 data_dict['image'] = [torch.zeros(3, crop_size['height'], crop_size['width'])]
             return data_dict
         except Exception as e:
@@ -862,6 +1057,7 @@ class DataCollatorForSupervisedDataset(object):
     def __call__(self, instances: Sequence[Dict]) -> Dict[str, torch.Tensor]:
         input_ids, labels = tuple([instance[key] for instance in instances]
                                   for key in ("input_ids", "labels"))
+        # print('before Collator', input_ids)
         input_ids = torch.nn.utils.rnn.pad_sequence(
             input_ids,
             batch_first=True,
@@ -877,6 +1073,7 @@ class DataCollatorForSupervisedDataset(object):
             attention_mask=input_ids.ne(self.tokenizer.pad_token_id),
         )
 
+        # print('after Collator', input_ids)
         # ======================================================================================================
         # origin image, if batch_size=6: [[image], [image], [video], [image, image], [video, video], [video, image]]
         '''
@@ -974,6 +1171,24 @@ def train():
                     cache_dir=training_args.cache_dir,
                     **bnb_model_from_pretrained_args
                 )
+            elif 'openchat' in model_args.model_name_or_path.lower():
+                model = LlavaMistralForCausalLM.from_pretrained(
+                    model_args.model_name_or_path,
+                    cache_dir=training_args.cache_dir,
+                    **bnb_model_from_pretrained_args
+                )
+            elif 'phi' in model_args.model_name_or_path.lower():
+                model = LlavaPhiForCausalLM.from_pretrained(
+                    model_args.model_name_or_path,
+                    cache_dir=training_args.cache_dir,
+                    **bnb_model_from_pretrained_args
+                )
+            elif 'stablelm' in model_args.model_name_or_path.lower():
+                model = LlavaStablelmForCausalLM.from_pretrained(
+                    model_args.model_name_or_path,
+                    cache_dir=training_args.cache_dir,
+                    **bnb_model_from_pretrained_args
+                )
             else:
                 model = LlavaLlamaForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
@@ -983,6 +1198,12 @@ def train():
         else:
             if 'qwen' in model_args.model_name_or_path.lower():
                 model = MoELLaVAQWenForCausalLM.from_pretrained(
+                    model_args.model_name_or_path,
+                    cache_dir=training_args.cache_dir,
+                    **bnb_model_from_pretrained_args
+                )
+            elif 'phi' in model_args.model_name_or_path.lower():
+                model = MoELLaVAPhiForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
                     **bnb_model_from_pretrained_args
@@ -1007,7 +1228,7 @@ def train():
 
     if training_args.bits in [4, 8]:
         from peft import prepare_model_for_kbit_training
-        model.config.torch_dtype=(torch.float32 if training_args.fp16 else (torch.bfloat16 if training_args.bf16 else torch.float32))
+        model.config.torch_dtype = (torch.float32 if training_args.fp16 else (torch.bfloat16 if training_args.bf16 else torch.float32))
         model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=training_args.gradient_checkpointing)
 
     if training_args.gradient_checkpointing:
@@ -1026,6 +1247,10 @@ def train():
             if 'qwen' in model_args.model_name_or_path.lower():
                 target_modules = [
                     'mlp.w1', 'mlp.w2', 'mlp.c_proj'
+                ] if training_args.only_lora_ffn else find_all_linear_names(model, add_keywords=['wg'])
+            elif 'phi' in model_args.model_name_or_path.lower():
+                target_modules = [
+                    'fc1', 'fc2'
                 ] if training_args.only_lora_ffn else find_all_linear_names(model, add_keywords=['wg'])
             else:
                 target_modules = [
@@ -1051,7 +1276,6 @@ def train():
         model.initialize_moe_modules(model_args=model_args)
     else:
         if training_args.lora_enable:
-            assert 'qwen' in model_args.model_name_or_path.lower()
             from peft import LoraConfig, get_peft_model
             lora_config = LoraConfig(
                 r=training_args.lora_r,
@@ -1088,10 +1312,27 @@ def train():
                 model_max_length=training_args.model_max_length,
                 padding_side="right",
                 use_fast=False,
-                # unk_token='<|extra_0|>',
             )
-            # tokenizer.pad_token = tokenizer.unk_token
-            # tokenizer.pad_token_id = tokenizer.unk_token_id
+            tokenizer.add_special_tokens({'unk_token': '<|extra_0|>', 'eos_token': '<|endoftext|>'})
+        elif 'phi' in model_args.model_name_or_path.lower():
+            tokenizer = transformers.AutoTokenizer.from_pretrained(
+                model_args.model_name_or_path,
+                cache_dir=training_args.cache_dir,
+                model_max_length=training_args.model_max_length,
+                padding_side="right",
+                use_fast=False,
+            )
+            tokenizer.add_special_tokens({'unk_token': '<|extra_0|>'})
+        elif 'stablelm' in model_args.model_name_or_path.lower():
+            from moellava.model.language_model.stablelm.tokenization_arcade100k import Arcade100kTokenizer
+            tokenizer = Arcade100kTokenizer.from_pretrained(
+                model_args.model_name_or_path,
+                cache_dir=training_args.cache_dir,
+                model_max_length=training_args.model_max_length,
+                padding_side="right",
+                use_fast=False,
+            )
+            tokenizer.unk_token = tokenizer.pad_token  # FIXME: DO SUPPORT ADD SPECIAL TOKENS
         else:
             tokenizer = transformers.AutoTokenizer.from_pretrained(
                 model_args.model_name_or_path,
@@ -1100,7 +1341,8 @@ def train():
                 padding_side="right",
                 use_fast=False,
             )
-
+    # import ipdb
+    # ipdb.set_trace()
     if model_args.version == "v0":
         if tokenizer.pad_token is None:
             smart_tokenizer_and_embedding_resize(
@@ -1112,6 +1354,9 @@ def train():
         tokenizer.pad_token = tokenizer.unk_token
     else:
         tokenizer.pad_token = tokenizer.unk_token
+        # =============================================================================================================
+        model.config.pad_token_id = tokenizer.pad_token_id
+        # =============================================================================================================
         if model_args.version in conversation_lib.conv_templates:
             conversation_lib.default_conversation = conversation_lib.conv_templates[model_args.version]
         else:

@@ -3,7 +3,7 @@ import logging
 import logging.handlers
 import os
 import sys
-
+from torch import nn
 import numpy as np
 import requests
 
@@ -26,6 +26,26 @@ def order_pick_k(lst, k):
         f" (ignored)"
     )
     return new_lst
+
+
+
+class HookTool:
+    def __init__(self):
+        self.fea = None
+    def hook_fun(self, module, fea_in, fea_out):
+        self.fea = fea_out.detach().cpu()
+
+def get_gating_logit_by_hook(model):
+    fea_hooks = []
+    for n, m in model.named_modules():
+        if 'wg' in n and isinstance(m, nn.Linear):
+            print(n, m, 'match!!!!!!!!!!!!!!!!!!!!!!!!!')
+            cur_hook = HookTool()
+            m.register_forward_hook(cur_hook.hook_fun)
+            fea_hooks.append(cur_hook)
+    return fea_hooks
+
+
 
 def build_logger(logger_name, logger_filename):
     global handler

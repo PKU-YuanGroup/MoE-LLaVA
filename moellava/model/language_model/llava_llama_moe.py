@@ -23,9 +23,9 @@ from transformers import AutoConfig, AutoModelForCausalLM, \
 
 from transformers.modeling_outputs import CausalLMOutputWithPast
 
-from ..llava_arch import LlavaMetaModel, LlavaQWenMetaForCausalLM
+from ..llava_arch import LlavaMetaModel, LlavaMetaForCausalLM
 
-from deepspeed.moe.layer import MoE
+# from deepspeed.moe.layer import MoE
 from dataclasses import dataclass
 from typing import Optional, Tuple, Union, List
 import torch.nn as nn
@@ -303,7 +303,7 @@ def MoELlamaModel_forward(self):
     return forward
 
 
-class MoELLaVALlamaForCausalLM(LlamaForCausalLM, LlavaQWenMetaForCausalLM):
+class MoELLaVALlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
     config_class = MoELLaVALlamaConfig
 
     def __init__(self, config):
@@ -401,7 +401,7 @@ class MoELLaVALlamaForCausalLM(LlamaForCausalLM, LlavaQWenMetaForCausalLM):
                     moe_losses.append(moe_loss)
             moe_loss = self.router_aux_loss_coef * sum(moe_losses)
             if labels is not None:
-                print(loss, moe_loss, loss + moe_loss)
+                print(loss, sum(moe_losses), loss + moe_loss)
                 loss += moe_loss
         # import ipdb
         # ipdb.set_trace()
@@ -431,7 +431,9 @@ class MoELLaVALlamaForCausalLM(LlamaForCausalLM, LlavaQWenMetaForCausalLM):
 
     def initialize_moe_modules(self, model_args):
 
+
         self.config.moe['moe_enable'] = model_args.moe_enable
+        self.config.moe['train_modules'] = model_args.train_modules
         self.config.moe['moe_mode'] = model_args.moe_mode
         self.config.moe['moe_layers_idx'] = model_args.moe_layers_idx
         self.config.moe['ep_size']= model_args.ep_size
@@ -441,17 +443,17 @@ class MoELLaVALlamaForCausalLM(LlamaForCausalLM, LlavaQWenMetaForCausalLM):
         self.config.moe['min_capacity'] = model_args.min_capacity
         self.config.moe['use_residual'] = model_args.use_residual
         self.config.moe['router_aux_loss_coef'] = self.router_aux_loss_coef = model_args.router_aux_loss_coef
-        self.config.moe['train_modules'] = [
-                # 'mlp.w1', 'mlp.w2', 'mlp.c_proj', 'wg',
-                # 'wte', 'lm_head'
-            ]
-
-        if len(self.config.moe['train_modules']) > 0:
+        # self.config.moe['train_modules'] = [
+        #         # 'mlp.w1', 'mlp.w2', 'mlp.c_proj', 'wg',
+        #         # 'wte', 'lm_head'
+        #     ]
+        if self.config.moe['train_modules'] is not None and len(self.config.moe['train_modules']) > 0:
             for n, p in self.named_parameters():
                 if any(name in n for name in self.config.moe['train_modules']):
                     continue
                 else:
                     p.requires_grad = False
+
 
 
         num_layers = self.config.num_hidden_layers
@@ -543,158 +545,6 @@ class EvalMoELLaVALlamaForCausalLM(MoELLaVALlamaForCausalLM):
         rank0_print(f'replace LlamaModel.forward to MoELlamaModel.forward')
 
 
-# class EvalMoELLaVALlamaForCausalLM(LlamaForCausalLM, LlavaQWenMetaForCausalLM):
-#     config_class = MoELLaVAConfig
-#
-#     def __init__(self, config):
-#         super(LlamaForCausalLM, self).__init__(config)
-#         self.model = MoELLaVALlamaModel(config)
-#         self.pretraining_tp = config.pretraining_tp
-#         self.vocab_size = config.vocab_size
-#         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
-#
-#         # Initialize weights and apply final processing
-#         self.post_init()
-#
-#
-#         num_layers = self.config.num_hidden_layers
-#         moe_layers_idx = self.config.moe['moe_layers_idx']
-#
-#         for num_experts, layer_num in zip(self.config.moe['num_experts'], moe_layers_idx):
-#             self.model.layers[layer_num].mlp = MoE(
-#                 self.config.hidden_size,
-#                 expert=self.model.layers[layer_num].mlp,
-#                 num_experts=num_experts,
-#                 ep_size=self.config.moe['ep_size'],
-#                 k=self.config.moe['top_k_experts'],
-#                 capacity_factor=self.config.moe['capacity_factor'],
-#                 eval_capacity_factor=self.config.moe['eval_capacity_factor'],
-#                 min_capacity=self.config.moe['min_capacity'],
-#                 use_residual=self.config.moe['use_residual'],
-#             )
-#         rank0_print(f"LLM num_layers: {num_layers}, MoE num_layers: {len(moe_layers_idx)}, where\n",
-#                     *[f'layer-{layer_num} has {num_experts} experts\n' for num_experts, layer_num in
-#                       zip(self.config.moe['num_experts'], moe_layers_idx)])
-#
-#         for m in self.model.layers:
-#             m.forward = MoELlamaDecoderLayer_forward(m)
-#         rank0_print(f'replace LlamaDecoderLayer.forward to MoELlamaDecoderLayer.forward')
-#         self.model.forward = MoELlamaModel_forward(self.model)
-#         rank0_print(f'replace LlamaModel.forward to MoELlamaModel.forward')
-#
-#
-#     def get_model(self):
-#         return self.model
-#
-#     def forward(
-#             self,
-#             input_ids: torch.LongTensor = None,
-#             attention_mask: Optional[torch.Tensor] = None,
-#             position_ids: Optional[torch.LongTensor] = None,
-#             past_key_values: Optional[List[torch.FloatTensor]] = None,
-#             inputs_embeds: Optional[torch.FloatTensor] = None,
-#             labels: Optional[torch.LongTensor] = None,
-#             use_cache: Optional[bool] = None,
-#             output_attentions: Optional[bool] = None,
-#             output_hidden_states: Optional[bool] = None,
-#             images: Optional[torch.FloatTensor] = None,
-#             return_dict: Optional[bool] = None,
-#     ) -> Union[Tuple, MoECausalLMOutputWithPast]:
-#         # print('before prepare_inputs_labels_for_multimodal')
-#         # import ipdb
-#         # ipdb.set_trace()
-#         if inputs_embeds is None:
-#             (
-#                 input_ids,
-#                 position_ids,
-#                 attention_mask,
-#                 past_key_values,
-#                 inputs_embeds,
-#                 labels
-#             ) = self.prepare_inputs_labels_for_multimodal(
-#                 input_ids,
-#                 position_ids,
-#                 attention_mask,
-#                 past_key_values,
-#                 labels,
-#                 images
-#             )
-#         # import ipdb
-#         # ipdb.set_trace()
-#         # print('after prepare_inputs_labels_for_multimodal')
-#         outputs = self.model(
-#             input_ids=input_ids,
-#             attention_mask=attention_mask,
-#             position_ids=position_ids,
-#             past_key_values=past_key_values,
-#             inputs_embeds=inputs_embeds,
-#             use_cache=use_cache,
-#             output_attentions=output_attentions,
-#             output_hidden_states=output_hidden_states,
-#             return_dict=return_dict,
-#         )
-#         # import ipdb
-#         # ipdb.set_trace()
-#         hidden_states = outputs[0]
-#         if self.config.pretraining_tp > 1:
-#             assert NotImplementedError
-#             lm_head_slices = self.lm_head.weight.split(self.vocab_size // self.config.pretraining_tp, dim=0)
-#             logits = [F.linear(hidden_states, lm_head_slices[i]) for i in range(self.config.pretraining_tp)]
-#             logits = torch.cat(logits, dim=-1)
-#         else:
-#             logits = self.lm_head(hidden_states)
-#         logits = logits.float()
-#
-#         loss = None
-#         if labels is not None:
-#             # Shift so that tokens < n predict n
-#             shift_logits = logits[..., :-1, :].contiguous()
-#             shift_labels = labels[..., 1:].contiguous()
-#             # Flatten the tokens
-#             loss_fct = CrossEntropyLoss()
-#             shift_logits = shift_logits.view(-1, self.config.vocab_size)
-#             shift_labels = shift_labels.view(-1)
-#             # Enable model parallelism
-#             shift_labels = shift_labels.to(shift_logits.device)
-#             loss = loss_fct(shift_logits, shift_labels)
-#
-#         moe_loss, moe_losses = None, []
-#         if len(outputs[-1]) > 0:
-#             moe_loss_list = outputs[-1]
-#             # import ipdb
-#             # ipdb.set_trace()
-#             for moe_loss in moe_loss_list:
-#                 if moe_loss is not None:
-#                     moe_losses.append(moe_loss)
-#             moe_loss = self.router_aux_loss_coef * sum(moe_losses)
-#             print(loss, moe_loss, loss + moe_loss)
-#             if labels is not None:
-#                 loss += moe_loss
-#         # import ipdb
-#         # ipdb.set_trace()
-#         if not return_dict:
-#             output = (logits,) + outputs[1:]
-#             output = (moe_loss,) + output if moe_loss is not None else output
-#             return (loss,) + output if loss is not None else output
-#
-#         return MoECausalLMOutputWithPast(
-#             loss=loss,
-#             moe_loss=moe_loss,
-#             logits=logits,
-#             past_key_values=outputs.past_key_values,
-#             hidden_states=outputs.hidden_states,
-#             attentions=outputs.attentions,
-#             moe_loss_list=outputs.moe_loss_list,
-#         )
-#
-#     def prepare_inputs_for_generation(self, input_ids, past_key_values=None, inputs_embeds=None, **kwargs):
-#         images = kwargs.pop("images", None)
-#         _inputs = super().prepare_inputs_for_generation(
-#             input_ids, past_key_values=past_key_values, inputs_embeds=inputs_embeds, **kwargs
-#         )
-#         if images is not None:
-#             _inputs['images'] = images
-#         return _inputs
 
 AutoConfig.register("moe_llava_llama", MoELLaVALlamaConfig)
 AutoModelForCausalLM.register(MoELLaVALlamaConfig, MoELLaVALlamaForCausalLM)

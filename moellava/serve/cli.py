@@ -33,6 +33,8 @@ def main(args):
     image_processor = processor['image']
     if 'qwen' in model_name.lower():  # FIXME: first
         conv_mode = "v1_qwen"
+    elif 'openchat' in model_name.lower():  # FIXME: first
+        conv_mode = "v1_openchat"
     else:
         if 'llama-2' in model_name.lower():
             conv_mode = "llava_llama_2"

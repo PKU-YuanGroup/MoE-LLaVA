@@ -77,8 +77,10 @@ def generate(image1, textbox_in, first_run, state, state_, images_tensor):
         state.append_message(state.roles[0], textbox_in + "\n" + show_images)
     state.append_message(state.roles[1], textbox_out)
 
+    # return (state, state_, state.to_gradio_chatbot(), False, gr.update(value=None, interactive=True), images_tensor,
+    #         gr.update(value=image1 if os.path.exists(image1) else None, interactive=True))
     return (state, state_, state.to_gradio_chatbot(), False, gr.update(value=None, interactive=True), images_tensor,
-            gr.update(value=image1 if os.path.exists(image1) else None, interactive=True))
+            gr.update(value=None, interactive=True))
 
 
 def regenerate(state, state_):

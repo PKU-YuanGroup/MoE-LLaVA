@@ -146,6 +146,9 @@ class LlavaMetaForCausalLM(ABC):
         return self.get_model().get_video_tower()
 
     def encode_images(self, images):
+
+        # import ipdb
+        # ipdb.set_trace()
         image_features = self.get_model().get_image_tower()(images)
         image_features = self.get_model().mm_projector.forward_image(image_features)
         return image_features
@@ -247,6 +250,8 @@ class LlavaMetaForCausalLM(ABC):
         if labels is None:
             labels = torch.full_like(input_ids, IGNORE_INDEX)
 
+        # import ipdb
+        # ipdb.set_trace()
         # remove the padding using attention_mask -- TODO: double check
         input_ids = [cur_input_ids[cur_attention_mask] for cur_input_ids, cur_attention_mask in zip(input_ids, attention_mask)]
         labels = [cur_labels[cur_attention_mask] for cur_labels, cur_attention_mask in zip(labels, attention_mask)]
@@ -282,6 +287,9 @@ class LlavaMetaForCausalLM(ABC):
 
             # print('cur_input_ids_noim', cur_input_ids_noim)
             # print('cur_labels_noim', cur_labels_noim)
+
+            # import ipdb
+            # ipdb.set_trace()
 
             cur_new_input_embeds = []
             cur_new_labels = []
@@ -500,6 +508,9 @@ class LlavaQWenMetaForCausalLM(LlavaMetaForCausalLM):
         if labels is None:
             labels = torch.full_like(input_ids, IGNORE_INDEX)
 
+
+        # import ipdb
+        # ipdb.set_trace()
         # remove the padding using attention_mask -- TODO: double check
         input_ids = [cur_input_ids[cur_attention_mask] for cur_input_ids, cur_attention_mask in zip(input_ids, attention_mask)]
         labels = [cur_labels[cur_attention_mask] for cur_labels, cur_attention_mask in zip(labels, attention_mask)]
@@ -533,6 +544,8 @@ class LlavaQWenMetaForCausalLM(LlavaMetaForCausalLM):
             cur_input_embeds = self.get_model().embed_tokens(torch.cat(cur_input_ids_noim))
             cur_input_embeds_no_im = torch.split(cur_input_embeds, split_sizes, dim=0)
 
+            # import ipdb
+            # ipdb.set_trace()
             # print('cur_input_ids_noim', cur_input_ids_noim)
             # print('cur_labels_noim', cur_labels_noim)
 

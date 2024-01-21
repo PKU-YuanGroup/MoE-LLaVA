@@ -7,12 +7,20 @@ import time
 
 NUM_SECONDS_TO_SLEEP = 0.5
 
+openai.api_key = 'sk-3BypRvJabon5hkcXA4457e957e7d4a28Ad5f96Ca2bE64a6e'
+openai.api_base = 'https://api.chatgptid.net/v1'
+# model = 'gpt-3.5-turbo'
+
+# openai.api_base = 'https://api.chatify.me/v1'
+# openai.api_key = "sk-CtsnEOwT9ZFZtqtRFfEcA589DcC54b6e8404D5B1095f97Db"
+# gpt_model = "gpt-4-0613"
 
 def get_eval(content: str, max_tokens: int):
     while True:
         try:
             response = openai.ChatCompletion.create(
-                model='gpt-4-0314',
+                model='gpt-3.5-turbo',
+                # model='gpt-4-turbo',
                 messages=[{
                     'role': 'system',
                     'content': 'You are a helpful and precise assistant for checking the quality of the answer.'

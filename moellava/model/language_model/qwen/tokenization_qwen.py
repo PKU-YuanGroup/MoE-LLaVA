@@ -168,7 +168,6 @@ class QWenTokenizer(PreTrainedTokenizer):
     def save_vocabulary(self, save_directory: str, **kwargs) -> Tuple[str]:
         """
         Save only the vocabulary of the tokenizer (vocabulary).
-
         Returns:
             `Tuple(str)`: Paths to the files saved.
         """
@@ -188,7 +187,6 @@ class QWenTokenizer(PreTrainedTokenizer):
     ) -> List[Union[bytes, str]]:
         """
         Converts a string in a sequence of tokens.
-
         Args:
             text (`str`):
                 The sequence to be encoded.
@@ -198,15 +196,12 @@ class QWenTokenizer(PreTrainedTokenizer):
             disallowed_special (`Literal["all"]` or `Collection`):
                 The surface forms of the tokens that should not be in regular texts and trigger errors.
                 Default to an empty tuple.
-
             kwargs (additional keyword arguments, *optional*):
                 Will be passed to the underlying model specific encode method.
-
         Returns:
             `List[bytes|str]`: The list of tokens.
         """
         tokens = []
-        text = self.bos_token + text   ########################################
         text = unicodedata.normalize("NFC", text)
 
         # this implementation takes a detour: text -> token id -> token surface forms
@@ -258,7 +253,6 @@ class QWenTokenizer(PreTrainedTokenizer):
         """
         Converts a string in a sequence of tokens (string), using the tokenizer. Split in words for word-based
         vocabulary or sub-words for sub-word-based vocabularies (BPE/SentencePieces/WordPieces).
-
         Do NOT take care of added tokens.
         """
         raise NotImplementedError
