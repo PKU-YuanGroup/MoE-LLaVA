@@ -121,16 +121,25 @@ conv_templates = {
 Remember the key for the registered dialogue conversation, such as `phi`. And modify the `--version phi` in the commands for Stage 2 and Stage 3. **DO NOT need to modify the `--version plain` in Stage 1.**
 
 
-## Don't have special tokens, but can NOT add special tokens
+## CAN NOT add special tokens
 
 ### StableLMTokenizer
 
 #### Tokenizer
 
-For those tokenizers that don't have special tokens, but can add special tokens, such as StableLMTokenizer. You need to make sure the tokenizer has `unk_token` [here](). Generally, this type of tokenizer will have `pad_token`.
+For those tokenizers that can **not** add special tokens, such as StableLMTokenizer.
+
+First find all the special tokens of the tokenizer.
 
 ```
-tokenizer.unk_token = tokenizer.pad_token 
+tokenizer.special_tokens
+>>> {'<|endoftext|>': 100257, '<|fim_prefix|>': 100258, '<|fim_middle|>': 100259, '<|fim_suffix|>': 100260, '<|fim_pad|>': 100261, '<gh_stars>': 100262, '<filename>':  100263, '<issue_start>': 100264, '<issue_comment>': 100265, '<issue_closed>': 100266, '<jupyter_start>': 100267, '<jupyter_text>': 100268, '<jupyter_code>': 100269, '<jupyter_output>': 100270, '<empty_output>': 100271, '<commit_before>': 100272, '<commit_msg>': 100273, '<commit_after>': 100274, '<reponame>': 100275, '<|endofprompt|>': 100276, '<|im_start|>': 100277, '<|im_end|>': 100278, '<|pause|>': 100279, '<|reg0|>': 100280, '<|reg1|>': 100281, '<|reg2|>': 100282, '<|reg3|>': 100283, '<|reg4|>': 100284, '<|reg5|>': 100285, '<|reg6|>': 100286, '<|reg7|>': 100287, '<|extra0|>': 100288}
+```
+
+Choosing a less important token, e.g., `<|reg0|>`.  You need to make sure the tokenizer has `unk_token` [here]().
+
+```
+tokenizer.unk_token = '<|reg0|>'
 ```
 
 #### `preprocess_stablelm` function
