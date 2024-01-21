@@ -16,7 +16,7 @@ We also provide the processed data as follows.
         <td>LLaVA-PT</td><td>Stage 1</td><td>LLaVA 1.5-558k (<a href="https://pan.baidu.com/s/1UZiRORpXwAHdKPgrUi1nDA?pwd=7xgx">BaiDu</a>)</td>
     </tr>
     <tr align="center">
-        <td>Hybird-FT</td><td>Stage 2</td><td>SViT-157k (<a href="https://pan.baidu.com/s/1PtcTck4xC0fAE0QS0OYc8Q?pwd=ko9x">BaiDu</a>), LVIS-220k (<a href="https://pan.baidu.com/s/1-MWrPGZptFFBO1_4tniAXA?pwd=ivxg">BaiDu</a>), LRV-331k (<a href="https://pan.baidu.com/s/1sYnfRN_yFuo719fNA_BV_w?pwd=lmai">BaiDu</a>), MIMIC-IT-256k (<a href="">BaiDu</a>)</td>
+        <td>Hybird-FT</td><td>Stage 2</td><td>SViT-157k (<a href="https://pan.baidu.com/s/1PtcTck4xC0fAE0QS0OYc8Q?pwd=ko9x">BaiDu</a>), LVIS-220k (<a href="https://pan.baidu.com/s/1-MWrPGZptFFBO1_4tniAXA?pwd=ivxg">BaiDu</a>), LRV-331k (<a href="https://pan.baidu.com/s/1sYnfRN_yFuo719fNA_BV_w?pwd=lmai">BaiDu</a>), MIMIC-IT-256k (<a href="https://pan.baidu.com/s/1w0Wr8d-IhIUuRyKbuoPwyw?pwd=4big">BaiDu</a>)</td>
     </tr>
     <tr align="center">
         <td>LLaVA-FT</td><td>Stage 3</td><td>LLaVA 1.5-mix-665k (<a href="https://pan.baidu.com/s/1xC9E6VuOOEBV5iieve0Z7A?pwd=2o0a">BaiDu</a>)</td>
