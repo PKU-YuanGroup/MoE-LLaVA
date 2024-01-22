@@ -210,5 +210,5 @@ Passing the `--version v1` in the commands for Stage 2 and Stage 3. **DO NOT nee
 
 ## Converting models to MoE architectures
 
-Refer to [llava_qwen_moe.py](moellava/model/language_model/llava_llama_moe.py) and [llava_llama_moe.py](moellava/model/language_model/llava_llama_moe.py)
+Refer to [llava_stablelm_moe.py](moellava/model/language_model/llava_stablelm_moe.py), [llava_qwen_moe.py](moellava/model/language_model/llava_llama_moe.py), [llava_phi_moe.py](moellava/model/language_model/llava_phi_moe.py) and [llava_llama_moe.py](moellava/model/language_model/llava_llama_moe.py)
 
