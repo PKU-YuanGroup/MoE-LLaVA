@@ -62,3 +62,8 @@ Specify your `IMAGE_FOLDER` according to the data preparation.
 - Stage 1 pretraining script: [pretrain.sh](scripts/v1_5/openchat/pretrain.sh). 
 - Stage 2 tuning script: [finetune.sh](scripts/v1_5/openchat/finetune.sh).
 - Stage 3 moe-tuning script: [finetune_moe.sh](scripts/v1_5/openchat/finetune_moe.sh).
+
+
+## LoRA Training
+
+Comeing soon...
