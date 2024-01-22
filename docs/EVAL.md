@@ -86,73 +86,135 @@ You can refer to the official repository for validation, but we also provide [of
 
 1. Download [`test2015`](http://images.cocodataset.org/zips/test2015.zip) and put it under `eval/vqav2`.
 2. Multi-GPU inference.
+
+**LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 bash scripts/v1_5/eval/eval_image_vqav2.sh
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 bash scripts/v1_5/eval/llava/vqav2.sh
 ```
+**MoE-based** model
+```Shell
+bash scripts/v1_5/eval/moe_llava/vqav2.sh
+```
+
 3. Submit the results to the [evaluation server](https://eval.ai/web/challenges/challenge-page/830/my-submission): `eval/vqav2/answers_upload`.
 
 ### GQA
 
 1. Download the data following the official instructions [here](https://cs.stanford.edu/people/dorarad/gqa/download.html) and put under `eval/gqa/data`.
-2. Multi-GPU inference.
+2. Multi-GPU inference
+
+**LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 bash scripts/v1_5/eval/eval_image_gqa.sh
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 bash scripts/v1_5/eval/llava/gqa.sh
+```
+**MoE-based** model
+```Shell
+bash scripts/v1_5/eval/moe_llava/gqa.sh
 ```
 
 ### VisWiz
 
 1. Download [`test.json`](https://vizwiz.cs.colorado.edu/VizWiz_final/vqa_data/Annotations.zip) and extract [`test.zip`](https://vizwiz.cs.colorado.edu/VizWiz_final/images/test.zip) to `test`. Put them under `eval/vizwiz`.
 2. Single-GPU inference.
+
+**LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/eval_image_vizwiz.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/llava/vizwiz.sh
 ```
+**MoE-based** model
+```Shell
+bash scripts/v1_5/eval/moe_llava/vizwiz.sh
+```
+
 3. Submit the results to the [evaluation server](https://eval.ai/web/challenges/challenge-page/1911/my-submission): `eval/vizwiz/answers_upload`.
 
 ### ScienceQA
 
 1. Under `eval/scienceqa`, download `images`, `pid_splits.json`, `problems.json` from the `data/scienceqa` folder of the ScienceQA [repo](https://github.com/lupantech/ScienceQA).
 2. Single-GPU inference and evaluate.
+
+**LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/eval_image_sqa.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/llava/sqa.sh
 ```
+**MoE-based** model
+```Shell
+bash scripts/v1_5/eval/moe_llava/sqa.sh
+```
+
 
 ### TextVQA
 
 1. Download [`TextVQA_0.5.1_val.json`](https://dl.fbaipublicfiles.com/textvqa/data/TextVQA_0.5.1_val.json) and [images](https://dl.fbaipublicfiles.com/textvqa/images/train_val_images.zip) and extract to `eval/textvqa`.
 2. Single-GPU inference and evaluate.
+
+**LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/eval_image_textvqa.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/llava/textvqa.sh
 ```
+**MoE-based** model
+```Shell
+bash scripts/v1_5/eval/moe_llava/textvqa.sh
+```
+
 
 ### POPE
 
 1. Download `coco` from [POPE](https://github.com/AoiDragon/POPE/tree/e3e39262c85a6a83f26cf5094022a782cb0df58d/output/coco) and put under `eval/pope`.
 2. Single-GPU inference and evaluate.
+
+**LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/eval_image_pope.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/llava/pope.sh
 ```
+**MoE-based** model
+```Shell
+bash scripts/v1_5/eval/moe_llava/pope.sh
+```
+
 
 ### MMBench
 
 1. Download [`mmbench_dev_20230712.tsv`](https://download.openmmlab.com/mmclassification/datasets/mmbench/mmbench_dev_20230712.tsv) and put under `eval/mmbench`.
 2. Single-GPU inference.
+
+**LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/eval_image_mmbench.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/llava/mmbench.sh
 ```
+**MoE-based** model
+```Shell
+bash scripts/v1_5/eval/moe_llava/mmbench.sh
+```
+
 3. Submit the results to the [evaluation server](https://opencompass.org.cn/leaderboard-multimodal): `eval/mmbench/answers_upload/mmbench_dev_20230712`.
 
 ### LLaVA-Bench-in-the-Wild
 
 1. Extract contents of [`llava-bench-in-the-wild`](https://huggingface.co/datasets/liuhaotian/llava-bench-in-the-wild) to `eval/llava-bench-in-the-wild`.
 2. Single-GPU inference and evaluate.
+
+**LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/eval_image_llavabench.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/llava/llavabench.sh
 ```
+**MoE-based** model
+```Shell
+bash scripts/v1_5/eval/moe_llava/llavabench.sh
+```
+
 
 ### MM-Vet
 
 1. Extract [`mm-vet.zip`](https://github.com/yuweihao/MM-Vet/releases/download/v1/mm-vet.zip) to `eval/mmvet`.
 2. Single-GPU inference.
+
+**LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/eval_image_mmvet.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/llava/mmvet.sh
 ```
+**MoE-based** model
+```Shell
+bash scripts/v1_5/eval/moe_llava/mmvet.sh
+```
+
