@@ -1,5 +1,6 @@
 #!/bin/bash
 
+CONV="conv_template"
 CKPT_NAME="your_ckpt_name"
 CKPT="checkpoints/${CKPT_NAME}"
 EVAL="eval"
@@ -9,7 +10,7 @@ python3 -m moellava.eval.model_vqa_loader \
     --image-folder ${EVAL}/vizwiz/test \
     --answers-file ${EVAL}/vizwiz/answers/${CKPT_NAME}.jsonl \
     --temperature 0 \
-    --conv-mode vicuna_v1
+    --conv-mode ${CONV}
 
 python3 scripts/convert_vizwiz_for_submission.py \
     --annotation-file ${EVAL}/vizwiz/llava_test.jsonl \

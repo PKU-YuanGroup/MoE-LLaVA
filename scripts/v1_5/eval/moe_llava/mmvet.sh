@@ -1,5 +1,6 @@
 #!/bin/bash
 
+CONV="conv_template"
 CKPT_NAME="your_ckpt_name"
 CKPT="checkpoints/${CKPT_NAME}"
 EVAL="eval"
@@ -9,7 +10,7 @@ deepspeed moellava/eval/model_vqa.py \
     --image-folder ${EVAL}/mm-vet/images \
     --answers-file ${EVAL}/mm-vet/answers/${CKPT_NAME}.jsonl \
     --temperature 0 \
-    --conv-mode v1_qwen
+    --conv-mode ${CONV}
 
 mkdir -p ${EVAL}/mm-vet/results
 

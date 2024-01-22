@@ -5,6 +5,7 @@ IFS=',' read -ra GPULIST <<< "$gpu_list"
 
 CHUNKS=${#GPULIST[@]}
 
+CONV="conv_template"
 CKPT_NAME="your_ckpt_name"
 CKPT="checkpoints/${CKPT_NAME}"
 SPLIT="llava_gqa_testdev_balanced"
@@ -20,7 +21,7 @@ for IDX in $(seq 0 $((CHUNKS-1))); do
         --num-chunks $CHUNKS \
         --chunk-idx $IDX \
         --temperature 0 \
-        --conv-mode v1_qwen &
+        --conv-mode ${CONV} &
 done
 
 wait

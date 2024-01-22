@@ -2,6 +2,7 @@
 
 SPLIT="mmbench_dev_20230712"
 
+CONV="conv_template"
 CKPT_NAME="your_ckpt_name"
 CKPT="checkpoints/${CKPT_NAME}"
 EVAL="eval"
@@ -11,7 +12,7 @@ python3 -m moellava.eval.model_vqa_mmbench \
     --answers-file ${EVAL}/mmbench/answers/$SPLIT/${CKPT_NAME}.jsonl \
     --single-pred-prompt \
     --temperature 0 \
-    --conv-mode vicuna_v1
+    --conv-mode ${CONV}
 
 mkdir -p ${EVAL}/mmbench/answers_upload/$SPLIT
 
