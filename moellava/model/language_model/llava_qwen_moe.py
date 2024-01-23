@@ -24,7 +24,7 @@ from .qwen.modeling_qwen import QWenLMHeadModel, QWenModel, _import_flash_attn, 
 from .qwen.configuration_qwen import QWenConfig
 
 from transformers.modeling_outputs import CausalLMOutputWithPast, BaseModelOutputWithPast
-# from deepspeed.moe.layer import MoE
+from deepspeed.moe.layer import MoE
 from .qwen.tokenization_qwen import QWenTokenizer
 from ..llava_arch import LlavaMetaModel, LlavaQWenMetaForCausalLM
 import torch.distributed as dist

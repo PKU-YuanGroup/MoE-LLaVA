@@ -8,7 +8,10 @@ from fastapi import FastAPI
 import os
 from PIL import Image
 import tempfile
-from decord import VideoReader, cpu
+try:
+    from decord import VideoReader, cpu
+except:
+    pass
 from transformers import TextStreamer
 
 from moellava.conversation import conv_templates, SeparatorStyle, Conversation
@@ -57,7 +60,7 @@ def generate(image1, textbox_in, first_run, state, state_, images_tensor):
 
     image_processor = handler.image_processor
     if os.path.exists(image1):
-        tensor = image_processor.preprocess(image1, return_tensors='pt')['pixel_values'][0].to(handler.model.device, dtype=dtype)
+        tensor = image_processor.preprocess(Image.open(image1).convert('RGB'), return_tensors='pt')['pixel_values'][0].to(handler.model.device, dtype=dtype)
         # print(tensor.shape)
         images_tensor.append(tensor)
 
@@ -113,7 +116,23 @@ args = parser.parse_args()
 # if auto_mpi_discovery and not all(map(lambda v: v in os.environ, required_env)):
 
 model_path = args.model_path
-conv_mode = "v1_qwen"
+if 'qwen' in model_path.lower():  # FIXME: first
+    conv_mode = "qwen"
+elif 'openchat' in model_path.lower():  # FIXME: first
+    conv_mode = "openchat"
+elif 'phi' in model_path.lower():  # FIXME: first
+    conv_mode = "phi"
+elif 'stablelm' in model_path.lower():  # FIXME: first
+    conv_mode = "stablelm"
+else:
+    if 'llama-2' in model_path.lower():
+        conv_mode = "llava_llama_2"
+    elif "v1" in model_path.lower():
+        conv_mode = "llava_v1"
+    elif "mpt" in model_path.lower():
+        conv_mode = "mpt"
+    else:
+        conv_mode = "llava_v0"
 device = 'cuda'
 load_8bit = False
 load_4bit = False

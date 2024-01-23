@@ -25,7 +25,7 @@ from transformers.modeling_outputs import CausalLMOutputWithPast
 
 from ..llava_arch import LlavaMetaModel, LlavaMetaForCausalLM
 
-# from deepspeed.moe.layer import MoE
+from deepspeed.moe.layer import MoE
 from dataclasses import dataclass
 from typing import Optional, Tuple, Union, List
 import torch.nn as nn
@@ -325,7 +325,7 @@ class MoELLaVAMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
     def __init__(self, config):
         super(MistralForCausalLM, self).__init__(config)
         self.model = MoELLaVAMistralModel(config)
-        self.pretraining_tp = config.pretraining_tp
+        # self.pretraining_tp = config.pretraining_tp
         self.vocab_size = config.vocab_size
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
 
@@ -385,13 +385,13 @@ class MoELLaVAMistralForCausalLM(MistralForCausalLM, LlavaMetaForCausalLM):
         # import ipdb
         # ipdb.set_trace()
         hidden_states = outputs[0]
-        if self.config.pretraining_tp > 1:
-            assert NotImplementedError
-            lm_head_slices = self.lm_head.weight.split(self.vocab_size // self.config.pretraining_tp, dim=0)
-            logits = [F.linear(hidden_states, lm_head_slices[i]) for i in range(self.config.pretraining_tp)]
-            logits = torch.cat(logits, dim=-1)
-        else:
-            logits = self.lm_head(hidden_states)
+        # if self.config. pretraining_tp> 1:
+        #     assert NotImplementedError
+        #     lm_head_slices = self.lm_head.weight.split(self.vocab_size // self.config.pretraining_tp, dim=0)
+        #     logits = [F.linear(hidden_states, lm_head_slices[i]) for i in range(self.config.pretraining_tp)]
+        #     logits = torch.cat(logits, dim=-1)
+        # else:
+        logits = self.lm_head(hidden_states)
         logits = logits.float()
 
         loss = None

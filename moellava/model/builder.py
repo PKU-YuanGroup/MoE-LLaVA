@@ -315,7 +315,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                 else:
                     model = LlavaPhiForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
                 model.config.eos_token_id = tokenizer.eos_token_id
-            elif 'phi' in model_name.lower():
+            elif 'stablelm' in model_name.lower():
                 from moellava.model.language_model.stablelm.tokenization_arcade100k import Arcade100kTokenizer
                 tokenizer = Arcade100kTokenizer.from_pretrained(model_path, use_fast=False, padding_side=padding_side)
                 # print(tokenizer)

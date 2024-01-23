@@ -18,7 +18,8 @@ from typing import List, Optional, Tuple, Union
 import torch
 import torch.nn as nn
 
-from transformers import AutoConfig, AutoModelForCausalLM
+from transformers import AutoConfig, AutoModelForCausalLM, DynamicCache, Cache
+from transformers.modeling_attn_mask_utils import _prepare_4d_causal_attention_mask
 from .phi.configuration_phi import PhiConfig
 from .phi.modeling_phi import PhiModel, PhiForCausalLM
 
@@ -26,7 +27,7 @@ from transformers.modeling_outputs import CausalLMOutputWithPast
 
 from ..llava_arch import LlavaMetaModel, LlavaMetaForCausalLM
 
-# from deepspeed.moe.layer import MoE
+from deepspeed.moe.layer import MoE
 from dataclasses import dataclass
 from typing import Optional, Tuple, Union, List
 import torch.nn as nn
@@ -130,13 +131,13 @@ def MoEPhiDecoderLayer_forward(self):
         )
         attn_outputs = self.resid_dropout(attn_outputs)
 
-        hidden_states = self.resid_dropout(self.mlp(hidden_states))
+        hidden_states = self.mlp(hidden_states)
 
         moe_losses = []
         if len(hidden_states) == 3:
             moe_losses.append(hidden_states[1])
             hidden_states = hidden_states[0]
-        hidden_states = attn_outputs + hidden_states + residual
+        hidden_states = attn_outputs + self.resid_dropout(hidden_states) + residual
 
         outputs = (hidden_states,)
 
@@ -402,14 +403,27 @@ class MoELLaVAPhiForCausalLM(PhiForCausalLM, LlavaMetaForCausalLM):
             moe_loss_list=outputs.moe_loss_list,
         )
 
-    def prepare_inputs_for_generation(self, input_ids, past_key_values=None, inputs_embeds=None, **kwargs):
-        images = kwargs.pop("images", None)
-        _inputs = super().prepare_inputs_for_generation(
-            input_ids, past_key_values=past_key_values, inputs_embeds=inputs_embeds, **kwargs
+    def prepare_inputs_for_generation(
+            self, input_ids, past_key_values=None, attention_mask=None, inputs_embeds=None, **kwargs
+    ):
+        if past_key_values:
+            input_ids = input_ids[:, -1:]
+
+        # if `inputs_embeds` are passed, we only want to use them in the 1st generation step
+        if inputs_embeds is not None and past_key_values is None:
+            model_inputs = {"inputs_embeds": inputs_embeds}
+        else:
+            model_inputs = {"input_ids": input_ids}
+
+        model_inputs.update(
+            {
+                "past_key_values": past_key_values,
+                "use_cache": kwargs.get("use_cache"),
+                "attention_mask": attention_mask,
+                "images": kwargs.get("images", None),
+            }
         )
-        if images is not None:
-            _inputs['images'] = images
-        return _inputs
+        return model_inputs
 
     def initialize_moe_modules(self, model_args):
 

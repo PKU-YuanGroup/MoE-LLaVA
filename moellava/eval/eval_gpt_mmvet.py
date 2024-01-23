@@ -212,7 +212,8 @@ while need_more_runs():
                                 score = 0.0
                                 flag = False
                     grade_sample_run_complete = True
-                except:
+                except Exception as e:
+                    print(e)
                     # gpt4 may have token rate limit
                     print("sleep 1s")
                     time.sleep(1)

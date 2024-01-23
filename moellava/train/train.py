@@ -657,102 +657,6 @@ def preprocess_phi(
     )
 
 
-
-def preprocess_stablelm(
-    sources,
-    tokenizer: transformers.PreTrainedTokenizer,
-    has_image: bool = False
-) -> Dict:
-    conv = conversation_lib.default_conversation.copy()
-    roles = {"human": conv.roles[0], "gpt": conv.roles[1]}
-
-    # print('00000000000', sources)
-    # Apply prompt templates
-    conversations = []
-    # sys.exit()
-
-    # import ipdb
-    # ipdb.set_trace()
-    for i, source in enumerate(sources):
-        if roles[source[0]["from"]] != conv.roles[0]:
-            # Skip the first one if it is not from human
-            source = source[1:]
-
-        conv.messages = []
-        for j, sentence in enumerate(source):
-            role = roles[sentence["from"]]
-            assert role == conv.roles[j % 2], f"{i}"
-            conv.append_message(role, sentence["value"])
-        conversations.append(conv.get_prompt())
-    # print(11111111, conversations)
-    # Tokenize conversations
-    # print('before tokenizer_image_token', conversations)
-    if has_image:
-        input_ids = torch.stack([tokenizer_image_token(prompt, tokenizer, return_tensors='pt') for prompt in conversations], dim=0)
-        # print(2222222222222, input_ids.shape)
-    else:
-        input_ids = tokenizer(
-            conversations,
-            return_tensors="pt",
-            padding="longest",
-            max_length=tokenizer.model_max_length,
-            truncation=True,
-        ).input_ids
-
-    # print('after tokenizer_image_token input_ids targets', input_ids)
-    targets = input_ids.clone()
-
-    assert conv.sep_style == conversation_lib.SeparatorStyle.TWO
-    # print(tokenizer)
-    # Mask targets
-    sep = conv.sep + conv.roles[1] + ": "
-    # print('sep', sep)
-    for conversation, target in zip(conversations, targets):
-        total_len = int(target.ne(tokenizer.pad_token_id).sum()) + conversation.count(conv.sep2)  # pad_token_id == eos_token_id
-        # print('total_len', total_len)
-        rounds = conversation.split(conv.sep2)
-        # print('len(rounds)', len(rounds))
-        cur_len = 0
-        target[:cur_len] = IGNORE_INDEX
-        for i, rou in enumerate(rounds):
-            if rou == "":
-                break
-
-            parts = rou.split(sep)
-            # print('i rou, parts', i, rou, parts)
-            if len(parts) != 2:
-                break
-            parts[0] += sep
-            # print('after add sep rou, parts', rou, parts)
-
-            if has_image:
-                round_len = len(tokenizer_image_token(rou, tokenizer)) + 1  # for eos_token
-                instruction_len = len(tokenizer_image_token(parts[0], tokenizer)) - 1
-            else:
-                round_len = len(tokenizer(rou).input_ids) + 1  # for eos_token
-                instruction_len = len(tokenizer(parts[0]).input_ids) - 1
-            # print('round_len, instruction_len, target[cur_len : cur_len + instruction_len]',
-            #       round_len, instruction_len, target[cur_len : cur_len + instruction_len], target[cur_len : cur_len + round_len])
-            target[cur_len : cur_len + instruction_len] = IGNORE_INDEX  # instruction_len is before the answer
-
-            cur_len += round_len
-        target[cur_len:] = IGNORE_INDEX
-
-        if cur_len < tokenizer.model_max_length:
-            # import ipdb
-            # ipdb.set_trace()
-            if cur_len != total_len:
-                target[:] = IGNORE_INDEX
-                print(
-                    f"WARNING: tokenization mismatch: {cur_len} vs. {total_len}."
-                    f" (ignored)"
-                )
-    # print(input_ids, target)
-    return dict(
-        input_ids=input_ids,
-        labels=targets,
-    )
-
 def preprocess_mpt(
     sources,
     tokenizer: transformers.PreTrainedTokenizer,
@@ -864,7 +768,7 @@ def preprocess(
             conversation_lib.default_conversation.version.startswith("qwen"):  # for phi and qwen
         return preprocess_phi(sources, tokenizer, has_image=has_image)
     if conversation_lib.default_conversation.version.startswith("stablelm"):  # for stablelm
-        return preprocess_stablelm(sources, tokenizer, has_image=has_image)
+        return preprocess_phi(sources, tokenizer, has_image=has_image)
     if conversation_lib.default_conversation.version.startswith("v1"):
         return preprocess_v1(sources, tokenizer, has_image=has_image)
     if conversation_lib.default_conversation.version == "mpt":
@@ -1073,7 +977,7 @@ class DataCollatorForSupervisedDataset(object):
             attention_mask=input_ids.ne(self.tokenizer.pad_token_id),
         )
 
-        # print('after Collator', input_ids)
+        # print('after Collator', batch)
         # ======================================================================================================
         # origin image, if batch_size=6: [[image], [image], [video], [image, image], [video, video], [video, image]]
         '''
@@ -1208,6 +1112,12 @@ def train():
                     cache_dir=training_args.cache_dir,
                     **bnb_model_from_pretrained_args
                 )
+            elif 'stablelm' in model_args.model_name_or_path.lower():
+                model = MoELLaVAStablelmForCausalLM.from_pretrained(
+                    model_args.model_name_or_path,
+                    cache_dir=training_args.cache_dir,
+                    **bnb_model_from_pretrained_args
+                )
             else:
                 model = MoELLaVALlamaForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
@@ -1251,6 +1161,14 @@ def train():
             elif 'phi' in model_args.model_name_or_path.lower():
                 target_modules = [
                     'fc1', 'fc2'
+                ] if training_args.only_lora_ffn else find_all_linear_names(model, add_keywords=['wg'])
+            elif 'stablelm' in model_args.model_name_or_path.lower():
+                target_modules = [
+                    'up_proj', 'down_proj', 'gate_proj'
+                ] if training_args.only_lora_ffn else find_all_linear_names(model, add_keywords=['wg'])
+            elif 'openchat' in model_args.model_name_or_path.lower():
+                target_modules = [
+                    'up_proj', 'down_proj', 'gate_proj'
                 ] if training_args.only_lora_ffn else find_all_linear_names(model, add_keywords=['wg'])
             else:
                 target_modules = [
@@ -1332,7 +1250,7 @@ def train():
                 padding_side="right",
                 use_fast=False,
             )
-            tokenizer.unk_token = tokenizer.pad_token  # FIXME: DO SUPPORT ADD SPECIAL TOKENS
+            tokenizer.unk_token = '<|reg0|>'  # FIXME: DO SUPPORT ADD SPECIAL TOKENS
         else:
             tokenizer = transformers.AutoTokenizer.from_pretrained(
                 model_args.model_name_or_path,

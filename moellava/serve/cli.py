@@ -32,9 +32,13 @@ def main(args):
     tokenizer, model, processor, context_len = load_pretrained_model(args.model_path, args.model_base, model_name, args.load_8bit, args.load_4bit, device=args.device)
     image_processor = processor['image']
     if 'qwen' in model_name.lower():  # FIXME: first
-        conv_mode = "v1_qwen"
+        conv_mode = "qwen"
     elif 'openchat' in model_name.lower():  # FIXME: first
-        conv_mode = "v1_openchat"
+        conv_mode = "openchat"
+    elif 'phi' in model_name.lower():  # FIXME: first
+        conv_mode = "phi"
+    elif 'stablelm' in model_name.lower():  # FIXME: first
+        conv_mode = "stablelm"
     else:
         if 'llama-2' in model_name.lower():
             conv_mode = "llava_llama_2"
