@@ -52,7 +52,12 @@ MoE-LLaVA shows excellent performance in multi-modal learning.
 
 Highly recommend trying out our web demo by the following command, which incorporates all features currently supported by MoE-LLaVA. We also provide [online demo](https://huggingface.co/spaces/LanguageBind/MoE-LLaVA) in Huggingface Spaces.
 ```bash
-deepspeed moellava/serve/gradio_web_server.py --model-path "LanguageBind/MoE-LLaVA" 
+# use phi2
+deepspeed moellava/serve/gradio_web_server.py --model-path "LanguageBind/MoE-LLaVA-Phi2-2.7B-4e" 
+# use phi2
+deepspeed moellava/serve/gradio_web_server.py --model-path "LanguageBind/MoE-LLaVA-Qwen-1.8B-4e" 
+# use stablelm
+deepspeed moellava/serve/gradio_web_server.py --model-path "LanguageBind/MoE-LLaVA-StableLM-1.6B-4e" 
 ```
 
 * **CLI Inference**
