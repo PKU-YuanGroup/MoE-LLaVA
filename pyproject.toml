@@ -14,7 +14,7 @@ classifiers = [
 ]
 dependencies = [
     "torch==2.0.1", "torchvision==0.15.2",
-    "transformers==4.36.2", "tokenizers>=0.12.1,<0.14", "sentencepiece==0.1.99", "shortuuid",
+    "transformers==4.36.2", "tokenizers==0.15.1", "sentencepiece==0.1.99", "shortuuid",
     "accelerate==0.21.0", "peft==0.4.0", "bitsandbytes==0.41.0",
     "pydantic<2,>=1", "markdown2[all]", "numpy", "scikit-learn==1.2.2",
     "gradio==3.37.0", "gradio_client==0.7.0",
@@ -24,7 +24,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-train = ["deepspeed==0.12.6", "ninja", "wandb"]
+train = ["deepspeed==0.9.5", "ninja", "wandb"]
 
 [project.urls]
 "Homepage" = "https://github.com/PKU-YuanGroup/MoE-LLaVA"
