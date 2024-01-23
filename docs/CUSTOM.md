@@ -127,7 +127,7 @@ Remember the key for the registered dialogue conversation, such as `phi`. And mo
 
 #### Tokenizer
 
-For those tokenizers that can **not** add special tokens, such as StableLMTokenizer.
+For those tokenizers that can **not** add special tokens, such as `StableLMTokenizer`.
 
 First find all the special tokens of the tokenizer.
 
