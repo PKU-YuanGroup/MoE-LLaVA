@@ -42,8 +42,8 @@ MoE-LLaVA shows excellent performance in multi-modal learning.
 ### 🔥 High performance, but with fewer parameters
 - The sparse model with **3 billion parameters** outperformed the dense model with 7 billion parameters, demonstrating significant superiority in multi-modal learning.
 
-<p align="left">
-<img src="assets/res_img.jpg" width=80%>
+<p align="center">
+<img src="assets/intro.jpg" width=30%>
 </p>
 
 ## 🤗 Demo
