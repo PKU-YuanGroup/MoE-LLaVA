@@ -44,24 +44,24 @@ IMAGE_FOLDER
 Specify your `IMAGE_FOLDER` according to the data preparation.
 
 **Qwen**
-- Stage 1 pretraining script: [pretrain.sh](scripts/v1_5/qwen/pretrain.sh). 
-- Stage 2 tuning script: [finetune.sh](scripts/v1_5/qwen/finetune.sh).
-- Stage 3 moe-tuning script: [finetune_moe.sh](scripts/v1_5/qwen/finetune_moe.sh).
+- Stage 1 pretraining script: [pretrain.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1_5/qwen/pretrain.sh). 
+- Stage 2 tuning script: [finetune.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1_5/qwen/finetune.sh).
+- Stage 3 moe-tuning script: [finetune_moe.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1_5/qwen/finetune_moe.sh).
   
 **Phi2**
-- Stage 1 pretraining script: [pretrain.sh](scripts/v1_5/phi2/pretrain.sh). 
-- Stage 2 tuning script: [finetune.sh](scripts/v1_5/phi2/finetune.sh).
-- Stage 3 moe-tuning script: [finetune_moe.sh](scripts/v1_5/phi2/finetune_moe.sh).
+- Stage 1 pretraining script: [pretrain.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1_5/phi2/pretrain.sh). 
+- Stage 2 tuning script: [finetune.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1_5/phi2/finetune.sh).
+- Stage 3 moe-tuning script: [finetune_moe.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1_5/phi2/finetune_moe.sh).
   
 **StableLM**
-- Stage 1 pretraining script: [pretrain.sh](scripts/v1_5/stablelm/pretrain.sh). 
-- Stage 2 tuning script: [finetune.sh](scripts/v1_5/stablelm/finetune.sh).
-- Stage 3 moe-tuning script: [finetune_moe.sh](scripts/v1_5/stablelm/finetune_moe.sh).
+- Stage 1 pretraining script: [pretrain.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1_5/stablelm/pretrain.sh). 
+- Stage 2 tuning script: [finetune.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1_5/stablelm/finetune.sh).
+- Stage 3 moe-tuning script: [finetune_moe.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1_5/stablelm/finetune_moe.sh).
   
 **OpenChat**
-- Stage 1 pretraining script: [pretrain.sh](scripts/v1_5/openchat/pretrain.sh). 
-- Stage 2 tuning script: [finetune.sh](scripts/v1_5/openchat/finetune.sh).
-- Stage 3 moe-tuning script: [finetune_moe.sh](scripts/v1_5/openchat/finetune_moe.sh).
+- Stage 1 pretraining script: [pretrain.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1_5/openchat/pretrain.sh). 
+- Stage 2 tuning script: [finetune.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1_5/openchat/finetune.sh).
+- Stage 3 moe-tuning script: [finetune_moe.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1_5/openchat/finetune_moe.sh).
 
 
 ## LoRA Training
