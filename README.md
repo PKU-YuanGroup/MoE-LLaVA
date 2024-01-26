@@ -1,212 +1,117 @@
-<p align="center">
-    <img src="https://s11.ax1x.com/2023/12/28/piqvDMV.png" width="250" style="margin-bottom: 0.2;"/>
-<p>
-<h2 align="center"> <a href="">MoE-LLaVA: Mixture of Experts for Large Vision-Language Models</a></h2>
-<h5 align="center"> If you like our project, please give us a star ⭐ on GitHub for latest update.  </h2>
-
-<h5 align="center">
-    
-[![hf_space](https://img.shields.io/badge/🤗-Open%20In%20Spaces-blue.svg)](https://huggingface.co/spaces/LanguageBind/MoE-LLaVA)
-[![License](https://img.shields.io/badge/License-Apache%202.0-yellow)](https://github.com/PKU-YuanGroup/MoE-LLaVA/blob/main/LICENSE) 
-[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FPKU-YuanGroup%2FMoE-LLaVA&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=Visitor&edge_flat=false)](https://hits.seeyoufarm.com)
-[![GitHub issues](https://img.shields.io/github/issues/PKU-YuanGroup/MoE-LLaVA?color=critical&label=Issues)](https://github.com/PKU-YuanGroup/MoE-LLaVA/issues?q=is%3Aopen+is%3Aissue)
-[![GitHub closed issues](https://img.shields.io/github/issues-closed/PKU-YuanGroup/MoE-LLaVA?color=success&label=Issues)](https://github.com/PKU-YuanGroup/MoE-LLaVA/issues?q=is%3Aissue+is%3Aclosed)  <br>
-
-</h5>
-
-<details open><summary>💡 I also have other vision-language projects that may interest you ✨. </summary><p>
-<!--  may -->
-
-> [**Video-LLaVA: Learning United Visual Representation by Alignment Before Projection**](https://arxiv.org/abs/2311.10122) <br>
-> Bin Lin, Yang Ye, Bin Zhu, Jiaxi Cui, Munan Ning, Peng Jin, Li Yuan <br>
-[![github](https://img.shields.io/badge/-Github-black?logo=github)](https://github.com/PKU-YuanGroup/Video-LLaVA)  [![github](https://img.shields.io/github/stars/PKU-YuanGroup/Video-LLaVA.svg?style=social)](https://github.com/PKU-YuanGroup/Video-LLaVA) [![arXiv](https://img.shields.io/badge/Arxiv-2311.10122-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2311.10122) <br>
-
-> [**LanguageBind: Extending Video-Language Pretraining to N-modality by Language-based Semantic Alignment**](https://arxiv.org/abs/2310.01852) <br>
-> Bin Zhu, Bin Lin, Munan Ning, Yang Yan, Jiaxi Cui, HongFa Wang, Yatian Pang, Wenhao Jiang, Junwu Zhang, Zongwei Li, Wancai Zhang, Zhifeng Li, Wei Liu, Li Yuan <br>
-[![github](https://img.shields.io/badge/-Github-black?logo=github)](https://github.com/PKU-YuanGroup/LanguageBind)  [![github](https://img.shields.io/github/stars/PKU-YuanGroup/LanguageBind.svg?style=social)](https://github.com/PKU-YuanGroup/LanguageBind)  [![arXiv](https://img.shields.io/badge/Arxiv-2310.01852-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2310.01852) <br>
-
-</p></details>
-
-
-## 📰 News
-
-* **[2024.02.01]**  🤗[Hugging Face demo](https://huggingface.co/spaces/LanguageBind/MoE-LLaVA) and **all codes & datasets** are available now! Welcome to **watch** 👀 this repository for the latest updates.
-
-## 😮 Highlights
-
-MoE-LLaVA shows excellent performance in multi-modal learning.
-
-### 🚀 Simple baseline, learning multi-modal interactions with sparse pathways.
-- With the addition of **a simple MoE tuning stage**, we can complete the training of MoE-LLaVA on **8 V100 GPUs** within 2 days.
-
-### 🔥 High performance, but with fewer parameters
-- The sparse model with **3 billion parameters** outperformed the dense model with 7 billion parameters, demonstrating significant superiority in multi-modal learning.
-
-<p align="center">
-<img src="assets/intro.jpg" width=45%>
-</p>
-
-## 🤗 Demo
-
-* **Gradio Web UI**
-
-Highly recommend trying out our web demo by the following command, which incorporates all features currently supported by MoE-LLaVA. We also provide [online demo](https://huggingface.co/spaces/LanguageBind/MoE-LLaVA) in Huggingface Spaces.
-```bash
-# use phi2
-deepspeed --include localhost:0 moellava/serve/gradio_web_server.py --model-path "LanguageBind/MoE-LLaVA-Phi2-2.7B-4e" 
-# use phi2
-deepspeed --include localhost:0 moellava/serve/gradio_web_server.py --model-path "LanguageBind/MoE-LLaVA-Qwen-1.8B-4e" 
-# use stablelm
-deepspeed --include localhost:0 moellava/serve/gradio_web_server.py --model-path "LanguageBind/MoE-LLaVA-StableLM-1.6B-4e" 
-```
-
-* **CLI Inference**
-
-```bash
-# use phi2
-deepspeed --include localhost:0 moellava/serve/cli.py --model-path "LanguageBind/MoE-LLaVA-Phi2-2.7B-4e"  --image-file "image.jpg"
-# use qwen
-deepspeed --include localhost:0 moellava/serve/cli.py --model-path "LanguageBind/MoE-LLaVA-Qwen-1.8B-4e"  --image-file "image.jpg"
-# use stablelm
-deepspeed --include localhost:0 moellava/serve/cli.py --model-path "LanguageBind/MoE-LLaVA-StableLM-1.6B-4e"  --image-file "image.jpg"
-```
-
-<img src="assets/imagecli.gif" width="500" />
-
-## ⚙️ Requirements and Installation
-* Python >= 3.10
-* Pytorch == 2.0.1
-* CUDA Version >= 11.7
-* Install required packages:
-```bash
-git clone https://github.com/PKU-YuanGroup/MoE-LLaVA
-cd MoE-LLaVA
-conda create -n moellava python=3.10 -y
-conda activate moellava
-pip install --upgrade pip  # enable PEP 660 support
-pip install -e .
-pip install -e ".[train]"
-pip install flash-attn --no-build-isolation
-
-# Below are optional. For Qwen model.
-git clone https://github.com/Dao-AILab/flash-attention
-cd flash-attention && pip install .
-# Below are optional. Installing them might be slow.
-# pip install csrc/layer_norm
-# If the version of flash-attn is higher than 2.1.1, the following is not needed.
-# pip install csrc/rotary
-```
-
-## 🗝️ Training & Validating
-The training & validating instruction is in [TRAIN.md](docs/TRAIN.md) & [EVAL.md](docs/EVAL.md).
-
-## 💡 Customizing your MoE-LLaVA
-The instruction is in [CUSTOM.md](docs/CUSTOM.md).
-
-## 😍 Visualization
-The instruction is in [VISUALIZATION.md](docs/VISUALIZATION.md).
-
-## 🤖 API
-**We open source all codes.** If you want to load the model (e.g. ```LanguageBind/MoE-LLaVA```) on local, you can use the following code snippets.
-
-**Using the following command to run the code.**
-
-```bash
-deepspeed predict.py
-```
-
-```python
 import torch
-from moellava.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN
+
+# from moellava.constants import X_TOKEN_INDEX
+from transformers import TextStreamer
+
+from moellava.constants import IMAGE_TOKEN_INDEX
 from moellava.conversation import conv_templates, SeparatorStyle
+from moellava.mm_utils import get_model_name_from_path, KeywordsStoppingCriteria, tokenizer_image_token
 from moellava.model.builder import load_pretrained_model
 from moellava.utils import disable_torch_init
-from moellava.mm_utils import tokenizer_image_token, get_model_name_from_path, KeywordsStoppingCriteria
 
-def main():
-    disable_torch_init()
-    image = 'moellava/serve/examples/extreme_ironing.jpg'
-    inp = 'What is unusual about this image?'
-    model_path = 'LanguageBind/MoE-LLaVA-Phi2-2.7B-4e'  # LanguageBind/MoE-LLaVA-Qwen-1.8B-4e or LanguageBind/MoE-LLaVA-StableLM-1.6B-4e
-    device = 'cuda'
-    load_4bit, load_8bit = False, False  # FIXME: Deepspeed support 4bit or 8bit?
-    model_name = get_model_name_from_path(model_path)
-    tokenizer, model, processor, context_len = load_pretrained_model(model_path, None, model_name, load_8bit, load_4bit, device=device)
-    image_processor = processor['image']
-    conv_mode = "v1_qwen"
-    conv = conv_templates[conv_mode].copy()
-    roles = conv.roles
-    image_tensor = image_processor.preprocess(image, return_tensors='pt')['pixel_values'].to(model.device, dtype=torch.float16)
+title_markdown = ("""
+<div style="display: flex; justify-content: center; align-items: center; text-align: center;">
+  <a href="https://github.com/PKU-YuanGroup/MoE-LLaVA" style="margin-right: 20px; text-decoration: none; display: flex; align-items: center;">
+    <img src="https://s11.ax1x.com/2023/12/28/piqvDMV.png" alt="MoE-LLaVA🚀" style="max-width: 120px; height: auto;">
+  </a>
+  <div>
+    <h1 >MoE-LLaVA: Mixture of Experts for Large Vision-Language Models</h1>
+    <h5 style="margin: 0;">If you like our project, please give us a star ✨ on Github for the latest update.</h5>
+  </div>
+</div>
 
-    print(f"{roles[1]}: {inp}")
-    inp = DEFAULT_IMAGE_TOKEN + '\n' + inp
-    conv.append_message(conv.roles[0], inp)
-    conv.append_message(conv.roles[1], None)
-    prompt = conv.get_prompt()
-    input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').unsqueeze(0).cuda()
-    stop_str = conv.sep if conv.sep_style != SeparatorStyle.TWO else conv.sep2
-    keywords = [stop_str]
-    stopping_criteria = KeywordsStoppingCriteria(keywords, tokenizer, input_ids)
 
-    with torch.inference_mode():
-        output_ids = model.generate(
-            input_ids,
-            images=image_tensor,
-            do_sample=True,
-            temperature=0.2,
-            max_new_tokens=1024,
-            use_cache=True,
-            stopping_criteria=[stopping_criteria])
+<div align="center">
+    <div style="display:flex; gap: 0.25rem;" align="center">
+        <a href='https://github.com/PKU-YuanGroup/MoE-LLaVA'><img src='https://img.shields.io/badge/Github-Code-blue'></a>
+        <a href="https://arxiv.org/pdf/2310.01852.pdf"><img src="https://img.shields.io/badge/Arxiv-2310.01852-red"></a>
+        <a href='https://github.com/PKU-YuanGroup/MoE-LLaVA/stargazers'><img src='https://img.shields.io/github/stars/PKU-YuanGroup/MoE-LLaVA.svg?style=social'></a>
+    </div>
+</div>
+""")
 
-    outputs = tokenizer.decode(output_ids[0, input_ids.shape[1]:], skip_special_tokens=True).strip()
-    print(outputs)
-
-if __name__ == '__main__':
-    main()
-```
-
-## 🙌 Related Projects
-* [Video-LLaVA](https://github.com/PKU-YuanGroup/Video-LLaVA) This framework empowers the model to efficiently utilize the united visual tokens.
-* [LanguageBind](https://github.com/PKU-YuanGroup/LanguageBind) An open source five modalities language-based retrieval framework.
-
-## 👍 Acknowledgement
-* [LLaVA](https://github.com/haotian-liu/LLaVA) The codebase we built upon and it is an efficient large language and vision assistant.
-
-## 🔒 License
-* The majority of this project is released under the Apache 2.0 license as found in the [LICENSE](https://github.com/PKU-YuanGroup/MoE-LLaVA/blob/main/LICENSE) file.
-* The service is a research preview intended for non-commercial use only, subject to the model [License](https://github.com/facebookresearch/llama/blob/main/MODEL_CARD.md) of LLaMA, [Terms of Use](https://openai.com/policies/terms-of-use) of the data generated by OpenAI, and [Privacy Practices](https://chrome.google.com/webstore/detail/sharegpt-share-your-chatg/daiacboceoaocpibfodeljbdfacokfjb) of ShareGPT. Please contact us if you find any potential violation.
-
-<!--
-
-## ✏️ Citation
-If you find our paper and code useful in your research, please consider giving a star :star: and citation :pencil:.
-
-```BibTeX
-@article{lin2023video,
-  title={Video-LLaVA: Learning United Visual Representation by Alignment Before Projection},
-  author={Lin, Bin and Zhu, Bin and Ye, Yang and Ning, Munan and Jin, Peng and Yuan, Li},
-  journal={arXiv preprint arXiv:2311.10122},
-  year={2023}
+block_css = """
+#buttons button {
+    min-width: min(120px,100%);
 }
-```
+"""
 
-```BibTeX
-@article{zhu2023languagebind,
-  title={LanguageBind: Extending Video-Language Pretraining to N-modality by Language-based Semantic Alignment},
-  author={Zhu, Bin and Lin, Bin and Ning, Munan and Yan, Yang and Cui, Jiaxi and Wang, HongFa and Pang, Yatian and Jiang, Wenhao and Zhang, Junwu and Li, Zongwei and others},
-  journal={arXiv preprint arXiv:2310.01852},
-  year={2023}
-}
-```
--->
+tos_markdown = ("""
+### Terms of use
+By using this service, users are required to agree to the following terms:
+The service is a research preview intended for non-commercial use only. It only provides limited safety measures and may generate offensive content. It must not be used for any illegal, harmful, violent, racist, or sexual purposes. The service may collect user dialogue data for future research.
+Please click the "Flag" button if you get any inappropriate answer! We will collect those to keep improving our moderator.
+For an optimal experience, please use desktop computers for this demo, as mobile devices may compromise its quality.
+""")
 
-<!--
-## ✨ Star History
-[![Star History](https://api.star-history.com/svg?repos=PKU-YuanGroup/MoE-LLaVA&type=Date)](https://star-history.com/#PKU-YuanGroup/MoE-LLaVA&Date)
--->
+learn_more_markdown = ("""
+### License
+The service is a research preview intended for non-commercial use only, subject to the model [License](https://github.com/facebookresearch/llama/blob/main/MODEL_CARD.md) of LLaMA, [Terms of Use](https://openai.com/policies/terms-of-use) of the data generated by OpenAI, and [Privacy Practices](https://chrome.google.com/webstore/detail/sharegpt-share-your-chatg/daiacboceoaocpibfodeljbdfacokfjb) of ShareGPT. Please contact us if you find any potential violation.
+""")
 
-## 🤝 Contributors
 
-<a href="https://github.com/PKU-YuanGroup/MoE-LLaVA/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=PKU-YuanGroup/MoE-LLaVA" />
-</a>
+class Chat:
+    def __init__(self, model_path, conv_mode, model_base=None, load_8bit=False, load_4bit=False, device='cuda'):
+        disable_torch_init()
+        model_name = get_model_name_from_path(model_path)
+        self.tokenizer, self.model, processor, context_len = load_pretrained_model(model_path, model_base, model_name,
+                                                                                   load_8bit, load_4bit,
+                                                                                   device=device)
+        self.image_processor = processor['image']
+        self.video_processor = processor['video']
+        self.conv_mode = conv_mode
+        self.device = self.model.device
+        print(self.model)
+
+    def get_prompt(self, qs, state):
+        state.append_message(state.roles[0], qs)
+        state.append_message(state.roles[1], None)
+        return state
+
+    @torch.inference_mode()
+    def generate(self, images_tensor: list, prompt: str, first_run: bool, state):
+        tokenizer, model, image_processor = self.tokenizer, self.model, self.image_processor
+
+        state = self.get_prompt(prompt, state)
+        prompt = state.get_prompt()
+        print('\n\n\n')
+        print(prompt)
+
+        input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').unsqueeze(0).to(
+            self.device)
+
+        temperature = 0.2
+
+        max_new_tokens = 1024
+
+        stop_str = conv_templates[self.conv_mode].copy().sep if conv_templates[
+                                                                    self.conv_mode].copy().sep_style != SeparatorStyle.TWO else \
+        conv_templates[self.conv_mode].copy().sep2
+        keywords = [stop_str]
+        stopping_criteria = KeywordsStoppingCriteria(keywords, tokenizer, input_ids)
+        streamer = TextStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
+
+        with torch.inference_mode():
+            output_ids = model.generate(
+                input_ids,
+                images=images_tensor,
+                do_sample=True,
+                temperature=temperature,
+                max_new_tokens=max_new_tokens,
+                streamer=streamer,
+                use_cache=True,
+                stopping_criteria=[stopping_criteria])
+
+        input_token_len = input_ids.shape[1]
+        n_diff_input_output = (input_ids != output_ids[:, :input_token_len]).sum().item()
+        if n_diff_input_output > 0:
+            print(f'[Warning] {n_diff_input_output} output_ids are not the same as the input_ids')
+        outputs = tokenizer.batch_decode(output_ids[:, input_token_len:], skip_special_tokens=True)[0]
+        outputs = outputs.strip()
+        if outputs.endswith(stop_str):
+            outputs = outputs[:-len(stop_str)]
+        outputs = outputs.strip()
+
+        print('response', outputs)
+        return outputs, state
+
