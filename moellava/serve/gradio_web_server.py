@@ -8,10 +8,7 @@ from fastapi import FastAPI
 import os
 from PIL import Image
 import tempfile
-try:
-    from decord import VideoReader, cpu
-except:
-    pass
+from decord import VideoReader, cpu
 from transformers import TextStreamer
 
 from moellava.conversation import conv_templates, SeparatorStyle, Conversation
@@ -116,6 +113,7 @@ args = parser.parse_args()
 # if auto_mpi_discovery and not all(map(lambda v: v in os.environ, required_env)):
 
 model_path = args.model_path
+
 if 'qwen' in model_path.lower():  # FIXME: first
     conv_mode = "qwen"
 elif 'openchat' in model_path.lower():  # FIXME: first
@@ -125,19 +123,12 @@ elif 'phi' in model_path.lower():  # FIXME: first
 elif 'stablelm' in model_path.lower():  # FIXME: first
     conv_mode = "stablelm"
 else:
-    if 'llama-2' in model_path.lower():
-        conv_mode = "llava_llama_2"
-    elif "v1" in model_path.lower():
-        conv_mode = "llava_v1"
-    elif "mpt" in model_path.lower():
-        conv_mode = "mpt"
-    else:
-        conv_mode = "llava_v0"
+    conv_mode = "v1"
 device = 'cuda'
 load_8bit = False
-load_4bit = False
+load_4bit = False if 'moe' in model_path.lower() else True
 dtype = torch.half
-handler = Chat(model_path, conv_mode=conv_mode, load_8bit=load_8bit, load_4bit=load_8bit, device=device)
+handler = Chat(model_path, conv_mode=conv_mode, load_8bit=load_8bit, load_4bit=load_4bit, device=device)
 handler.model.to(dtype=dtype)
 if not os.path.exists("temp"):
     os.makedirs("temp")
