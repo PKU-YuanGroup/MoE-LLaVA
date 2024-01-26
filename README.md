@@ -60,6 +60,12 @@ deepspeed --include localhost:0 moellava/serve/gradio_web_server.py --model-path
 deepspeed --include localhost:0 moellava/serve/gradio_web_server.py --model-path "LanguageBind/MoE-LLaVA-StableLM-1.6B-4e" 
 ```
 
+
+
+https://github.com/PKU-YuanGroup/MoE-LLaVA/assets/62638829/8541aac6-9ef6-4fde-aa94-80d0375b9bdb
+
+
+
 * **CLI Inference**
 
 ```bash
