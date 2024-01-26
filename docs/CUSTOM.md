@@ -192,7 +192,7 @@ Remember the key for the registered dialogue conversation, such as `stablelm`. A
 
 ### LlamaTokenizer
 
-If the behavior of your tokenizer is consistent with `LlamaTokenizer`. You can just use the already defined conversation template. Beware of the differences brought about by different transformers versions, we recommend using `LlamaTokenizer` on version 4.31.0.
+If the behavior of your tokenizer is consistent with `LlamaTokenizer`. You can just use the already defined conversation template. Beware of the differences brought about by different transformers versions, **we strongly recommend using `LlamaTokenizer` on version 4.31.0**.
 
 For example, for the `LlamaTokenizer`, `bos_token` is `<s>`, `eos_token` is `</s>`, and `unk_token` is `<unk>`.
 When the tokenizer encodes one sentence, the resulting output should include the `bos_token_id`. In following example, the `bos_token_id` is 1.
