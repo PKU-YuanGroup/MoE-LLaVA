@@ -77,7 +77,7 @@ deepspeed --include localhost:0 moellava/serve/cli.py --model-path "LanguageBind
 deepspeed --include localhost:0 moellava/serve/cli.py --model-path "LanguageBind/MoE-LLaVA-StableLM-1.6B-4e"  --image-file "image.jpg"
 ```
 
-<img src="assets/imagecli.gif" width="500" />
+<img src="assets/imagecli.gif" />
 
 ## ⚙️ Requirements and Installation
 * Python >= 3.10
