@@ -30,7 +30,7 @@
 
 ## 📰 News
 
-* **[2024.02.01]**  🤗[Hugging Face demo](https://huggingface.co/spaces/LanguageBind/MoE-LLaVA) and **all codes & datasets** are available now! Welcome to **watch** 👀 this repository for the latest updates.
+* **[2024.02.01]**  🤗[Hugging Face demo](https://huggingface.co/spaces/LanguageBind/MoE-LLaVA) and **all codes & datasets** are available now! The [paper](https://github.com/PKU-YuanGroup/MoE-LLaVA/blob/main/MoE-LLaVA.pdf) is released. Welcome to **watch** 👀 this repository for the latest updates.
 
 ## 😮 Highlights
 
