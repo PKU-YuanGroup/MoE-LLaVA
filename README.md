@@ -84,6 +84,8 @@ deepspeed --include localhost:0 moellava/serve/cli.py --model-path "LanguageBind
 * Python >= 3.10
 * Pytorch == 2.0.1
 * CUDA Version >= 11.7
+* **Transformers == 4.36.2**
+* **Tokenizers==0.15.1**
 * Install required packages:
 ```bash
 git clone https://github.com/PKU-YuanGroup/MoE-LLaVA
