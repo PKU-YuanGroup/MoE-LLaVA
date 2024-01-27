@@ -142,7 +142,7 @@ def main():
     model_name = get_model_name_from_path(model_path)
     tokenizer, model, processor, context_len = load_pretrained_model(model_path, None, model_name, load_8bit, load_4bit, device=device)
     image_processor = processor['image']
-    conv_mode = "v1_qwen"
+    conv_mode = "phi"  # qwen or stablelm
     conv = conv_templates[conv_mode].copy()
     roles = conv.roles
     image_tensor = image_processor.preprocess(image, return_tensors='pt')['pixel_values'].to(model.device, dtype=torch.float16)
