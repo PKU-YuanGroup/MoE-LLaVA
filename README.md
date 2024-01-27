@@ -80,6 +80,17 @@ deepspeed --include localhost:0 moellava/serve/cli.py --model-path "LanguageBind
 
 <img src="assets/imagecli.gif" />
 
+## 🐳 Model Zoo
+
+| Model | LLM | Checkpoint | Avg | VQAv2 | GQA | VizWiz | SQA | T-VQA | POPE | MM-Bench | MM-Vet |
+|----------|-----------|-----------|---|---|---|---|---|---|---|---|---|
+| MoE-LLaVA-1.6B×4-Top2 | 1.6B | [LanguageBind/MoE-LLaVA-StableLM-1.6B-4e](https://huggingface.co/LanguageBind/MoE-LLaVA-StableLM-1.6B-4e) | 56.7 | 76.0 | 60.4 | 37.2 | 62.6 | 47.8 | 84.3 | 59.4 | 26.1 |
+| MoE-LLaVA-1.8B×4-Top2 | 1.8B | [LanguageBind/MoE-LLaVA-Qwen-1.8B-4e](https://huggingface.co/LanguageBind/MoE-LLaVA-Qwen-1.8B-4e) | 56.5 | 76.2 | 61.2 | 32.3 | 62.3 | 47.7 | 87.0 | 59.8 | 25.3 |
+| MoE-LLaVA-2.7B×4-Top2 | 2.7B | [LanguageBind/MoE-LLaVA-Phi2-2.7B-4e](https://huggingface.co/LanguageBind/MoE-LLaVA-Phi2-2.7B-4e) | 60.3 | 77.1 | 61.1 | 43.4 | 68.7 | 50.2 | 85.0 | 65.5 | 31.1 |
+| LLaVA-1.5 | 7B | [liuhaotian/llava-v1.5-7b](https://huggingface.co/liuhaotian/llava-v1.5-7b) | 62.0 | 78.5 | 62.0 | 50.0 | 66.8 | 58.2 | 85.9 | 64.3 | 31.1 |
+| LLaVA-1.5 | 13B | [liuhaotian/llava-v1.5-13b](https://huggingface.co/liuhaotian/llava-v1.5-13b) | 64.9 | 80.0 | 63.3 | 53.6 | 71.6 | 61.3 | 85.9 | 67.7 | 36.1 |
+
+
 ## ⚙️ Requirements and Installation
 * Python >= 3.10
 * Pytorch == 2.0.1
