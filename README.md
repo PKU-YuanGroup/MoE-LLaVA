@@ -36,9 +36,6 @@
 
 MoE-LLaVA shows excellent performance in multi-modal learning.
 
-### 🚀 Simple baseline, learning multi-modal interactions with sparse pathways.
-- With the addition of **a simple MoE tuning stage**, we can complete the training of MoE-LLaVA on **8 V100 GPUs** within 2 days.
-
 ### 🔥 High performance, but with fewer parameters
 - The sparse model with **3 billion parameters** outperformed the dense model with 7 billion parameters, demonstrating significant superiority in multi-modal learning.
 
@@ -46,9 +43,12 @@ MoE-LLaVA shows excellent performance in multi-modal learning.
 <img src="assets/intro.jpg" width=55%>
 </p>
 
+### 🚀 Simple baseline, learning multi-modal interactions with sparse pathways.
+- With the addition of **a simple MoE tuning stage**, we can complete the training of MoE-LLaVA on **8 V100 GPUs** within 2 days.
+
 ## 🤗 Demo
 
-* **Gradio Web UI**
+### Gradio Web UI
 
 Highly recommend trying out our web demo by the following command, which incorporates all features currently supported by MoE-LLaVA. We also provide [online demo](https://huggingface.co/spaces/LanguageBind/MoE-LLaVA) in Huggingface Spaces.
 ```bash
@@ -66,7 +66,7 @@ https://github.com/PKU-YuanGroup/MoE-LLaVA/assets/62638829/8541aac6-9ef6-4fde-aa
 
 
 
-* **CLI Inference**
+### CLI Inference
 
 ```bash
 # use phi2
