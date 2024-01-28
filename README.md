@@ -48,7 +48,7 @@ MoE-LLaVA shows excellent performance in multi-modal learning.
 - With the addition of **a simple MoE tuning stage**, we can complete the training of MoE-LLaVA on **8 V100 GPUs** within 2 days.
 
 <p align="center">
-<img src="assets/intro.jpg" width=75%>
+<img src="assets/intro.jpg" width=65%>
 </p>
 
 ## 🤗 Demo
