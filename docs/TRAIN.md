@@ -3,7 +3,7 @@
 - The LLaVA-PT is from [LLaVA](https://github.com/haotian-liu/LLaVA).
 - The Hybird-FT is from [SViT](https://github.com/BAAI-DCAI/Visual-Instruction-Tuning), [LVIS](https://github.com/X2FD/LVIS-INSTRUCT4V), [LRV](https://github.com/FuxiaoLiu/LRV-Instruction), [MIMIC-IT](https://github.com/Luodian/Otter).
 - The LLaVA-FT is from [LLaVA](https://github.com/haotian-liu/LLaVA).
-- Download the training annotations. You can download from [Baidu Disk](https://pan.baidu.com/s/1rwub9o0T3_7ZHbPZzCiLZw?pwd=0yhi), [Google Disk](https://drive.google.com/file/d/13YxtVowfhUIpGOCODhKFstoRBvogF4od/view?usp=sharing), [Peking University Disk]() or [Hugging Face](https://huggingface.co/datasets/LanguageBind/MoE-LLaVA)
+- Download the training annotations. You can download from [Baidu Disk](https://pan.baidu.com/s/1rwub9o0T3_7ZHbPZzCiLZw?pwd=0yhi), [Google Disk](https://drive.google.com/file/d/13YxtVowfhUIpGOCODhKFstoRBvogF4od/view?usp=sharing), [Peking University Disk](https://disk.pku.edu.cn/link/AA10683317FB824FB9B2427A6B268EAADB) or [Hugging Face](https://huggingface.co/datasets/LanguageBind/MoE-LLaVA/tree/main/train_json)
 
 
 We also provide the processed data as follows. The link is to BaiDu Disk.
@@ -24,7 +24,7 @@ We also provide the processed data as follows. The link is to BaiDu Disk.
 </table>
 </div>
 
-For those who can not easily access to BaiDu Disk, you can download data from [Hugging Face](https://huggingface.co/datasets/LanguageBind/MoE-LLaVA).
+**For those who can not easily access to BaiDu Disk**, you can download data from [Hugging Face](https://huggingface.co/datasets/LanguageBind/MoE-LLaVA).
 
 After downloading all of them, organize the data as follows in ```IMAGE_FOLDER```. 
 
@@ -41,7 +41,7 @@ IMAGE_FOLDER
 
 
 ## Training
-Specify your `IMAGE_FOLDER` according to the data preparation.
+Specify your `IMAGE_FOLDER` and `JSON_FOLDER` according to the data preparation.
 
 **Qwen**
 - Stage 1 pretraining script: [pretrain.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1_5/qwen/pretrain.sh). 
