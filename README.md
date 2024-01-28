@@ -41,11 +41,15 @@ MoE-LLaVA shows excellent performance in multi-modal learning.
 - with just **3B sparsely activated parameters**, MoE-LLaVA demonstrates performance comparable to the LLaVA-1.5-7B on various visual understanding datasets and even surpasses the LLaVA-1.5-13B in object hallucination benchmarks.
 
 <p align="center">
-<img src="assets/intro.jpg" width=75%>
+<img src="assets/intro0.jpg" width=55%>
 </p>
 
 ### 🚀 Simple baseline, learning multi-modal interactions with sparse pathways.
 - With the addition of **a simple MoE tuning stage**, we can complete the training of MoE-LLaVA on **8 V100 GPUs** within 2 days.
+
+<p align="center">
+<img src="assets/intro.jpg" width=75%>
+</p>
 
 ## 🤗 Demo
 
