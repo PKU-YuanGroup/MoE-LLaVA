@@ -59,6 +59,9 @@ Specify your `IMAGE_FOLDER` and `JSON_FOLDER` according to the data preparation.
 - Stage 3 moe-tuning script: [finetune_moe.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1_5/stablelm/finetune_moe.sh).
   
 **OpenChat**
+
+OpenChat seems to have bugs in `transformer==4.36.2`. Please `pip install transformers==4.34.2`.
+
 - Stage 1 pretraining script: [pretrain.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1_5/openchat/pretrain.sh). 
 - Stage 2 tuning script: [finetune.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1_5/openchat/finetune.sh).
 - Stage 3 moe-tuning script: [finetune_moe.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1_5/openchat/finetune_moe.sh).
