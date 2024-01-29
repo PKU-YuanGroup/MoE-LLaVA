@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "moellava"
 version = "1.0.0"
-description = "Towards GPT-4 like large language and visual assistant."
+description = "Mixture-of-Experts for Large Vision-Language Models."
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
@@ -20,11 +20,11 @@ dependencies = [
     "gradio==3.37.0", "gradio_client==0.7.0",
     "requests", "httpx==0.24.0", "uvicorn", "fastapi",
     "einops==0.6.1", "einops-exts==0.0.4", "timm==0.6.13",
-    "protobuf==4.24.4", "tiktoken==0.5.2",
+    "protobuf==4.24.4", "tiktoken==0.5.2"
 ]
 
 [project.optional-dependencies]
-train = ["deepspeed==0.9.5", "ninja", "wandb"]
+train = ["deepspeed==0.9.5", "ninja", "wandb", "tensorboardX==2.6.2.2"]
 
 [project.urls]
 "Homepage" = "https://github.com/PKU-YuanGroup/MoE-LLaVA"
