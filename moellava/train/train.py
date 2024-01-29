@@ -1215,6 +1215,12 @@ def train():
                     cache_dir=training_args.cache_dir,
                     **bnb_model_from_pretrained_args
                 )
+            elif 'openchat' in model_args.model_name_or_path.lower():
+                model = MoELLaVAMistralForCausalLM.from_pretrained(
+                    model_args.model_name_or_path,
+                    cache_dir=training_args.cache_dir,
+                    **bnb_model_from_pretrained_args
+                )
             elif 'stablelm' in model_args.model_name_or_path.lower():
                 model = MoELLaVAStablelmForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
