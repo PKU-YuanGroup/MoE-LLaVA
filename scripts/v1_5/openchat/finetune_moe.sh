@@ -14,7 +14,7 @@ HF_DATASETS_OFFLINE=1 TRANSFORMERS_OFFLINE=1 deepspeed moellava/train/train_mem.
     --train_modules fc1 fc2 wg \
     --deepspeed ./scripts/zero2.json \
     --model_name_or_path ./checkpoints/llavaopenchat-7b-finetune \
-    --version phi \
+    --version openchat \
     --data_path ${JSON_FOLDER}/llava_image_tune_.json ${JSON_FOLDER}/nlp_tune.json \
     --image_folder ${IMAGE_FOLDER} \
     --image_tower openai/clip-vit-large-patch14-336 \
