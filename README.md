@@ -88,7 +88,7 @@ deepspeed --include localhost:0 moellava/serve/cli.py --model-path "LanguageBind
 ## 🐳 Model Zoo
 
 | Model | Activated Param | Checkpoint | Avg | VQAv2 | GQA | VizWiz | SQA | T-VQA | POPE | MM-Bench | MM-Vet |
-|----------|-----------|-----------|---|---|---|---|---|---|---|---|---|---|
+|----------|-----------|-----------|---|---|---|---|---|---|---|---|---|
 | MoE-LLaVA-1.6B×4-Top2 | 2.0B | [LanguageBind/MoE-LLaVA-StableLM-1.6B-4e](https://huggingface.co/LanguageBind/MoE-LLaVA-StableLM-1.6B-4e) | 56.6 | 76.0 | 60.4 | 37.2 | 62.6 | 47.8 | 84.3 | 59.4 | 26.1 |
 | MoE-LLaVA-1.8B×4-Top2 | 2.2B | [LanguageBind/MoE-LLaVA-Qwen-1.8B-4e](https://huggingface.co/LanguageBind/MoE-LLaVA-Qwen-1.8B-4e) | 56.7 | 76.2 | 61.5 | 32.6 | 63.1 | 48.0 | 87.0 | 59.6 | 25.3 |
 | MoE-LLaVA-2.7B×4-Top2 | 3.6B | [LanguageBind/MoE-LLaVA-Phi2-2.7B-4e](https://huggingface.co/LanguageBind/MoE-LLaVA-Phi2-2.7B-4e) | 60.3 | 77.1 | 61.1 | 43.4 | 68.7 | 50.2 | 85.0 | 65.5 | 31.1 |
