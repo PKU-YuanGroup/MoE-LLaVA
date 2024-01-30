@@ -6,7 +6,7 @@ cd ~/MoE-LLaVA
 HF_DATASETS_OFFLINE=1 TRANSFORMERS_OFFLINE=1 deepspeed moellava/train/train_mem.py \
     --deepspeed ./scripts/zero2.json \
     --model_name_or_path stabilityai/stablelm-2-1_6b \
-    --version phi \
+    --version stablelm \
     --data_path ${JSON_FOLDER}/la_tune_256k.json \
                 ${JSON_FOLDER}/lrv_tune_331k.json ${JSON_FOLDER}/lvis_tune_220k_.json \
                 ${JSON_FOLDER}/svit_tune_157k.json ${JSON_FOLDER}/nlp_tune.json \
