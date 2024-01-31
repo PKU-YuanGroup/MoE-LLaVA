@@ -10,6 +10,7 @@
 
 [![hf_space](https://img.shields.io/badge/🤗-Open%20In%20Spaces-blue.svg)](https://huggingface.co/spaces/LanguageBind/MoE-LLaVA)
 [![arXiv](https://img.shields.io/badge/Arxiv-2401.15947-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2401.15947) 
+[![jiqizhixin](https://img.shields.io/badge/-WeChat@机器之心-000000?logo=wechat&logoColor=07C160)](https://mp.weixin.qq.com/s/ICylR6n2LhqQRS0CAHFI1A)
 [![License](https://img.shields.io/badge/License-Apache%202.0-yellow)](https://github.com/PKU-YuanGroup/MoE-LLaVA/blob/main/LICENSE) 
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FPKU-YuanGroup%2FMoE-LLaVA&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=Visitor&edge_flat=false)](https://hits.seeyoufarm.com)
 [![GitHub issues](https://img.shields.io/github/issues/PKU-YuanGroup/MoE-LLaVA?color=critical&label=Issues)](https://github.com/PKU-YuanGroup/MoE-LLaVA/issues?q=is%3Aopen+is%3Aissue)
@@ -31,7 +32,7 @@
 
 
 ## 📰 News
-* **[2024.01.30]**  🔥 We release a stronger [MoE-LLaVA-Phi2](https://huggingface.co/LanguageBind/MoE-LLaVA-Phi2-2.7B-4e-384) that trained on 384×384, which surpasses LLaVA-1.5-7B on 6 out of 9 benchmarks using 3.6B activated parameters.
+* **[2024.01.30]**  🔥 We release a stronger [MoE-LLaVA-Phi2](https://huggingface.co/LanguageBind/MoE-LLaVA-Phi2-2.7B-4e-384). **The average performance surpasses LLaVA-1.5-7B by using 3.6B activated parameters,** checking our [model zoo](https://github.com/PKU-YuanGroup/MoE-LLaVA?tab=readme-ov-file#-model-zoo).
 * **[2024.01.27]**  🤗 [Hugging Face demo](https://huggingface.co/spaces/LanguageBind/MoE-LLaVA) and **all codes & datasets** are available now! Welcome to **watch** 👀 this repository for the latest updates.
 
 ## 😮 Highlights
@@ -98,6 +99,19 @@ deepspeed --include localhost:0 moellava/serve/cli.py --model-path "LanguageBind
 <!--
 | LLaVA-1.5 | 13B | [liuhaotian/llava-v1.5-13b](https://huggingface.co/liuhaotian/llava-v1.5-13b) | 64.9 | 80.0 | 63.3 | 53.6 | 71.6 | 61.3 | 85.9 | 67.7 | 36.1 |
 -->
+
+<details>
+<summary>Pretrain Model</summary>
+
+| Model  | Checkpoint |
+|----------|-----------|
+| MoE-LLaVA-1.6B×4-Top2 | [LanguageBind/MoE-LLaVA-StableLM-Pretrain](https://huggingface.co/LanguageBind/MoE-LLaVA-StableLM-Pretrain) |
+| MoE-LLaVA-1.8B×4-Top2 | [LanguageBind/MoE-LLaVA-Qwen-Pretrain](https://huggingface.co/LanguageBind/MoE-LLaVA-Qwen-Pretrain) |
+| MoE-LLaVA-2.7B×4-Top2 | [LanguageBind/MoE-LLaVA-Phi2-Pretrain](https://huggingface.co/LanguageBind/MoE-LLaVA-Phi2-Pretrain) |
+| MoE-LLaVA-2.7B×4-Top2-384 | [LanguageBind/MoE-LLaVA-Phi2-384-Pretrain](https://huggingface.co/LanguageBind/MoE-LLaVA-Phi2-384-Pretrain) |
+
+
+</details>
 
 ## ⚙️ Requirements and Installation
 * Python >= 3.10
