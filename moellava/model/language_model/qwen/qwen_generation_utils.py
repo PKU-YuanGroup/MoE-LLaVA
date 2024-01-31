@@ -67,13 +67,13 @@ def get_ltor_masks_and_position_ids(
         # Loop through the batches:
         for b in range(micro_batch_size):
 
-            # Find indecies where EOD token is.
+            # Find indices where EOD token is.
             eod_index = position_ids[b, data[b] == eod_token]
-            # Detach indecies from positions if going to modify positions.
+            # Detach indices from positions if going to modify positions.
             if reset_position_ids:
                 eod_index = eod_index.clone()
 
-            # Loop through EOD indecies:
+            # Loop through EOD indices:
             prev_index = 0
             for j in range(eod_index.size()[0]):
                 i = eod_index[j]
