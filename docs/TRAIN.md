@@ -43,6 +43,8 @@ IMAGE_FOLDER
 ## Training
 Specify your `IMAGE_FOLDER` and `JSON_FOLDER` according to the data preparation.
 
+For training on 384 resolution, we use `google/siglip-so400m-patch14-384` as `image_tower`. Notably, if you pass the `--image_tower google/siglip-so400m-patch14-384`, you should upgrade the version of transformers to 4.37.0.
+
 **Qwen**
 - Stage 1 pretraining script: [pretrain.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1_5/qwen/pretrain.sh). 
 - Stage 2 tuning script: [finetune.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1_5/qwen/finetune.sh).
