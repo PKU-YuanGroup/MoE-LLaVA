@@ -149,7 +149,7 @@ The instruction is in [CUSTOM.md](docs/CUSTOM.md).
 The instruction is in [VISUALIZATION.md](docs/VISUALIZATION.md).
 
 ## 🤖 API
-**We open source all codes.** If you want to load the model (e.g. ```LanguageBind/MoE-LLaVA```) on local, you can use the following code snippets.
+**We open source all codes.** If you want to load the model (e.g. ```LanguageBind/MoE-LLaVA-Phi2-2.7B-4e```) on local, you can use the following code snippets.
 
 **Using the following command to run the code.**
 
