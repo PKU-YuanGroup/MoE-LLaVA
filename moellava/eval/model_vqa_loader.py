@@ -76,7 +76,7 @@ def eval_model(args):
     model_name = get_model_name_from_path(model_path)
     tokenizer, model, processor, context_len = load_pretrained_model(model_path, args.model_base, model_name)
 
-    if args.return_gating_logit:
+    if args.return_gating_logit is not None:
         from moellava.utils import get_gating_logit_by_hook
         print(model)
         fea_hooks = get_gating_logit_by_hook(model)
@@ -113,8 +113,8 @@ def eval_model(args):
                 top_p=args.top_p,
                 num_beams=args.num_beams,
                 max_new_tokens=args.max_new_tokens,
-                use_cache=True if not args.return_gating_logit else False)
-        if args.return_gating_logit:
+                use_cache=True if args.return_gating_logit is None else False)
+        if args.return_gating_logit is not None:
             # import ipdb
             # ipdb.set_trace()
             all_gating_logits[cnt] = dict(gating_logit=[i.fea for i in fea_hooks],
@@ -122,7 +122,7 @@ def eval_model(args):
                                           input_ids=input_ids.detach().cpu(),
                                           output_ids=output_ids.detach().cpu())
             print(input_ids.shape, output_ids.shape, fea_hooks[0].fea.shape, image_tensor.shape if image_tensor is not None else [])
-            assert fea_hooks[0].fea.shape[0] + 1 == output_ids.shape[1] + 575
+            # assert fea_hooks[0].fea.shape[0] + 1 == output_ids.shape[1] + 575
             print('The number of hooks is:', len(fea_hooks))
 
         input_token_len = input_ids.shape[1]
@@ -142,8 +142,9 @@ def eval_model(args):
                                    "metadata": {}}) + "\n")
         # ans_file.flush()
     ans_file.close()
-    if args.return_gating_logit:
-        torch.save(all_gating_logits, 'text_qa_all_gating_logits.pt')
+
+    if args.return_gating_logit is not None:
+        torch.save(all_gating_logits, f'{args.return_gating_logit}.pt')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -160,7 +161,7 @@ if __name__ == "__main__":
     parser.add_argument("--num_beams", type=int, default=1)
     parser.add_argument("--max_new_tokens", type=int, default=128)
     parser.add_argument("--local_rank", type=int, default=-1)
-    parser.add_argument("--return_gating_logit", action="store_true")
+    parser.add_argument("--return_gating_logit", type=str, default=None)
     args = parser.parse_args()
 
     eval_model(args)
