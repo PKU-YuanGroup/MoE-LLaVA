@@ -160,6 +160,7 @@ deepspeed --include localhost:0 predict.py
 
 ```python
 import torch
+from PIL import Image
 from moellava.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN
 from moellava.conversation import conv_templates, SeparatorStyle
 from moellava.model.builder import load_pretrained_model
@@ -179,7 +180,7 @@ def main():
     conv_mode = "phi"  # qwen or stablelm
     conv = conv_templates[conv_mode].copy()
     roles = conv.roles
-    image_tensor = image_processor.preprocess(image, return_tensors='pt')['pixel_values'].to(model.device, dtype=torch.float16)
+    image_tensor = image_processor.preprocess(Image.open(image).convert('RGB'), return_tensors='pt')['pixel_values'].to(model.device, dtype=torch.float16)
 
     print(f"{roles[1]}: {inp}")
     inp = DEFAULT_IMAGE_TOKEN + '\n' + inp
