@@ -93,7 +93,7 @@ deepspeed --include localhost:0 moellava/serve/cli.py --model-path "LanguageBind
 |----------|-----------|-----------|---|---|---|---|---|---|---|---|---|
 | MoE-LLaVA-1.6B×4-Top2 | 2.0B | [LanguageBind/MoE-LLaVA-StableLM-1.6B-4e](https://huggingface.co/LanguageBind/MoE-LLaVA-StableLM-1.6B-4e) | 57.3 | 76.7 | 60.3 | 36.2 | 62.6 | 50.1 | 85.7 | 60.2 | 26.9 |
 | MoE-LLaVA-1.8B×4-Top2 | 2.2B | [LanguageBind/MoE-LLaVA-Qwen-1.8B-4e](https://huggingface.co/LanguageBind/MoE-LLaVA-Qwen-1.8B-4e) | 56.7 | 76.2 | 61.5 | 32.6 | 63.1 | 48.0 | 87.0 | 59.6 | 25.3 |
-| MoE-LLaVA-2.7B×4-Top2 | 3.6B | [LanguageBind/MoE-LLaVA-Phi2-2.7B-4e](https://huggingface.co/LanguageBind/MoE-LLaVA-Phi2-2.7B-4e) | 61.0 | 77.1 | 61.4 | 43.9 | 68.4 | 51.4 | 86.3 | 65.2 | 34.3 |
+| MoE-LLaVA-2.7B×4-Top2 | 3.6B | [LanguageBind/MoE-LLaVA-Phi2-2.7B-4e](https://huggingface.co/LanguageBind/MoE-LLaVA-Phi2-2.7B-4e) | 61.1 | 77.6 | 61.4 | 43.9 | 68.5 | 51.4 | 86.3 | 65.2 | 34.3 |
 | MoE-LLaVA-2.7B×4-Top2-384 | 3.6B | [LanguageBind/MoE-LLaVA-Phi2-2.7B-4e-384](https://huggingface.co/LanguageBind/MoE-LLaVA-Phi2-2.7B-4e-384) | 62.9 | 79.9 | 62.6 | 43.7 | 70.3 | 57.0 | 85.7 | 68.0 | 35.9 |
 | LLaVA-1.5 | 7B | [liuhaotian/llava-v1.5-7b](https://huggingface.co/liuhaotian/llava-v1.5-7b) | 62.0 | 78.5 | 62.0 | 50.0 | 66.8 | 58.2 | 85.9 | 64.3 | 30.5 |
 
