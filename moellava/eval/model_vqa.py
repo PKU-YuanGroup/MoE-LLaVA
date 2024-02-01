@@ -32,13 +32,21 @@ def eval_model(args):
     model_path = os.path.expanduser(args.model_path)
     model_name = get_model_name_from_path(model_path)
     tokenizer, model, processor, context_len = load_pretrained_model(model_path, args.model_base, model_name)
+    if args.return_gating_logit is not None:
+        from moellava.utils import get_gating_logit_by_hook
+        print(model)
+        fea_hooks = get_gating_logit_by_hook(model)
+        all_gating_logits = {}
     image_processor = processor['image']
     questions = [json.loads(q) for q in open(os.path.expanduser(args.question_file), "r")]
     questions = get_chunk(questions, args.num_chunks, args.chunk_idx)
     answers_file = os.path.expanduser(args.answers_file)
     os.makedirs(os.path.dirname(answers_file), exist_ok=True)
     ans_file = open(answers_file, "w")
+
+    cnt = -1
     for line in tqdm(questions):
+        cnt += 1
         idx = line["question_id"]
         image_file = line["image"]
         qs = line["text"]
@@ -72,8 +80,19 @@ def eval_model(args):
                 num_beams=args.num_beams,
                 # no_repeat_ngram_size=3,
                 max_new_tokens=1024,
-                use_cache=True)
+                use_cache=True if args.return_gating_logit is None else False,
+            )
 
+        if args.return_gating_logit is not None:
+            # import ipdb
+            # ipdb.set_trace()
+            all_gating_logits[cnt] = dict(gating_logit=[i.fea for i in fea_hooks],
+                                          images=image_tensor.unsqueeze(0) if image_tensor.unsqueeze(0) is None else image_tensor.unsqueeze(0).detach().cpu(),
+                                          input_ids=input_ids.detach().cpu(),
+                                          output_ids=output_ids.detach().cpu())
+            print(input_ids.shape, output_ids.shape, fea_hooks[0].fea.shape, image_tensor.unsqueeze(0).shape if image_tensor.unsqueeze(0) is not None else [])
+            # assert fea_hooks[0].fea.shape[0] + 1 == output_ids.shape[1] + 575
+            print('The number of hooks is:', len(fea_hooks))
         input_token_len = input_ids.shape[1]
         n_diff_input_output = (input_ids != output_ids[:, :input_token_len]).sum().item()
         if n_diff_input_output > 0:
@@ -94,6 +113,9 @@ def eval_model(args):
         ans_file.flush()
     ans_file.close()
 
+    if args.return_gating_logit is not None:
+        torch.save(all_gating_logits, f'{args.return_gating_logit}.pt')
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model-path", type=str, default="facebook/opt-350m")
@@ -108,6 +130,7 @@ if __name__ == "__main__":
     parser.add_argument("--top_p", type=float, default=None)
     parser.add_argument("--num_beams", type=int, default=1)
     parser.add_argument("--local_rank", type=int, default=-1)
+    parser.add_argument("--return_gating_logit", type=str, default=None)
     args = parser.parse_args()
 
     eval_model(args)
