@@ -33,7 +33,7 @@
 
 
 ## 📰 News
-* **[2024.01.30]**  🔥 We release a stronger [MoE-LLaVA-Phi2](https://huggingface.co/LanguageBind/MoE-LLaVA-Phi2-2.7B-4e-384). **The average performance surpasses LLaVA-1.5-7B by using 3.6B activated parameters,** checking our [model zoo](#-model-zoo).
+* **[2024.01.30]**  🔥 We release a stronger [MoE-LLaVA-Phi2](https://huggingface.co/LanguageBind/MoE-LLaVA-Phi2-2.7B-4e-384). **The average performance surpasses LLaVA-1.5-7B by using 3.6B sparse activated parameters,** checking our [model zoo](#-model-zoo).
 * **[2024.01.27]**  🤗 [Hugging Face demo](https://huggingface.co/spaces/LanguageBind/MoE-LLaVA) and **all codes & datasets** are available now! Welcome to **watch** 👀 this repository for the latest updates.
 
 ## 😮 Highlights
