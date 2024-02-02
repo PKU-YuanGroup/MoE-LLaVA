@@ -57,7 +57,7 @@ MoE-LLaVA shows excellent performance in multi-modal learning.
 
 ## 🤗 Demo
 
-### Gradio Web UI
+### Gradio Web UI  <a href='https://github.com/gradio-app/gradio'><img src='https://img.shields.io/github/stars/gradio-app/gradio'></a> 
 
 Highly recommend trying out our web demo by the following command, which incorporates all features currently supported by MoE-LLaVA. We also provide [online demo](https://huggingface.co/spaces/LanguageBind/MoE-LLaVA) in Huggingface Spaces.
 ```bash
