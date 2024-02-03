@@ -10,7 +10,8 @@ from moellava.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN, DEFAULT_I
 from moellava.conversation import conv_templates, SeparatorStyle
 from moellava.model.builder import load_pretrained_model
 from moellava.utils import disable_torch_init
-from moellava.mm_utils import tokenizer_image_token, process_images, load_image_from_base64, get_model_name_from_path
+from moellava.mm_utils import tokenizer_image_token, process_images, load_image_from_base64, get_model_name_from_path, \
+    KeywordsStoppingCriteria
 
 from PIL import Image
 import math
@@ -57,6 +58,11 @@ def eval_model(args):
     model_path = os.path.expanduser(args.model_path)
     model_name = get_model_name_from_path(model_path)
     tokenizer, model, processor, context_len = load_pretrained_model(model_path, args.model_base, model_name)
+    if args.return_gating_logit is not None:
+        from moellava.utils import get_gating_logit_by_hook
+        print(model)
+        fea_hooks = get_gating_logit_by_hook(model)
+        all_gating_logits = {}
     image_processor = processor['image']
     questions = pd.read_table(os.path.expanduser(args.question_file))
     questions = get_chunk(questions, args.num_chunks, args.chunk_idx)
@@ -68,6 +74,7 @@ def eval_model(args):
         args.conv_mode = args.conv_mode + '_mmtag'
         print(f'It seems that this is a plain model, but it is not using a mmtag prompt, auto switching to {args.conv_mode}.')
 
+    cnt = -1
     for index, row in tqdm(questions.iterrows(), total=len(questions)):
         options = get_options(row, all_options)
         cur_option_char = all_options[:len(options)]
@@ -78,6 +85,7 @@ def eval_model(args):
             num_rounds = 1
 
         for round_idx in range(num_rounds):
+            cnt += 1
             idx = row['index']
             question = row['question']
             hint = row['hint']
@@ -108,7 +116,10 @@ def eval_model(args):
             image_tensor = process_images([image], image_processor, model.config)[0]
             # image_tensor = image_processor.preprocess(image, return_tensors='pt')['pixel_values'][0]
 
+            conv = conv_templates[args.conv_mode].copy()
             stop_str = conv.sep if conv.sep_style != SeparatorStyle.TWO else conv.sep2
+            keywords = [stop_str]
+            stopping_criteria = [KeywordsStoppingCriteria(keywords, tokenizer, input_ids)]
 
             with torch.inference_mode():
                 output_ids = model.generate(
@@ -120,7 +131,22 @@ def eval_model(args):
                     num_beams=args.num_beams,
                     # no_repeat_ngram_size=3,
                     max_new_tokens=1024,
-                    use_cache=True)
+                    use_cache=True if args.return_gating_logit is None else False, 
+                    stopping_criteria=stopping_criteria
+                )
+
+            if args.return_gating_logit is not None:
+                # import ipdb
+                # ipdb.set_trace()
+                all_gating_logits[cnt] = dict(gating_logit=[i.fea for i in fea_hooks],
+                                              images=image_tensor.unsqueeze(0) if image_tensor.unsqueeze(
+                                                  0) is None else image_tensor.unsqueeze(0).detach().cpu(),
+                                              input_ids=input_ids.detach().cpu(),
+                                              output_ids=output_ids.detach().cpu())
+                print(input_ids.shape, output_ids.shape, fea_hooks[0].fea.shape,
+                      image_tensor.unsqueeze(0).shape if image_tensor.unsqueeze(0) is not None else [])
+                # assert fea_hooks[0].fea.shape[0] + 1 == output_ids.shape[1] + 575
+                print('The number of hooks is:', len(fea_hooks))
 
             input_token_len = input_ids.shape[1]
             n_diff_input_output = (input_ids != output_ids[:, :input_token_len]).sum().item()
@@ -149,6 +175,9 @@ def eval_model(args):
             cur_option_char = cur_option_char[1:] + cur_option_char[:1]
     ans_file.close()
 
+    if args.return_gating_logit is not None:
+        torch.save(all_gating_logits, f'{args.return_gating_logit}.pt')
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model-path", type=str, default="facebook/opt-350m")
@@ -166,6 +195,7 @@ if __name__ == "__main__":
     parser.add_argument("--single-pred-prompt", action="store_true")
     parser.add_argument("--lang", type=str, default="en")
     parser.add_argument("--local_rank", type=int, default=-1)
+    parser.add_argument("--return_gating_logit", type=str, default=None)
     args = parser.parse_args()
 
     eval_model(args)
