@@ -66,10 +66,12 @@ def eval_model(args):
         image = Image.open(os.path.join(args.image_folder, image_file))
         image_tensor = image_processor.preprocess(image, return_tensors='pt')['pixel_values'][0]
 
+
+        conv = conv_templates[args.conv_mode].copy()
         stop_str = conv.sep if conv.sep_style != SeparatorStyle.TWO else conv.sep2
         keywords = [stop_str]
-        stopping_criteria = KeywordsStoppingCriteria(keywords, tokenizer, input_ids)
-
+        stopping_criteria = [KeywordsStoppingCriteria(keywords, tokenizer, input_ids)]
+        
         with torch.inference_mode():
             output_ids = model.generate(
                 input_ids,
@@ -81,6 +83,7 @@ def eval_model(args):
                 # no_repeat_ngram_size=3,
                 max_new_tokens=1024,
                 use_cache=True if args.return_gating_logit is None else False,
+                stopping_criteria=stopping_criteria
             )
 
         if args.return_gating_logit is not None:
