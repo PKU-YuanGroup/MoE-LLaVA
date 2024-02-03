@@ -9,9 +9,9 @@ JSON_FOLDER="ft_json"
 IMAGE_FOLDER="train_image_video"
 cd ~/MoE-LLaVA
 HF_DATASETS_OFFLINE=1 TRANSFORMERS_OFFLINE=1 deepspeed moellava/train/train_mem.py \
-    --moe_enable True --num_experts ${num_experts} --top_k_experts ${top_k_experts} \
+    --moe_enable True --num_experts ${num_experts} --top_k_experts ${top_k_experts} --capacity_factor 1.5 \
     --moe_mode ${moe_mode} --use_residual ${use_residual} --router_aux_loss_coef ${router_aux_loss_coef} \
-    --train_modules fc1 fc2 wg \
+    --train_modules mlp.w1 mlp.w2 mlp.c_proj wg \
     --deepspeed ./scripts/zero2.json \
     --model_name_or_path ./checkpoints/llavaqwen-1.8b-finetune \
     --version qwen \
