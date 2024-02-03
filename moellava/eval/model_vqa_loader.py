@@ -9,7 +9,7 @@ from moellava.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN, DEFAULT_I
 from moellava.conversation import conv_templates, SeparatorStyle
 from moellava.model.builder import load_pretrained_model
 from moellava.utils import disable_torch_init
-from moellava.mm_utils import tokenizer_image_token, process_images, get_model_name_from_path
+from moellava.mm_utils import tokenizer_image_token, process_images, get_model_name_from_path, KeywordsStoppingCriteria
 from torch.utils.data import Dataset, DataLoader
 
 from PIL import Image
@@ -104,6 +104,11 @@ def eval_model(args):
 
         input_ids = input_ids.to(device='cuda', non_blocking=True)
 
+        conv = conv_templates[args.conv_mode].copy()
+        stop_str = conv.sep if conv.sep_style != SeparatorStyle.TWO else conv.sep2
+        keywords = [stop_str]
+        stopping_criteria = [KeywordsStoppingCriteria(keywords, tokenizer, input_ids)]
+
         with torch.inference_mode():
             output_ids = model.generate(
                 input_ids,
@@ -113,7 +118,9 @@ def eval_model(args):
                 top_p=args.top_p,
                 num_beams=args.num_beams,
                 max_new_tokens=args.max_new_tokens,
-                use_cache=True if args.return_gating_logit is None else False)
+                use_cache=True if args.return_gating_logit is None else False,
+                stopping_criteria=stopping_criteria
+            )
         if args.return_gating_logit is not None:
             # import ipdb
             # ipdb.set_trace()
