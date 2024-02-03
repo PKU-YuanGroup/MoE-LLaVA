@@ -9,6 +9,8 @@
 
 
 [![hf_space](https://img.shields.io/badge/🤗-Open%20In%20Spaces-blue.svg)](https://huggingface.co/spaces/LanguageBind/MoE-LLaVA)
+[![Replicate demo and cloud API](https://replicate.com/camenduru/moe-llava/badge)](https://replicate.com/camenduru/moe-llava)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/camenduru/MoE-LLaVA-jupyter/blob/main/MoE_LLaVA_jupyter.ipynb)
 [![hf_space](https://img.shields.io/badge/🤗-Paper%20In%20HF-red.svg)](https://huggingface.co/papers/2401.15947)
 [![arXiv](https://img.shields.io/badge/Arxiv-2401.15947-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2401.15947) 
 [![jiqizhixin](https://img.shields.io/badge/-WeChat@机器之心-000000?logo=wechat&logoColor=07C160)](https://mp.weixin.qq.com/s/ICylR6n2LhqQRS0CAHFI1A)
@@ -34,6 +36,7 @@
 
 ## 📰 News
 * **[2024.02.03]**  🎉 We release a stronger [MoE-LLaVA-StableLM](https://huggingface.co/LanguageBind/MoE-LLaVA-StableLM-1.8B-4e-384). The average performance is close to LLaVA-1.5-7B by using **2.0B** sparse activated parameters, checking our [model zoo](#-model-zoo).
+* **[2024.02.02]**  🤝 Enjoying the [![Replicate demo and cloud API](https://replicate.com/camenduru/moe-llava/badge)](https://replicate.com/camenduru/moe-llava) and [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/camenduru/MoE-LLaVA-jupyter/blob/main/MoE_LLaVA_jupyter.ipynb), created by [@camenduru](https://github.com/camenduru), who generously supports our research!
 * **[2024.02.01]**  🔥 People who cannot access HF can now download the model through the <img src="https://github.com/PKU-YuanGroup/MoE-LLaVA/raw/main/assets/modelscope_logo.png" width="20px" style="max-width: 100%;"> model scope, checking our [model zoo](#-model-zoo).
 * **[2024.01.30]**  🔥 We release a stronger [MoE-LLaVA-Phi2](https://huggingface.co/LanguageBind/MoE-LLaVA-Phi2-2.7B-4e-384). The average performance **surpasses LLaVA-1.5-7B by using 3.6B** sparse activated parameters, checking our [model zoo](#-model-zoo).
 * **[2024.01.27]**  🤗 [Hugging Face demo](https://huggingface.co/spaces/LanguageBind/MoE-LLaVA) and **all codes & datasets** are available now! Welcome to **watch** 👀 this repository for the latest updates.
