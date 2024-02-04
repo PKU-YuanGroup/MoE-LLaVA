@@ -119,7 +119,7 @@ bash scripts/v1_5/eval/moe_llava/gqa.sh
 
 **LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/llava/vizwiz.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/moe_llava/vizwiz.sh
 ```
 **MoE-based** model
 ```Shell
@@ -135,7 +135,7 @@ bash scripts/v1_5/eval/moe_llava/vizwiz.sh
 
 **LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/llava/sqa.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/moe_llava/sqa.sh
 ```
 **MoE-based** model
 ```Shell
@@ -150,7 +150,7 @@ bash scripts/v1_5/eval/moe_llava/sqa.sh
 
 **LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/llava/textvqa.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/moe_llava/textvqa.sh
 ```
 **MoE-based** model
 ```Shell
@@ -165,13 +165,27 @@ bash scripts/v1_5/eval/moe_llava/textvqa.sh
 
 **LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/llava/pope.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/moe_llava/pope.sh
 ```
 **MoE-based** model
 ```Shell
 bash scripts/v1_5/eval/moe_llava/pope.sh
 ```
 
+### MME
+1. Download the data following the official instructions [here](https://github.com/BradyFU/Awesome-Multimodal-Large-Language-Models/tree/Evaluation).
+2. Downloaded images to `MME_Benchmark_release_version`.
+3. Put the official `eval_tool` and `MME_Benchmark_release_version` under `eval/MME`.
+4. Single-GPU inference and evaluate.
+
+**LLaVA-based** model
+```Shell
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/moe_llava/mme.sh
+```
+**MoE-based** model
+```Shell
+bash scripts/v1_5/eval/moe_llava/mme.sh
+```
 
 ### MMBench
 
@@ -180,7 +194,7 @@ bash scripts/v1_5/eval/moe_llava/pope.sh
 
 **LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/llava/mmbench.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/moe_llava/mmbench.sh
 ```
 **MoE-based** model
 ```Shell
@@ -196,7 +210,7 @@ bash scripts/v1_5/eval/moe_llava/mmbench.sh
 
 **LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/llava/llavabench.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/moe_llava/llavabench.sh
 ```
 **MoE-based** model
 ```Shell
@@ -211,7 +225,7 @@ bash scripts/v1_5/eval/moe_llava/llavabench.sh
 
 **LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/llava/mmvet.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/moe_llava/mmvet.sh
 ```
 **MoE-based** model
 ```Shell
