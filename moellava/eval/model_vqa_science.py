@@ -32,7 +32,7 @@ def eval_model(args):
     model_path = os.path.expanduser(args.model_path)
     model_name = get_model_name_from_path(model_path)
     tokenizer, model, processor, context_len = load_pretrained_model(model_path, args.model_base, model_name)
-    if args.return_gating_logit:
+    if args.return_gating_logit is not None:
         from moellava.utils import get_gating_logit_by_hook
         print(model)
         fea_hooks = get_gating_logit_by_hook(model)
@@ -43,7 +43,10 @@ def eval_model(args):
     answers_file = os.path.expanduser(args.answers_file)
     os.makedirs(os.path.dirname(answers_file), exist_ok=True)
     ans_file = open(answers_file, "w")
+
+    cnt = -1
     for i, line in enumerate(tqdm(questions)):
+        cnt += 1
         idx = line["id"]
         question = line['conversations'][0]
         qs = question['value'].replace('<image>', '').strip()
@@ -73,9 +76,10 @@ def eval_model(args):
 
         input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').unsqueeze(0).cuda()
 
+        conv = conv_templates[args.conv_mode].copy()
         stop_str = conv.sep if conv.sep_style != SeparatorStyle.TWO else conv.sep2
         keywords = [stop_str]
-        stopping_criteria = [KeywordsStoppingCriteria(keywords, tokenizer, input_ids)] if conv.version == "v0" else None
+        stopping_criteria = [KeywordsStoppingCriteria(keywords, tokenizer, input_ids)]
 
         with torch.inference_mode():
             output_ids = model.generate(
@@ -84,13 +88,19 @@ def eval_model(args):
                 do_sample=True if args.temperature > 0 else False,
                 temperature=args.temperature,
                 max_new_tokens=1024,
-                use_cache=True if not args.return_gating_logit else False,
+                use_cache=True if args.return_gating_logit is None else False,
                 stopping_criteria=stopping_criteria,
             )
-        if args.return_gating_logit:
-            all_gating_logits[idx] = dict(gating_logit=fea_hooks, images=images if images is None else images.detach().cpu(), input_ids=input_ids.detach().cpu())
-            print(input_ids.shape, images.shape if images is not None else [])
-            print('The number of hooks is:', len(fea_hooks), 'The shape of the first gating logit is:', fea_hooks[0].fea.shape)
+        if args.return_gating_logit is not None:
+            # import ipdb
+            # ipdb.set_trace()
+            all_gating_logits[cnt] = dict(gating_logit=[i.fea for i in fea_hooks],
+                                          images=images if images is None else images.detach().cpu(),
+                                          input_ids=input_ids.detach().cpu(),
+                                          output_ids=output_ids.detach().cpu())
+            print(input_ids.shape, output_ids.shape, fea_hooks[0].fea.shape, images.shape if images is not None else [])
+            # assert fea_hooks[0].fea.shape[0] + 1 == output_ids.shape[1] + 575
+            print('The number of hooks is:', len(fea_hooks))
         # print(output_ids)
         # import ipdb
         # ipdb.set_trace()
@@ -142,8 +152,8 @@ def eval_model(args):
         ans_file.flush()
     ans_file.close()
 
-    if args.return_gating_logit:
-        torch.save(all_gating_logits, 'vqa_science_all_gating_logits.pt')
+    if args.return_gating_logit is not None:
+        torch.save(all_gating_logits, f'{args.return_gating_logit}.pt')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -159,7 +169,7 @@ if __name__ == "__main__":
     parser.add_argument("--answer-prompter", action="store_true")
     parser.add_argument("--single-pred-prompt", action="store_true")
     parser.add_argument("--local_rank", type=int, default=-1)
-    parser.add_argument("--return_gating_logit", action="store_true")
+    parser.add_argument("--return_gating_logit", type=str, default=None)
     args = parser.parse_args()
 
     eval_model(args)
