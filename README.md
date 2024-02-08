@@ -35,7 +35,10 @@
 </p></details>
 
 
-## 📰 News
+## 📣 News
+* ⏳⏳⏳ Training a stronger model that using datasets proposed by LLaVA-1.6 and supporting a higher image resolution (e.g 768 × 768).
+
+* ⏳⏳⏳ Training MoE-LLaVA-Qwen1.5 to support Chinese better.
 * **[2024.02.03]**  🎉 We release a stronger [MoE-LLaVA-StableLM](https://huggingface.co/LanguageBind/MoE-LLaVA-StableLM-1.8B-4e-384). The average performance is close to LLaVA-1.5-7B by using **2.0B** sparse activated parameters, checking our [model zoo](#-model-zoo).
 * **[2024.02.02]**  🤝 Enjoying the [![Replicate demo and cloud API](https://replicate.com/camenduru/moe-llava/badge)](https://replicate.com/camenduru/moe-llava) and [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/camenduru/MoE-LLaVA-jupyter/blob/main/MoE_LLaVA_jupyter.ipynb), created by [@camenduru](https://github.com/camenduru), who generously supports our research!
 * **[2024.02.01]**  🔥 People who cannot access HF can now download the model through the <img src="https://github.com/PKU-YuanGroup/MoE-LLaVA/raw/main/assets/modelscope_logo.png" width="20px" style="max-width: 100%;"> model scope, checking our [model zoo](#-model-zoo).
@@ -54,7 +57,7 @@ MoE-LLaVA shows excellent performance in multi-modal learning.
 </p>
 
 ### 🚀 Simple baseline, learning multi-modal interactions with sparse pathways.
-- With the addition of **a simple MoE tuning stage**, we can complete the training of MoE-LLaVA on **8 V100 GPUs** within 2 days.
+- With the addition of **a simple MoE tuning stage**, we can complete the training of MoE-LLaVA on **8 A100 GPUs** within 1 days.
 
 <p align="center">
 <img src="assets/intro.jpg" width=65%>
@@ -233,13 +236,11 @@ if __name__ == '__main__':
 If you find our paper and code useful in your research, please consider giving a star :star: and citation :pencil:.
 
 ```BibTeX
-@misc{lin2024moellava,
-      title={MoE-LLaVA: Mixture of Experts for Large Vision-Language Models}, 
-      author={Bin Lin and Zhenyu Tang and Yang Ye and Jiaxi Cui and Bin Zhu and Peng Jin and Junwu Zhang and Munan Ning and Li Yuan},
-      year={2024},
-      eprint={2401.15947},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV}
+@article{lin2024moe,
+  title={MoE-LLaVA: Mixture of Experts for Large Vision-Language Models},
+  author={Lin, Bin and Tang, Zhenyu and Ye, Yang and Cui, Jiaxi and Zhu, Bin and Jin, Peng and Zhang, Junwu and Ning, Munan and Yuan, Li},
+  journal={arXiv preprint arXiv:2401.15947},
+  year={2024}
 }
 ```
 
