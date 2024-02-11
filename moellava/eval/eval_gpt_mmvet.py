@@ -19,7 +19,7 @@ args = parser.parse_args()
 
 
 
-openai.api_base = ''
+
 openai.api_key = ""
 gpt_model = "gpt-4-0613"
 
