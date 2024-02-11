@@ -18,12 +18,9 @@ parser.add_argument('--result_path')
 args = parser.parse_args()
 
 
-# openai.api_base = 'https://api.chatgptid.net/v1'
-# openai.api_key = "sk-3BypRvJabon5hkcXA4457e957e7d4a28Ad5f96Ca2bE64a6e"
-# gpt_model = "gpt-3.5-turbo"
 
-openai.api_base = 'https://api.chatify.me/v1'
-openai.api_key = "sk-CtsnEOwT9ZFZtqtRFfEcA589DcC54b6e8404D5B1095f97Db"
+openai.api_base = ''
+openai.api_key = ""
 gpt_model = "gpt-4-0613"
 
 
