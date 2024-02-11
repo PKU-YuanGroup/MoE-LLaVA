@@ -19,7 +19,7 @@ python3 scripts/convert_mmvet_for_eval.py \
     --dst ${EVAL}/mm-vet/results/${CKPT_NAME}.json
 
 
-python3 scripts/eval_gpt_mmvet.py \
+python3 moellava/eval/eval_gpt_mmvet.py \
     --mmvet_path ${EVAL}/mm-vet \
     --ckpt_name ${CKPT_NAME} \
     --result_path ${EVAL}/mm-vet/results
