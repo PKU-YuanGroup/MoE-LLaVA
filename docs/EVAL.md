@@ -180,7 +180,7 @@ bash scripts/v1_5/eval/moe_llava/pope.sh
 
 **LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/moe_llava/mme.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/llava/mme.sh
 ```
 **MoE-based** model
 ```Shell
@@ -194,7 +194,7 @@ bash scripts/v1_5/eval/moe_llava/mme.sh
 
 **LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/moe_llava/mmbench.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/llava/mmbench.sh
 ```
 **MoE-based** model
 ```Shell
@@ -202,6 +202,43 @@ bash scripts/v1_5/eval/moe_llava/mmbench.sh
 ```
 
 3. Submit the results to the [evaluation server](https://opencompass.org.cn/leaderboard-multimodal): `eval/mmbench/answers_upload/mmbench_dev_20230712`.
+
+
+### MMBench-CN
+
+1. Download [`mmbench_dev_cn_20231003.tsv`](https://download.openmmlab.com/mmclassification/datasets/mmbench/mmbench_dev_cn_20231003.tsv) and put under `eval/mmbench`.
+2. Single-GPU inference.
+
+**LLaVA-based** model
+```Shell
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/llava/mmbench_cn.sh
+```
+**MoE-based** model
+```Shell
+bash scripts/v1_5/eval/moe_llava/mmbench_cn.sh
+```
+
+3. Submit the results to the [evaluation server](https://opencompass.org.cn/leaderboard-multimodal): `eval/mmbench/answers_upload/mmbench_dev_cn_20231003`.
+
+
+### SEED-Bench
+
+1. Following the official [instructions](https://github.com/AILab-CVC/SEED-Bench/blob/main/DATASET.md) to download the images and the videos. Put images under `eval/seed_bench/SEED-Bench-image`.
+2. Extract the video frame in the middle from the downloaded videos, and put them under `eval/seed_bench/SEED-Bench-video-image`.
+3. Multiple-GPU inference and evaluate.
+
+**LLaVA-based** model
+```Shell
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 bash scripts/v1_5/eval/llava/seed.sh
+```
+**MoE-based** model
+```Shell
+bash scripts/v1_5/eval/moe_llava/seed.sh
+```
+
+4. Optionally, submit the results to the leaderboard: `eval/seed_bench/answers_upload` using the official jupyter notebook.
+
+
 
 ### LLaVA-Bench-in-the-Wild
 
