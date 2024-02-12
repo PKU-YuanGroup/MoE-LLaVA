@@ -11,7 +11,7 @@ CKPT="checkpoints/${CKPT_NAME}"
 EVAL="eval"
 
 for IDX in $(seq 0 $((CHUNKS-1))); do
-    deepspeed moellava/eval/model_vqa_loader.py \
+    deepspeed --include localhost:${GPULIST[$IDX]} --master_port $((${GPULIST[$IDX]} + 29501)) moellava/eval/model_vqa_loader.py \
         --model-path ${CKPT} \
         --question-file ${EVAL}/seed_bench/llava-seed-bench.jsonl \
         --image-folder ${EVAL}/seed_bench \
