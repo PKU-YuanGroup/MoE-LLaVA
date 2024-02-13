@@ -98,7 +98,7 @@ deepspeed --include localhost:0 moellava/serve/cli.py --model-path "LanguageBind
 
 ## 🐳 Model Zoo
 
-| Model | Activated Param | Transformers(HF) | ModelScope(HF) | Avg | VQAv2 | GQA | VizWiz | SQA | T-VQA | POPE | MME | MM-Bench | MM-Vet |
+| Model | Activated Param | Transformers(HF) | ModelScope(HF) | Avg | VQAv2 | GQA | VizWiz | SQA-IMG | T-VQA | POPE | MME | MM-Bench | MM-Vet |
 |----------|-----------|-----------|---|---|---|---|---|---|---|---|---|---|---|
 | MoE-LLaVA-1.6B×4-Top2 | 2.0B | [🤗LanguageBind/MoE-LLaVA-StableLM-1.6B-4e](https://huggingface.co/LanguageBind/MoE-LLaVA-StableLM-1.6B-4e) | [<img src="https://github.com/PKU-YuanGroup/MoE-LLaVA/raw/main/assets/modelscope_logo.png" width="20px" style="max-width: 100%;">PKU-YuanLab/MoE-LLaVA-StableLM-1.6B-4e](https://modelscope.cn/models/PKU-YuanLab/MoE-LLaVA-StableLM-1.6B-4e) | 57.3 | 76.7 | 60.3 | 36.2 | 62.6 | 50.1 | 85.7 | 1318.1 | 60.2 | 26.9 |
 | MoE-LLaVA-1.8B×4-Top2 | 2.2B | [🤗LanguageBind/MoE-LLaVA-Qwen-1.8B-4e](https://huggingface.co/LanguageBind/MoE-LLaVA-Qwen-1.8B-4e) | [<img src="https://github.com/PKU-YuanGroup/MoE-LLaVA/raw/main/assets/modelscope_logo.png" width="20px" style="max-width: 100%;">PKU-YuanLab/MoE-LLaVA-Qwen-1.8B-4e](https://modelscope.cn/models/PKU-YuanLab/MoE-LLaVA-Qwen-1.8B-4e) | 56.7 | 76.2 | 61.5 | 32.6 | 63.1 | 48.0 | 87.0 | 1291.6 | 59.6 | 25.3 |
