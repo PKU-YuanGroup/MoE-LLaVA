@@ -79,7 +79,7 @@ eval
 ## Validating
 Our image validation code comes from LLaVA, thanks for their contribution! 
 
-You can refer to the official repository for validation, but we also provide [off-the-shelf](scripts/v1_5/eval) scripts.
+You can refer to the official repository for validation, but we also provide [off-the-shelf](scripts/v1/eval) scripts.
 
 
 ### VQAv2
@@ -89,11 +89,11 @@ You can refer to the official repository for validation, but we also provide [of
 
 **LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 bash scripts/v1_5/eval/llava/vqav2.sh
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 bash scripts/v1/eval/llava/vqav2.sh
 ```
 **MoE-based** model
 ```Shell
-bash scripts/v1_5/eval/moe_llava/vqav2.sh
+bash scripts/v1/eval/moe_llava/vqav2.sh
 ```
 
 3. Submit the results to the [evaluation server](https://eval.ai/web/challenges/challenge-page/830/my-submission): `eval/vqav2/answers_upload`.
@@ -105,11 +105,11 @@ bash scripts/v1_5/eval/moe_llava/vqav2.sh
 
 **LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 bash scripts/v1_5/eval/llava/gqa.sh
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 bash scripts/v1/eval/llava/gqa.sh
 ```
 **MoE-based** model
 ```Shell
-bash scripts/v1_5/eval/moe_llava/gqa.sh
+bash scripts/v1/eval/moe_llava/gqa.sh
 ```
 
 ### VisWiz
@@ -119,11 +119,11 @@ bash scripts/v1_5/eval/moe_llava/gqa.sh
 
 **LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/moe_llava/vizwiz.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1/eval/moe_llava/vizwiz.sh
 ```
 **MoE-based** model
 ```Shell
-bash scripts/v1_5/eval/moe_llava/vizwiz.sh
+bash scripts/v1/eval/moe_llava/vizwiz.sh
 ```
 
 3. Submit the results to the [evaluation server](https://eval.ai/web/challenges/challenge-page/1911/my-submission): `eval/vizwiz/answers_upload`.
@@ -135,11 +135,11 @@ bash scripts/v1_5/eval/moe_llava/vizwiz.sh
 
 **LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/moe_llava/sqa.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1/eval/moe_llava/sqa.sh
 ```
 **MoE-based** model
 ```Shell
-bash scripts/v1_5/eval/moe_llava/sqa.sh
+bash scripts/v1/eval/moe_llava/sqa.sh
 ```
 
 
@@ -150,11 +150,11 @@ bash scripts/v1_5/eval/moe_llava/sqa.sh
 
 **LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/moe_llava/textvqa.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1/eval/moe_llava/textvqa.sh
 ```
 **MoE-based** model
 ```Shell
-bash scripts/v1_5/eval/moe_llava/textvqa.sh
+bash scripts/v1/eval/moe_llava/textvqa.sh
 ```
 
 
@@ -165,11 +165,11 @@ bash scripts/v1_5/eval/moe_llava/textvqa.sh
 
 **LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/moe_llava/pope.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1/eval/moe_llava/pope.sh
 ```
 **MoE-based** model
 ```Shell
-bash scripts/v1_5/eval/moe_llava/pope.sh
+bash scripts/v1/eval/moe_llava/pope.sh
 ```
 
 ### MME
@@ -180,11 +180,11 @@ bash scripts/v1_5/eval/moe_llava/pope.sh
 
 **LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/llava/mme.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1/eval/llava/mme.sh
 ```
 **MoE-based** model
 ```Shell
-bash scripts/v1_5/eval/moe_llava/mme.sh
+bash scripts/v1/eval/moe_llava/mme.sh
 ```
 
 ### MMBench
@@ -194,11 +194,11 @@ bash scripts/v1_5/eval/moe_llava/mme.sh
 
 **LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/llava/mmbench.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1/eval/llava/mmbench.sh
 ```
 **MoE-based** model
 ```Shell
-bash scripts/v1_5/eval/moe_llava/mmbench.sh
+bash scripts/v1/eval/moe_llava/mmbench.sh
 ```
 
 3. Submit the results to the [evaluation server](https://opencompass.org.cn/leaderboard-multimodal): `eval/mmbench/answers_upload/mmbench_dev_20230712`.
@@ -211,11 +211,11 @@ bash scripts/v1_5/eval/moe_llava/mmbench.sh
 
 **LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/llava/mmbench_cn.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1/eval/llava/mmbench_cn.sh
 ```
 **MoE-based** model
 ```Shell
-bash scripts/v1_5/eval/moe_llava/mmbench_cn.sh
+bash scripts/v1/eval/moe_llava/mmbench_cn.sh
 ```
 
 3. Submit the results to the [evaluation server](https://opencompass.org.cn/leaderboard-multimodal): `eval/mmbench/answers_upload/mmbench_dev_cn_20231003`.
@@ -229,11 +229,11 @@ bash scripts/v1_5/eval/moe_llava/mmbench_cn.sh
 
 **LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 bash scripts/v1_5/eval/llava/seed.sh
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 bash scripts/v1/eval/llava/seed.sh
 ```
 **MoE-based** model
 ```Shell
-bash scripts/v1_5/eval/moe_llava/seed.sh
+bash scripts/v1/eval/moe_llava/seed.sh
 ```
 
 4. Optionally, submit the results to the leaderboard: `eval/seed_bench/answers_upload` using the official jupyter notebook.
@@ -247,11 +247,11 @@ bash scripts/v1_5/eval/moe_llava/seed.sh
 
 **LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/moe_llava/llavabench.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1/eval/moe_llava/llavabench.sh
 ```
 **MoE-based** model
 ```Shell
-bash scripts/v1_5/eval/moe_llava/llavabench.sh
+bash scripts/v1/eval/moe_llava/llavabench.sh
 ```
 
 
@@ -262,10 +262,10 @@ bash scripts/v1_5/eval/moe_llava/llavabench.sh
 
 **LLaVA-based** model
 ```Shell
-CUDA_VISIBLE_DEVICES=0 bash scripts/v1_5/eval/moe_llava/mmvet.sh
+CUDA_VISIBLE_DEVICES=0 bash scripts/v1/eval/moe_llava/mmvet.sh
 ```
 **MoE-based** model
 ```Shell
-bash scripts/v1_5/eval/moe_llava/mmvet.sh
+bash scripts/v1/eval/moe_llava/mmvet.sh
 ```
 
