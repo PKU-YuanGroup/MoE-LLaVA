@@ -94,6 +94,7 @@ class LlavaQWenForCausalLM(QWenLMHeadModel, LlavaQWenMetaForCausalLM):
                 config.use_flash_attn = True
             else:
                 config.use_flash_attn = False
+        config.use_flash_attn = False
         if config.use_flash_attn and config.fp32:
             logger.warn("Flash attention will be disabled because it does NOT support fp32.")
 
