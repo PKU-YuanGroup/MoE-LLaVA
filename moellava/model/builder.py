@@ -96,7 +96,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                                                      # mp_size=2,
                                                      # dtype=torch.half,
                                                      checkpoint=None,
-                                                     replace_with_kernel_inject=True)
+                                                     replace_with_kernel_inject=False)
                 model = ds_engine.module
             else:
                 if 'qwen' in model_base.lower():
@@ -168,7 +168,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                                                          # mp_size=2,
                                                          # dtype=torch.half,
                                                          checkpoint=None,
-                                                         replace_with_kernel_inject=True)
+                                                         replace_with_kernel_inject=False)
                     model = ds_engine.module
                 else:
                     model = LlavaMistralForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
@@ -184,7 +184,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                                                          # mp_size=2,
                                                          # dtype=torch.half,
                                                          checkpoint=None,
-                                                         replace_with_kernel_inject=True)
+                                                         replace_with_kernel_inject=False)
                     model = ds_engine.module
                 else:
                     model = LlavaPhiForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
@@ -203,7 +203,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                                                          # mp_size=2,
                                                          # dtype=torch.half,
                                                          checkpoint=None,
-                                                         replace_with_kernel_inject=True)
+                                                         replace_with_kernel_inject=False)
                     model = ds_engine.module
                 else:
                     model = LlavaStablelmForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
@@ -220,7 +220,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                                                          # mp_size=2,
                                                          # dtype=torch.half,
                                                          checkpoint=None,
-                                                         replace_with_kernel_inject=True)
+                                                         replace_with_kernel_inject=False)
                     model = ds_engine.module
                 else:
                     model = LlavaQWenForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
@@ -241,7 +241,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                                                          # mp_size=2,
                                                          # dtype=torch.half,
                                                          checkpoint=None,
-                                                         replace_with_kernel_inject=True)
+                                                         replace_with_kernel_inject=False)
                     model = ds_engine.module
                 else:
                     model = LlavaLlamaForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
@@ -269,7 +269,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                                                          # mp_size=2,
                                                          dtype=torch.half,
                                                          checkpoint=None,
-                                                         replace_with_kernel_inject=True)
+                                                         replace_with_kernel_inject=False)
                     model = ds_engine.module
                 else:
                     model = LlavaQWenForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
@@ -292,7 +292,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                                                          # mp_size=2,
                                                          dtype=torch.half,
                                                          checkpoint=None,
-                                                         replace_with_kernel_inject=True)
+                                                         replace_with_kernel_inject=False)
                     model = ds_engine.module
                 else:
                     model = LlavaMistralForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
@@ -310,7 +310,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                                                          # mp_size=2,
                                                          dtype=torch.half,
                                                          checkpoint=None,
-                                                         replace_with_kernel_inject=True)
+                                                         replace_with_kernel_inject=False)
                     model = ds_engine.module
                 else:
                     model = LlavaPhiForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
@@ -329,7 +329,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                                                          # mp_size=2,
                                                          dtype=torch.half,
                                                          checkpoint=None,
-                                                         replace_with_kernel_inject=True)
+                                                         replace_with_kernel_inject=False)
                     model = ds_engine.module
                 else:
                     model = LlavaStablelmForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
