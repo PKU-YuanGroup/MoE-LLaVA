@@ -125,7 +125,8 @@ deepspeed --include localhost:0 moellava/serve/cli.py --model-path "LanguageBind
 </details>
 
 ## ⚙️ Requirements and Installation
-* Python >= 3.10
+We recommend the requirements as follows.
+* Python == 3.10
 * Pytorch == 2.0.1
 * CUDA Version >= 11.7
 * **Transformers == 4.36.2**
@@ -149,6 +150,13 @@ cd flash-attention && pip install .
 # If the version of flash-attn is higher than 2.1.1, the following is not needed.
 # pip install csrc/rotary
 ```
+
+> [!Warning]
+> <div align="left">
+> <b>
+> 🚨 We find that using flash attention2 makes performance degradation.
+> </b>
+> </div>
 
 ## 🗝️ Training & Validating
 The training & validating instruction is in [TRAIN.md](docs/TRAIN.md) & [EVAL.md](docs/EVAL.md).
