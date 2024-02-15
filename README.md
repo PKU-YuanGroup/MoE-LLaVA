@@ -129,7 +129,7 @@ We recommend the requirements as follows.
 * Python == 3.10
 * Pytorch == 2.0.1
 * CUDA Version >= 11.7
-* **Transformers == 4.36.2**
+* **Transformers == 4.37.0**
 * **Tokenizers==0.15.1**
 * Install required packages:
 ```bash
