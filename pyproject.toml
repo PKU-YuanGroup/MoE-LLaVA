@@ -20,7 +20,7 @@ dependencies = [
     "gradio==3.37.0", "gradio_client==0.7.0",
     "requests", "httpx==0.24.0", "uvicorn", "fastapi",
     "einops==0.6.1", "einops-exts==0.0.4", "timm==0.6.13",
-    "protobuf==4.24.4", "tiktoken==0.5.2", "openai==0.28.0"
+    "protobuf==4.24.4", "tiktoken==0.5.2", "openai==0.28.0", "openpyxl==3.1.2"
 ]
 
 [project.optional-dependencies]
