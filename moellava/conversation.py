@@ -261,6 +261,18 @@ conv_vicuna_v1 = Conversation(
     sep2="</s>",
 )
 
+conv_mistral = Conversation(
+    system="A chat between a curious user and an artificial intelligence assistant. "
+    "The assistant gives helpful, detailed, and polite answers to the user's questions.",
+    roles=("USER", "ASSISTANT"),
+    version="mistral",
+    messages=(),
+    offset=0,
+    sep_style=SeparatorStyle.TWO,
+    sep=" ",
+    sep2="</s>",
+)
+
 conv_openchat = Conversation(
     system="A chat between a curious user and an artificial intelligence assistant. "
     "The assistant gives helpful, detailed, and polite answers to the user's questions.",
@@ -273,6 +285,17 @@ conv_openchat = Conversation(
     sep2="<|end_of_turn|>",
 )
 
+conv_minicpm = Conversation(
+    system="A chat between a curious user and an artificial intelligence assistant. "
+    "The assistant gives helpful, detailed, and polite answers to the user's questions.",
+    roles=("USER", "ASSISTANT"),
+    version="minicpm",
+    messages=(),
+    offset=0,
+    sep_style=SeparatorStyle.TWO,
+    sep=" ",
+    sep2="</s>",
+)
 
 conv_phi = Conversation(
     system="A chat between a curious user and an artificial intelligence assistant. "
@@ -285,6 +308,7 @@ conv_phi = Conversation(
     sep=" ",
     sep2="<|endoftext|>",
 )
+
 
 conv_stablelm = Conversation(
     system="A chat between a curious user and an artificial intelligence assistant. "
@@ -401,6 +425,8 @@ conv_templates = {
     "v0": conv_vicuna_v0,
     "v1": conv_vicuna_v1,
     "openchat": conv_openchat,
+    "mistral": conv_mistral,
+    "minicpm": conv_minicpm,
     "phi": conv_phi,
     "qwen": conv_phi,
     "stablelm": conv_stablelm,
