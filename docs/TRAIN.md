@@ -67,8 +67,3 @@ For training on 384 resolution, we use `google/siglip-so400m-patch14-384` as `im
 - Stage 1 pretraining script: [pretrain.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1/openchat/pretrain.sh). 
 - Stage 2 tuning script: [finetune.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1/openchat/finetune.sh).
 - Stage 3 moe-tuning script: [finetune_moe.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1/openchat/finetune_moe.sh).
-
-
-## LoRA Training
-
-Comeing soon...
