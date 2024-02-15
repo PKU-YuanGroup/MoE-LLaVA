@@ -29,10 +29,15 @@ if a == '4' and int(b) >= 34:
     from moellava.model.language_model.llava_mistral_moe import EvalMoELLaVAMistralForCausalLM
     from moellava.model.language_model.llava_mistral import LlavaMistralForCausalLM
 if a == '4' and int(b) >= 36:
+    from moellava.model.language_model.llava_minicpm_moe import EvalMoELLaVAMiniCPMForCausalLM
+    from moellava.model.language_model.llava_minicpm import LlavaMiniCPMForCausalLM
     from moellava.model.language_model.llava_phi_moe import EvalMoELLaVAPhiForCausalLM
     from moellava.model.language_model.llava_phi import LlavaPhiForCausalLM
     from moellava.model.language_model.llava_stablelm_moe import EvalMoELLaVAStablelmForCausalLM
     from moellava.model.language_model.llava_stablelm import LlavaStablelmForCausalLM
+if a == '4' and int(b) >= 37:
+    from moellava.model.language_model.llava_qwen1_5_moe import EvalMoELLaVAQwen1_5ForCausalLM
+    from moellava.model.language_model.llava_qwen1_5 import LlavaQwen1_5ForCausalLM
 
 from transformers import AutoTokenizer, AutoModelForCausalLM, AutoConfig, BitsAndBytesConfig, GenerationConfig
 import torch
@@ -42,7 +47,8 @@ from moellava.constants import DEFAULT_IMAGE_PATCH_TOKEN, DEFAULT_IM_START_TOKEN
 from moellava.model.language_model.qwen.tokenization_qwen import QWenTokenizer
 
 
-def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, load_4bit=False, device_map="auto", device="cuda", padding_side="right", **kwargs):
+def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, load_4bit=False, device_map="auto",
+                          device="cuda", padding_side="right", merge=False, **kwargs):
     kwargs = {"device_map": device_map, **kwargs}
 
     if device != "cuda":
@@ -63,61 +69,40 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
 
     if 'llava' in model_name.lower():
         # Load LLaVA model
-        if 'lora' in model_name.lower() and model_base is None:
+        if 'lora' in model_name.lower() and 'moe' not in model_name.lower() and model_base is None:
             warnings.warn('There is `lora` in model name but no `model_base` is provided. If you are loading a LoRA model, please provide the `model_base` argument. Detailed instruction: https://github.com/haotian-liu/LLaVA#launch-a-model-worker-lora-weights-unmerged.')
-        if 'lora' in model_name.lower() and model_base is not None:
+        if 'lora' in model_name.lower() and 'moe' not in model_name.lower() and model_base is not None:
             lora_cfg_pretrained = AutoConfig.from_pretrained(model_path)
             tokenizer = AutoTokenizer.from_pretrained(model_base, use_fast=False, padding_side=padding_side)
             print('Loading LLaVA from base model...')
-            # ============================================================================================= TODO: adapt to moe
-            if getattr(lora_cfg_pretrained, 'moe_enable', False):
-                raise NotImplementedError
-                if 'qwen' in model_base.lower():
-                    model = EvalMoELLaVAQWenForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
-                    model.generation_config = GenerationConfig.from_pretrained(model_base, pad_token_id=tokenizer.pad_token_id)
-                    # model.generation_config.repetition_penalty = None
 
-                    model.generation_config.do_sample = False  # use greedy decoding
-                    model.generation_config.repetition_penalty = 1.0  # disable repetition penalty
-                elif 'openchat' in model_base.lower():
-                    model = EvalMoELLaVAMistralForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
-                elif 'phi' in model_base.lower():
-                    model = EvalMoELLaVAPhiForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
-                    model.config.eos_token_id = tokenizer.eos_token_id
-                elif 'stablelm' in model_base.lower():
-                    model = EvalMoELLaVAStableForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
-                    # model.config.eos_token_id = tokenizer.eos_token_id
-                else:
-                    model = EvalMoELLaVALlamaForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
-                import deepspeed
-                deepspeed.init_distributed(dist_backend='nccl')
-                # Initialize the DeepSpeed-Inference engine
-                ds_engine = deepspeed.init_inference(model,
-                                                     # mp_size=2,
-                                                     # dtype=torch.half,
-                                                     checkpoint=None,
-                                                     replace_with_kernel_inject=False)
-                model = ds_engine.module
+            if 'qwen' in model_base.lower() and '1.5' not in model_base.lower():
+                model = LlavaQWenForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
+                model.generation_config = GenerationConfig.from_pretrained(model_base, pad_token_id=tokenizer.pad_token_id)
+                # model.generation_config.repetition_penalty = None
+
+                model.generation_config.do_sample = False  # use greedy decoding
+                model.generation_config.repetition_penalty = 1.0  # disable repetition penalty
+            elif 'openchat' in model_base.lower() or 'mistral' in model_base.lower():
+                model = LlavaMistralForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
+            elif 'qwen' in model_base.lower() and '1.5' in model_base.lower():
+                model = LlavaQwen1_5ForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
+                model.config.eos_token_id = tokenizer.eos_token_id
+            elif 'phi' in model_base.lower():
+                model = LlavaPhiForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
+                model.config.eos_token_id = tokenizer.eos_token_id
+            elif 'minicpm' in model_base.lower():
+                model = LlavaMiniCPMForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
+                model.config.eos_token_id = tokenizer.eos_token_id
+            elif 'stablelm' in model_base.lower():
+                model = LlavaStablelmForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
+                model.config.eos_token_id = tokenizer.eos_token_id
             else:
-                if 'qwen' in model_base.lower():
-                    model = LlavaQWenForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
-                    model.generation_config = GenerationConfig.from_pretrained(model_base, pad_token_id=tokenizer.pad_token_id)
-                    # model.generation_config.repetition_penalty = None
-
-                    model.generation_config.do_sample = False  # use greedy decoding
-                    model.generation_config.repetition_penalty = 1.0  # disable repetition penalty
-                elif 'openchat' in model_base.lower():
-                    model = LlavaMistralForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
-                elif 'phi' in model_base.lower():
-                    model = LlavaPhiForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
-                    model.config.eos_token_id = tokenizer.eos_token_id
-                elif 'stablelm' in model_base.lower():
-                    model = LlavaStablelmForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
-                    # model.config.eos_token_id = tokenizer.eos_token_id
-                else:
-                    model = LlavaLlamaForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
+                model = LlavaLlamaForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
             # =============================================================================================
             token_num, tokem_dim = model.lm_head.out_features, model.lm_head.in_features
+            # import ipdb
+            # ipdb.set_trace()
             if model.lm_head.weight.shape[0] != token_num:
                 model.lm_head.weight = torch.nn.Parameter(torch.empty(token_num, tokem_dim, device=model.device, dtype=model.dtype))
                 model.model.embed_tokens.weight = torch.nn.Parameter(torch.empty(token_num, tokem_dim, device=model.device, dtype=model.dtype))
@@ -146,6 +131,51 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
             print('Merging LoRA weights...')
             model = model.merge_and_unload()
             print('Model is loaded...')
+        elif 'lora' in model_name.lower() and 'moe' in model_name.lower():
+            lora_cfg_pretrained = AutoConfig.from_pretrained(model_path)
+            print('Adapting to MoE...')
+            if 'qwen' in model_name.lower() and '1.5' not in model_name.lower():
+                tokenizer = QWenTokenizer.from_pretrained(model_path, use_fast=False, padding_side=padding_side)
+                model = EvalMoELLaVAQWenForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
+                model.generation_config = GenerationConfig.from_pretrained(model_path, pad_token_id=tokenizer.pad_token_id)
+                # model.generation_config.repetition_penalty = None
+                model.generation_config.do_sample = False  # use greedy decoding
+                model.generation_config.repetition_penalty = 1.0  # disable repetition penalty
+            elif 'openchat' in model_name.lower() or 'mistral' in model_name.lower():
+                tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False, padding_side=padding_side)
+                model = EvalMoELLaVAMistralForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
+            elif 'qwen' in model_name.lower() and '1.5' in model_name.lower():
+                tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False, padding_side=padding_side)
+                model = EvalMoELLaVAQwen1_5ForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
+                # import ipdb
+                # ipdb.set_trace()
+                model.config.eos_token_id = tokenizer.eos_token_id
+            elif 'phi' in model_name.lower():
+                tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False, padding_side=padding_side)
+                model = EvalMoELLaVAPhiForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
+                model.config.eos_token_id = tokenizer.eos_token_id
+            elif 'minicpm' in model_name.lower():
+                tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False, padding_side=padding_side)
+                model = EvalMoELLaVAMiniCPMForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
+                model.config.eos_token_id = tokenizer.eos_token_id
+            elif 'stablelm' in model_name.lower():
+                from moellava.model.language_model.stablelm.tokenization_arcade100k import Arcade100kTokenizer
+                tokenizer = Arcade100kTokenizer.from_pretrained(model_path, use_fast=False, padding_side=padding_side)
+                model = EvalMoELLaVAStablelmForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
+                model.config.eos_token_id = tokenizer.eos_token_id
+            else:
+                tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False, padding_side=padding_side)
+                model = EvalMoELLaVALlamaForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
+            if not merge:
+                import deepspeed
+                deepspeed.init_distributed(dist_backend='nccl')
+                # Initialize the DeepSpeed-Inference engine
+                ds_engine = deepspeed.init_inference(model,
+                                                     # mp_size=2,
+                                                     # dtype=torch.half,
+                                                     checkpoint=None,
+                                                     replace_with_kernel_inject=True)
+                model = ds_engine.module
         elif model_base is not None:
             # this may be mm projector only
             print('Loading LLaVA from base model...')
@@ -156,10 +186,10 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                 cfg_pretrained = AutoConfig.from_pretrained(model_path, trust_remote_code=True)
                 model = LlavaMPTForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
             # =============================================================================================
-            elif 'openchat' in model_name.lower():
+            elif 'openchat' in model_name.lower() or 'mistral' in model_name.lower():
                 tokenizer = AutoTokenizer.from_pretrained(model_base, use_fast=False, padding_side=padding_side)
                 cfg_pretrained = AutoConfig.from_pretrained(model_path)
-                if getattr(cfg_pretrained, 'moe_enable', False):
+                if getattr(cfg_pretrained, 'moe', {}).get('moe_enable', False):
                     model = EvalMoELLaVAMistralForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
                     import deepspeed
                     deepspeed.init_distributed(dist_backend='nccl')
@@ -175,7 +205,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
             elif 'phi' in model_name.lower():
                 tokenizer = AutoTokenizer.from_pretrained(model_base, use_fast=False, padding_side=padding_side)
                 cfg_pretrained = LlavaPhiConfig.from_pretrained(model_path)
-                if getattr(cfg_pretrained, 'moe_enable', False):
+                if getattr(cfg_pretrained, 'moe', {}).get('moe_enable', False):
                     model = EvalMoELLaVAPhiForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
                     import deepspeed
                     deepspeed.init_distributed(dist_backend='nccl')
@@ -189,12 +219,46 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                 else:
                     model = LlavaPhiForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
                 model.config.eos_token_id = tokenizer.eos_token_id
+            elif 'qwen' in model_name.lower() and '1.5' in model_name.lower():
+                tokenizer = AutoTokenizer.from_pretrained(model_base, use_fast=False, padding_side=padding_side)
+                cfg_pretrained = LlavaQwen1_5Config.from_pretrained(model_path)
+                if getattr(cfg_pretrained, 'moe', {}).get('moe_enable', False):
+                    model = EvalMoELLaVAQwen1_5ForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
+                    import deepspeed
+                    deepspeed.init_distributed(dist_backend='nccl')
+                    # Initialize the DeepSpeed-Inference engine
+                    ds_engine = deepspeed.init_inference(model,
+                                                         # mp_size=2,
+                                                         # dtype=torch.half,
+                                                         checkpoint=None,
+                                                         replace_with_kernel_inject=False)
+                    model = ds_engine.module
+                else:
+                    model = LlavaQwen1_5ForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
+                model.config.eos_token_id = tokenizer.eos_token_id
+            elif 'minicpm' in model_name.lower():
+                tokenizer = AutoTokenizer.from_pretrained(model_base, use_fast=False, padding_side=padding_side)
+                cfg_pretrained = LlavaMiniCPMConfig.from_pretrained(model_path)
+                if getattr(cfg_pretrained, 'moe', {}).get('moe_enable', False):
+                    model = EvalMoELLaVAMiniCPMForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
+                    import deepspeed
+                    deepspeed.init_distributed(dist_backend='nccl')
+                    # Initialize the DeepSpeed-Inference engine
+                    ds_engine = deepspeed.init_inference(model,
+                                                         # mp_size=2,
+                                                         # dtype=torch.half,
+                                                         checkpoint=None,
+                                                         replace_with_kernel_inject=False)
+                    model = ds_engine.module
+                else:
+                    model = LlavaMiniCPMForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
+                model.config.eos_token_id = tokenizer.eos_token_id
             elif 'stablelm' in model_name.lower():
                 from moellava.model.language_model.stablelm.tokenization_arcade100k import Arcade100kTokenizer
                 from moellava.model.language_model.stablelm.configuration_stablelm_epoch import StableLMEpochConfig
                 tokenizer = Arcade100kTokenizer.from_pretrained(model_base, use_fast=False, padding_side=padding_side)
                 cfg_pretrained = StableLMEpochConfig.from_pretrained(model_path)
-                if getattr(cfg_pretrained, 'moe_enable', False):
+                if getattr(cfg_pretrained, 'moe', {}).get('moe_enable', False):
                     model = EvalMoELLaVAStablelmForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
                     import deepspeed
                     deepspeed.init_distributed(dist_backend='nccl')
@@ -208,10 +272,10 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                 else:
                     model = LlavaStablelmForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
                 # model.config.eos_token_id = tokenizer.eos_token_id
-            elif 'qwen' in model_name.lower():
+            elif 'qwen' in model_name.lower() and '1.5' not in model_name.lower():
                 tokenizer = AutoTokenizer.from_pretrained(model_base, use_fast=False, padding_side=padding_side)
                 cfg_pretrained = AutoConfig.from_pretrained(model_path)
-                if getattr(cfg_pretrained, 'moe_enable', False):
+                if getattr(cfg_pretrained, 'moe', {}).get('moe_enable', False):
                     model = EvalMoELLaVAQWenForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
                     import deepspeed
                     deepspeed.init_distributed(dist_backend='nccl')
@@ -232,7 +296,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
             else:
                 tokenizer = AutoTokenizer.from_pretrained(model_base, use_fast=False, padding_side=padding_side)
                 cfg_pretrained = AutoConfig.from_pretrained(model_path)
-                if getattr(cfg_pretrained, 'moe_enable', False):
+                if getattr(cfg_pretrained, 'moe', {}).get('moe_enable', False):
                     model = EvalMoELLaVALlamaForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
                     import deepspeed
                     deepspeed.init_distributed(dist_backend='nccl')
@@ -257,7 +321,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                 else:
                     tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=True, padding_side=padding_side)
                     model = LlavaMPTForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
-            elif 'qwen' in model_name.lower():
+            elif 'qwen' in model_name.lower() and '1.5' not in model_name.lower():
                 tokenizer = QWenTokenizer.from_pretrained(model_path, use_fast=False, padding_side=padding_side)
                 if 'moe' in model_name.lower():
                     assert not load_8bit and not load_4bit  # FIXME
@@ -267,7 +331,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                     # Initialize the DeepSpeed-Inference engine
                     ds_engine = deepspeed.init_inference(model,
                                                          # mp_size=2,
-                                                         dtype=torch.half,
+                                                         # dtype=torch.half,
                                                          checkpoint=None,
                                                          replace_with_kernel_inject=False)
                     model = ds_engine.module
@@ -279,7 +343,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
 
                 model.generation_config.do_sample = False  # use greedy decoding
                 model.generation_config.repetition_penalty = 1.0  # disable repetition penalty
-            elif 'openchat' in model_name.lower():
+            elif 'openchat' in model_name.lower() or 'mistral' in model_name.lower():
                 tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False, padding_side=padding_side)
                 # print(tokenizer)
                 if 'moe' in model_name.lower():
@@ -290,7 +354,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                     # Initialize the DeepSpeed-Inference engine
                     ds_engine = deepspeed.init_inference(model,
                                                          # mp_size=2,
-                                                         dtype=torch.half,
+                                                         # dtype=torch.half,
                                                          checkpoint=None,
                                                          replace_with_kernel_inject=False)
                     model = ds_engine.module
@@ -308,12 +372,48 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                     # Initialize the DeepSpeed-Inference engine
                     ds_engine = deepspeed.init_inference(model,
                                                          # mp_size=2,
-                                                         dtype=torch.half,
+                                                         # dtype=torch.half,
                                                          checkpoint=None,
                                                          replace_with_kernel_inject=False)
                     model = ds_engine.module
                 else:
                     model = LlavaPhiForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
+                model.config.eos_token_id = tokenizer.eos_token_id
+            elif 'qwen' in model_name.lower() and '1.5' in model_name.lower():
+                tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False, padding_side=padding_side)
+                # print(tokenizer)
+                if 'moe' in model_name.lower():
+                    assert not load_8bit and not load_4bit  # FIXME
+                    model = EvalMoELLaVAQwen1_5ForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
+                    import deepspeed
+                    deepspeed.init_distributed(dist_backend='nccl')
+                    # Initialize the DeepSpeed-Inference engine
+                    ds_engine = deepspeed.init_inference(model,
+                                                         # mp_size=2,
+                                                         # dtype=torch.half,
+                                                         checkpoint=None,
+                                                         replace_with_kernel_inject=False)
+                    model = ds_engine.module
+                else:
+                    model = LlavaQwen1_5ForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
+                model.config.eos_token_id = tokenizer.eos_token_id
+            elif 'minicpm' in model_name.lower():
+                tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False, padding_side=padding_side)
+                # print(tokenizer)
+                if 'moe' in model_name.lower():
+                    assert not load_8bit and not load_4bit  # FIXME
+                    model = EvalMoELLaVAMiniCPMForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
+                    import deepspeed
+                    deepspeed.init_distributed(dist_backend='nccl')
+                    # Initialize the DeepSpeed-Inference engine
+                    ds_engine = deepspeed.init_inference(model,
+                                                         # mp_size=2,
+                                                         # dtype=torch.half,
+                                                         checkpoint=None,
+                                                         replace_with_kernel_inject=False)
+                    model = ds_engine.module
+                else:
+                    model = LlavaMiniCPMForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
                 model.config.eos_token_id = tokenizer.eos_token_id
             elif 'stablelm' in model_name.lower():
                 from moellava.model.language_model.stablelm.tokenization_arcade100k import Arcade100kTokenizer
@@ -327,7 +427,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                     # Initialize the DeepSpeed-Inference engine
                     ds_engine = deepspeed.init_inference(model,
                                                          # mp_size=2,
-                                                         dtype=torch.half,
+                                                         # dtype=torch.half,
                                                          checkpoint=None,
                                                          replace_with_kernel_inject=False)
                     model = ds_engine.module
