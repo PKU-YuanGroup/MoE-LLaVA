@@ -22,6 +22,7 @@ from dataclasses import dataclass, field
 import json
 import logging
 import pathlib
+from glob import glob
 from typing import Dict, Optional, Sequence, List
 
 import torch
@@ -826,6 +827,7 @@ def preprocess_plain(
     tokenizer: transformers.PreTrainedTokenizer,
 ) -> Dict:
     # add end signal and concatenate together
+    # print('sources', sources)
     conversations = []
     for source in sources:
         assert len(source) == 2
@@ -833,7 +835,7 @@ def preprocess_plain(
         source[0]['value'] = DEFAULT_IMAGE_TOKEN
         conversation = source[0]['value'] + source[1]['value'] + conversation_lib.default_conversation.sep
         conversations.append(conversation)
-    # print('for source in sources: conversations', conversations)
+    # print('conversations', conversations)
     # tokenize conversations
     input_ids = [tokenizer_image_token(prompt, tokenizer, return_tensors='pt') for prompt in conversations]
     # print('after tokenizer_image_token', input_ids)
@@ -842,7 +844,7 @@ def preprocess_plain(
         tokenized_len = len(tokenizer_image_token(source[0]['value'], tokenizer))
         target[:tokenized_len] = IGNORE_INDEX
 
-    # print('for target, source in zip(targets, sources):', input_ids)
+    # print('target:', target)
     return dict(input_ids=input_ids, labels=targets)
 
 
@@ -865,9 +867,12 @@ def preprocess(
     if conversation_lib.default_conversation.version.startswith("phi") or \
             conversation_lib.default_conversation.version.startswith("qwen"):  # for phi and qwen
         return preprocess_phi(sources, tokenizer, has_image=has_image)
-    if conversation_lib.default_conversation.version.startswith("stablelm"):  # for stablelm
+    if conversation_lib.default_conversation.version.startswith("stablelm"):  # stablelm same as phi
         return preprocess_phi(sources, tokenizer, has_image=has_image)
-    if conversation_lib.default_conversation.version.startswith("openchat"):  # for openchat
+    if conversation_lib.default_conversation.version.startswith("openchat") or \
+        conversation_lib.default_conversation.version.startswith("mistral"):  # for openchat
+        return preprocess_openchat(sources, tokenizer, has_image=has_image)
+    if conversation_lib.default_conversation.version.startswith("minicpm"):  # minicpm same as openchat
         return preprocess_openchat(sources, tokenizer, has_image=has_image)
     if conversation_lib.default_conversation.version.startswith("v1"):
         return preprocess_v1(sources, tokenizer, has_image=has_image)
@@ -938,6 +943,7 @@ class LazySupervisedDataset(Dataset):
 
     def __len__(self):
         return len(self.list_data_dict)
+        # return 10
 
     # @property
     # def lengths(self):
@@ -1081,6 +1087,7 @@ class DataCollatorForSupervisedDataset(object):
         )
 
         # print('after Collator', batch)
+        # print(input_ids, labels, input_ids.ne(self.tokenizer.pad_token_id))
         # ======================================================================================================
         # origin image, if batch_size=6: [[image], [image], [video], [image, image], [video, video], [video, image]]
         '''
@@ -1172,71 +1179,121 @@ def train():
                     cache_dir=training_args.cache_dir,
                     **bnb_model_from_pretrained_args
                 )
-            elif 'qwen' in model_args.model_name_or_path.lower():
+            elif 'qwen' in model_args.model_name_or_path.lower() and '1.5' not in model_args.model_name_or_path.lower():
                 model = LlavaQWenForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
                     **bnb_model_from_pretrained_args
                 )
-            elif 'openchat' in model_args.model_name_or_path.lower():
+            elif 'qwen' in model_args.model_name_or_path.lower() and '1.5' in model_args.model_name_or_path.lower():
+                model = LlavaQwen1_5ForCausalLM.from_pretrained(
+                    model_args.model_name_or_path,
+                    cache_dir=training_args.cache_dir,
+                    # attn_implementation="flash_attention_2",
+                    # torch_dtype=torch.bfloat16,
+                    **bnb_model_from_pretrained_args
+                )
+            elif 'openchat' in model_args.model_name_or_path.lower() or 'mistral' in model_args.model_name_or_path.lower():
                 model = LlavaMistralForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
+                    # attn_implementation="flash_attention_2",
+                    # torch_dtype=torch.bfloat16,
                     **bnb_model_from_pretrained_args
                 )
             elif 'phi' in model_args.model_name_or_path.lower():
                 model = LlavaPhiForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
+                    # attn_implementation="flash_attention_2",
+                    # torch_dtype=torch.bfloat16,
+                    **bnb_model_from_pretrained_args
+                )
+            elif 'minicpm' in model_args.model_name_or_path.lower():
+                model = LlavaMiniCPMForCausalLM.from_pretrained(
+                    model_args.model_name_or_path,
+                    cache_dir=training_args.cache_dir,
+                    # attn_implementation="flash_attention_2",
+                    # torch_dtype=torch.bfloat16,
                     **bnb_model_from_pretrained_args
                 )
             elif 'stablelm' in model_args.model_name_or_path.lower():
                 model = LlavaStablelmForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
+                    # attn_implementation="flash_attention_2",
+                    # torch_dtype=torch.bfloat16,
                     **bnb_model_from_pretrained_args
                 )
             else:
                 model = LlavaLlamaForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
+                    # attn_implementation="flash_attention_2",
+                    # torch_dtype=torch.bfloat16,
                     **bnb_model_from_pretrained_args
                 )
         else:
-            if 'qwen' in model_args.model_name_or_path.lower():
+            if 'qwen' in model_args.model_name_or_path.lower() and '1.5' not in model_args.model_name_or_path.lower():
                 model = MoELLaVAQWenForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
+                    **bnb_model_from_pretrained_args
+                )
+            elif 'qwen' in model_args.model_name_or_path.lower() and '1.5' in model_args.model_name_or_path.lower():
+                model = MoELLaVAQwen1_5ForCausalLM.from_pretrained(
+                    model_args.model_name_or_path,
+                    cache_dir=training_args.cache_dir,
+                    # attn_implementation="flash_attention_2",
+                    # torch_dtype=torch.bfloat16,
                     **bnb_model_from_pretrained_args
                 )
             elif 'phi' in model_args.model_name_or_path.lower():
                 model = MoELLaVAPhiForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
+                    # attn_implementation="flash_attention_2",
+                    # torch_dtype=torch.bfloat16,
                     **bnb_model_from_pretrained_args
                 )
-            elif 'openchat' in model_args.model_name_or_path.lower():
+            elif 'minicpm' in model_args.model_name_or_path.lower():
+                model = MoELLaVAMiniCPMForCausalLM.from_pretrained(
+                    model_args.model_name_or_path,
+                    cache_dir=training_args.cache_dir,
+                    # attn_implementation="flash_attention_2",
+                    # torch_dtype=torch.bfloat16,
+                    **bnb_model_from_pretrained_args
+                )
+            elif 'openchat' in model_args.model_name_or_path.lower() or 'mistral' in model_args.model_name_or_path.lower():
                 model = MoELLaVAMistralForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
+                    # attn_implementation="flash_attention_2",
+                    # torch_dtype=torch.bfloat16,
                     **bnb_model_from_pretrained_args
                 )
             elif 'stablelm' in model_args.model_name_or_path.lower():
                 model = MoELLaVAStablelmForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
+                    # attn_implementation="flash_attention_2",
+                    # torch_dtype=torch.bfloat16,
                     **bnb_model_from_pretrained_args
                 )
             else:
                 model = MoELLaVALlamaForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
+                    attn_implementation="flash_attention_2",
+                    torch_dtype=torch.bfloat16,
                     **bnb_model_from_pretrained_args
                 )
     else:
         model = transformers.LlamaForCausalLM.from_pretrained(
             model_args.model_name_or_path,
             cache_dir=training_args.cache_dir,
+            # attn_implementation="flash_attention_2",
+            # torch_dtype=torch.bfloat16,
             **bnb_model_from_pretrained_args
         )
     rank0_print('LLM init. firstly\n', model)
@@ -1260,39 +1317,39 @@ def train():
     # ==============================================================================================
     training_args.moe_enable = model_args.moe_enable
     training_args.only_lora_ffn = model_args.only_lora_ffn
+    model_args.lora_enable = training_args.lora_enable
     if model_args.moe_enable:
         if training_args.lora_enable:
             from peft import LoraConfig, get_peft_model
-            if 'qwen' in model_args.model_name_or_path.lower():
+            if 'qwen' in model_args.model_name_or_path.lower() and '1.5' not in model_args.model_name_or_path.lower():
                 target_modules = [
                     'mlp.w1', 'mlp.w2', 'mlp.c_proj'
-                ] if training_args.only_lora_ffn else find_all_linear_names(model, add_keywords=['wg'])
+                ] if training_args.only_lora_ffn else find_all_linear_names(model)
             elif 'phi' in model_args.model_name_or_path.lower():
                 target_modules = [
                     'fc1', 'fc2'
-                ] if training_args.only_lora_ffn else find_all_linear_names(model, add_keywords=['wg'])
-            elif 'stablelm' in model_args.model_name_or_path.lower():
-                target_modules = [
-                    'up_proj', 'down_proj', 'gate_proj'
-                ] if training_args.only_lora_ffn else find_all_linear_names(model, add_keywords=['wg'])
-            elif 'openchat' in model_args.model_name_or_path.lower():
-                target_modules = [
-                    'up_proj', 'down_proj', 'gate_proj'
-                ] if training_args.only_lora_ffn else find_all_linear_names(model, add_keywords=['wg'])
+                ] if training_args.only_lora_ffn else find_all_linear_names(model)
             else:
                 target_modules = [
                     'up_proj', 'down_proj', 'gate_proj'
-                ] if training_args.only_lora_ffn else find_all_linear_names(model, add_keywords=['wg'])
-            modules_to_save = ['wg']  # weight gating for MoE
+                ] if training_args.only_lora_ffn else find_all_linear_names(model)
+            # modules_to_save = ['wg']  # weight gating for MoE
             lora_config = LoraConfig(
                 r=training_args.lora_r,
                 lora_alpha=training_args.lora_alpha,
                 target_modules=target_modules,
                 lora_dropout=training_args.lora_dropout,
                 bias=training_args.lora_bias,
-                modules_to_save=modules_to_save,
+                # modules_to_save=modules_to_save,
                 task_type="CAUSAL_LM",
             )
+            model_args.lora_r = training_args.lora_r
+            model_args.lora_alpha = training_args.lora_alpha
+            model_args.lora_dropout = training_args.lora_dropout
+            model_args.lora_bias = training_args.lora_bias
+            # model_args.modules_to_save = modules_to_save
+            model_args.target_modules = target_modules
+            model_args.train_modules = target_modules
             if training_args.bits == 16:
                 if training_args.bf16:
                     model.to(torch.bfloat16)
@@ -1331,7 +1388,7 @@ def train():
     else:
         # import ipdb
         # ipdb.set_trace()
-        if 'qwen' in model_args.model_name_or_path.lower():
+        if 'qwen' in model_args.model_name_or_path.lower() and '1.5' not in model_args.model_name_or_path.lower():
             from moellava.model.language_model.qwen.tokenization_qwen import QWenTokenizer
             tokenizer = QWenTokenizer.from_pretrained(
                 model_args.model_name_or_path,
@@ -1341,6 +1398,15 @@ def train():
                 use_fast=False,
             )
             tokenizer.add_special_tokens({'unk_token': '<|extra_0|>', 'eos_token': '<|endoftext|>'})
+        if 'qwen' in model_args.model_name_or_path.lower() and '1.5' in model_args.model_name_or_path.lower():
+            tokenizer = transformers.AutoTokenizer.from_pretrained(
+                model_args.model_name_or_path,
+                cache_dir=training_args.cache_dir,
+                model_max_length=training_args.model_max_length,
+                padding_side="right",
+                use_fast=False,
+            )
+            tokenizer.add_special_tokens({'unk_token': '<|extra_0|>'})
         elif 'phi' in model_args.model_name_or_path.lower():
             tokenizer = transformers.AutoTokenizer.from_pretrained(
                 model_args.model_name_or_path,
@@ -1370,6 +1436,8 @@ def train():
             )
     # import ipdb
     # ipdb.set_trace()
+    # print(tokenizer)
+    # print(tokenizer)
     if model_args.version == "v0":
         if tokenizer.pad_token is None:
             smart_tokenizer_and_embedding_resize(
@@ -1452,6 +1520,8 @@ def train():
         if param.requires_grad:
             rank0_print(name)
     rank0_print(model)
+    # sys.exit()
+
     data_module = make_supervised_data_module(tokenizer=tokenizer,
                                               data_args=data_args)
     trainer = LLaVATrainer(model=model,
@@ -1467,7 +1537,7 @@ def train():
 
     model.config.use_cache = True
 
-    if training_args.lora_enable:
+    if training_args.lora_enable and not model_args.moe_enable:
         state_dict = get_peft_state_maybe_zero_3(
             model.named_parameters(), training_args.lora_bias
         )
@@ -1481,7 +1551,18 @@ def train():
     else:
         safe_save_model_for_hf_trainer(trainer=trainer,
                                        output_dir=training_args.output_dir)
-
+        if model_args.moe_enable:
+            ckpt = model.state_dict()
+            # import ipdb
+            # ipdb.set_trace()
+            ckpt = {(k[11:] if k.startswith('base_model.') else k): v for k, v in ckpt.items()}
+            if any(k.startswith('model.model.') for k in ckpt):
+                ckpt = {(k[6:] if k.startswith('model.') else k): v for k, v in ckpt.items()}
+            torch.save(ckpt, os.path.join(training_args.output_dir, 'pytorch_model.bin'))
+            model.config.save_pretrained(training_args.output_dir)
+            if training_args.local_rank == 0 or training_args.local_rank == -1:
+                [os.remove(i) for i in glob(os.path.join(training_args.output_dir, 'adapter_*'))]
+    # print(model.state_dict().keys())
 
 if __name__ == "__main__":
     train()
