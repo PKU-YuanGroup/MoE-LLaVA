@@ -13,8 +13,8 @@ You can use `script/merge_moe_lora_weights.py` to merge the LoRA weights.
 
 ```Shell
 deepspeed --include localhost:0 script/merge_lora_weights.py \
-	--model-path checkpoints/llavaphi-moe-lora \
-	--save-model-path checkpoints/llavaphi-moe-merge
+	--model-path checkpoints/moellava-phi-moe-lora \
+	--save-model-path checkpoints/moellava-phi-moe-merge
 ```
 
 > [!Warning]
