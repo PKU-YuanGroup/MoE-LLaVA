@@ -36,7 +36,7 @@
 
 
 ## 📣 News
-* ⏳⏳⏳ Training a stronger model that using datasets proposed by LLaVA-1.6 and supporting a higher image resolution (e.g 768 × 768).
+* ⏳⏳⏳ Training a stronger model under a higher image resolution (e.g 768 × 768).
 
 * ⏳⏳⏳ Training MoE-LLaVA-Qwen1.5 to support Chinese better.
 * **[2024.02.03]**  🎉 We release a stronger [MoE-LLaVA-StableLM](https://huggingface.co/LanguageBind/MoE-LLaVA-StableLM-1.8B-4e-384). The average performance is close to LLaVA-1.5-7B by using **2.0B** sparse activated parameters, checking our [model zoo](#-model-zoo).
