@@ -15,6 +15,15 @@ body:
       value: |
         Issue:
         
+        Environment:
+        ```
+        GPU: 8×A100-80G or others?
+        Deepspeed version:
+        Torch version:
+        Transformers version:
+        Tokenizers version:
+        ```
+        
         Command:
         ```
         PASTE THE COMMANDS HERE.
