@@ -45,22 +45,22 @@ Specify your `IMAGE_FOLDER` and `JSON_FOLDER` according to the data preparation.
 
 For training on 384 resolution, we use `google/siglip-so400m-patch14-384` as `image_tower`. Notably, if you pass the `--image_tower google/siglip-so400m-patch14-384`, you should upgrade the version of transformers to 4.37.0.
 
-**Qwen**
+### Qwen
 - Stage 1 pretraining script: [pretrain.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1/qwen/pretrain.sh). 
 - Stage 2 tuning script: [finetune.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1/qwen/finetune.sh).
 - Stage 3 moe-tuning script: [finetune_moe.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1/qwen/finetune_moe.sh).
   
-**Phi2**
+### Phi2
 - Stage 1 pretraining script: [pretrain.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1/phi2/pretrain.sh). 
 - Stage 2 tuning script: [finetune.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1/phi2/finetune.sh).
 - Stage 3 moe-tuning script: [finetune_moe.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1/phi2/finetune_moe.sh).
   
-**StableLM**
+### StableLM
 - Stage 1 pretraining script: [pretrain.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1/stablelm/pretrain.sh). 
 - Stage 2 tuning script: [finetune.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1/stablelm/finetune.sh).
 - Stage 3 moe-tuning script: [finetune_moe.sh](https://github.com/PKU-YuanGroup/MoE-LLaVA/tree/main/scripts/v1/stablelm/finetune_moe.sh).
   
-**OpenChat**
+### OpenChat
 
 <!-- OpenChat seems to have bugs in `transformer==4.36.2`. Please `pip install transformers==4.34.0`. -->
 
