@@ -39,6 +39,7 @@
 * ⏳⏳⏳ Training a stronger model under a higher image resolution (e.g 768 × 768).
 
 * ⏳⏳⏳ Training MoE-LLaVA-Qwen1.5 to support Chinese better.
+* **[2024.03.16]**  🎉 We release all stage2 models, cheching our [model zoo](#-model-zoo).
 * **[2024.02.03]**  🎉 We release a stronger [MoE-LLaVA-StableLM](https://huggingface.co/LanguageBind/MoE-LLaVA-StableLM-1.8B-4e-384). The average performance is close to LLaVA-1.5-7B by using **2.0B** sparse activated parameters, checking our [model zoo](#-model-zoo).
 * **[2024.02.02]**  🤝 Enjoying the [![Replicate demo and cloud API](https://replicate.com/camenduru/moe-llava/badge)](https://replicate.com/camenduru/moe-llava) and [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/camenduru/MoE-LLaVA-jupyter/blob/main/MoE_LLaVA_jupyter.ipynb), created by [@camenduru](https://github.com/camenduru), who generously supports our research!
 * **[2024.02.01]**  🔥 People who cannot access HF can now download the model through the <img src="https://github.com/PKU-YuanGroup/MoE-LLaVA/raw/main/assets/modelscope_logo.png" width="20px" style="max-width: 100%;"> model scope, checking our [model zoo](#-model-zoo).
@@ -112,11 +113,27 @@ deepspeed --include localhost:0 moellava/serve/cli.py --model-path "LanguageBind
 -->
 
 <details>
+<summary>Stage2 Model</summary>
+    
+Please know https://github.com/PKU-YuanGroup/MoE-LLaVA/issues/27.
+    
+| Model  | Checkpoint |
+|----------|-----------|
+| MoE-LLaVA-1.6B×4-Top2 | [LanguageBind/MoE-LLaVA-StableLM-Stage2](https://huggingface.co/LanguageBind/MoE-LLaVA-StableLM-Stage2) |
+| MoE-LLaVA-1.6B×4-Top2-384 | [LanguageBind/MoE-LLaVA-StableLM-Stage2-384](https://huggingface.co/LanguageBind/MoE-LLaVA-StableLM-Stage2-384) |
+| MoE-LLaVA-1.8B×4-Top2 | [LanguageBind/MoE-LLaVA-Qwen-Stage2](https://huggingface.co/LanguageBind/MoE-LLaVA-Qwen-Stage2) |
+| MoE-LLaVA-2.7B×4-Top2 | [LanguageBind/MoE-LLaVA-Phi2-Stage2](https://huggingface.co/LanguageBind/MoE-LLaVA-Phi2-Stage2) |
+| MoE-LLaVA-2.7B×4-Top2-384 | [LanguageBind/MoE-LLaVA-Phi2-Stage2-384](https://huggingface.co/LanguageBind/MoE-LLaVA-Phi2-Stage2-384) |
+
+</details>
+
+<details>
 <summary>Pretrain Model</summary>
 
 | Model  | Checkpoint |
 |----------|-----------|
 | MoE-LLaVA-1.6B×4-Top2 | [LanguageBind/MoE-LLaVA-StableLM-Pretrain](https://huggingface.co/LanguageBind/MoE-LLaVA-StableLM-Pretrain) |
+| MoE-LLaVA-1.6B×4-Top2-384 | [LanguageBind/MoE-LLaVA-StableLM-384-Pretrain](https://huggingface.co/LanguageBind/MoE-LLaVA-StableLM-384-Pretrain) |
 | MoE-LLaVA-1.8B×4-Top2 | [LanguageBind/MoE-LLaVA-Qwen-Pretrain](https://huggingface.co/LanguageBind/MoE-LLaVA-Qwen-Pretrain) |
 | MoE-LLaVA-2.7B×4-Top2 | [LanguageBind/MoE-LLaVA-Phi2-Pretrain](https://huggingface.co/LanguageBind/MoE-LLaVA-Phi2-Pretrain) |
 | MoE-LLaVA-2.7B×4-Top2-384 | [LanguageBind/MoE-LLaVA-Phi2-384-Pretrain](https://huggingface.co/LanguageBind/MoE-LLaVA-Phi2-384-Pretrain) |
