@@ -113,9 +113,14 @@ deepspeed --include localhost:0 moellava/serve/cli.py --model-path "LanguageBind
 -->
 
 <details>
+
+
+🚨 **Please know https://github.com/PKU-YuanGroup/MoE-LLaVA/issues/27.**
+
+
 <summary>Stage2 Model</summary>
-    
-Please know https://github.com/PKU-YuanGroup/MoE-LLaVA/issues/27.
+
+
     
 | Model  | Checkpoint |
 |----------|-----------|
