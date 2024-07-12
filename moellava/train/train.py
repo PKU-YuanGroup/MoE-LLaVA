@@ -1426,6 +1426,14 @@ def train():
                 use_fast=False,
             )
             tokenizer.unk_token = '<|reg0|>'  # FIXME: DO SUPPORT ADD SPECIAL TOKENS
+        elif 'vinallama' in model_args.model_name_or_path.lower():
+            tokenizer = transformers.AutoTokenizer.from_pretrained(
+                model_args.model_name_or_path,
+                cache_dir=training_args.cache_dir,
+                model_max_length=training_args.model_max_length,
+                padding_side="right",
+                use_fast=True,
+            )
         else:
             tokenizer = transformers.AutoTokenizer.from_pretrained(
                 model_args.model_name_or_path,
