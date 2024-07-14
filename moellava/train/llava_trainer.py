@@ -279,7 +279,7 @@ class LLaVATrainer(Trainer):
         self._save_rng_state(output_dir)
 
         # Update the `TrainerControl` state to where we are currently
-        # self.state.stateful_callbacks["TrainerControl"] = self.control.state()
+        self.state.stateful_callbacks["TrainerControl"] = self.control.state()
         self.state.save_to_json(os.path.join(output_dir, TRAINER_STATE_NAME))
 
         if self.args.push_to_hub:
