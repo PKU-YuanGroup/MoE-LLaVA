@@ -76,6 +76,9 @@ def merge_lora(args):
     model_merge = _unload_and_optionally_merge(model)
     model_merge.config.lora_merge = model_merge.config.lora
     delattr(model_merge.config, 'lora')
+    print("Check Type model_merge: ",type(model_merge))
+    print(model_merge)
+    print('-'*50)
     # import ipdb
     # ipdb.set_trace()
     model_merge.save_pretrained(args.save_model_path)
