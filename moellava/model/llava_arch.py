@@ -28,7 +28,7 @@ from moellava.constants import IGNORE_INDEX, IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_PA
 
 class LlavaMetaModel:
 
-    def __init__(self, config):
+    def __init__(self, config):         
         super(LlavaMetaModel, self).__init__(config)
         if getattr(config, "mm_image_tower", None) is not None:
             self.image_tower = build_image_tower(config, delay_load=True)

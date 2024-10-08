@@ -43,6 +43,15 @@ from moellava.utils import order_pick_k
 
 local_rank = None
 
+class Color:
+    YELLOW = '\033[93m'
+    BLUE  = '\033[94m'
+    GREEN = '\033[92m'
+    RED = '\033[91m'
+    PURPLE = '\033[95m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    END = '\033[0m'
 
 def rank0_print(*args):
     if local_rank == 0:
@@ -51,17 +60,17 @@ def rank0_print(*args):
 
 @dataclass
 class ModelArguments:
-    model_name_or_path: Optional[str] = field(default="facebook/opt-125m")
-    version: Optional[str] = field(default="v0")
-    freeze_backbone: bool = field(default=False)
-    tune_mm_mlp_adapter: bool = field(default=False)
+    model_name_or_path: Optional[str] = field(default="facebook/opt-125m") #name model
+    version: Optional[str] = field(default="v0") #version of prompt
+    freeze_backbone: bool = field(default=False) #freeze grad the backbone
+    tune_mm_mlp_adapter: bool = field(default=False) 
     mm_vision_select_layer: Optional[int] = field(default=-1)   # default to the last layer
     pretrain_mm_mlp_adapter: Optional[str] = field(default=None)
     mm_use_im_start_end: bool = field(default=False)
     mm_use_im_patch_token: bool = field(default=True)
     mm_vision_select_feature: Optional[str] = field(default="patch")
     # ===================================================================
-    image_tower: Optional[str] = field(default=None)
+    image_tower: Optional[str] = field(default=None) # require image tower
     video_tower: Optional[str] = field(default=None)
     image_projector_type: Optional[str] = field(default='linear')
     video_projector_type: Optional[str] = field(default='linear')
@@ -71,7 +80,7 @@ class ModelArguments:
     # ===================================================================
 
     # =============================================================
-    only_lora_ffn: bool = True
+    only_lora_ffn: bool = True #check mlp in lora only 
     moe_enable: bool = False
     train_modules: Optional[List[str]] = field(default=None, metadata={"help": ""})
     moe_mode: str = field(
@@ -143,7 +152,7 @@ class TrainingArguments(transformers.TrainingArguments):
     lora_dropout: float = 0.05
     lora_weight_path: str = ""
     lora_bias: str = "none"
-    mm_projector_lr: Optional[float] = None
+    mm_projector_lr: Optional[float] = None #it set lr for mm_projector
     group_by_modality_length: bool = field(default=False)
 
 
@@ -1296,7 +1305,7 @@ def train():
             # torch_dtype=torch.bfloat16,
             **bnb_model_from_pretrained_args
         )
-    rank0_print('LLM init. firstly\n', model)
+    rank0_print(Color.YELLOW+"LLM init. firstly\n"+Color.END)
     model.config.use_cache = False
 
     if model_args.freeze_backbone:
@@ -1355,7 +1364,7 @@ def train():
                     model.to(torch.bfloat16)
                 if training_args.fp16:
                     model.to(torch.float16)
-            rank0_print("Adding LoRA adapters...")
+            rank0_print(Color.RED+"Adding LoRA adapters..."+Color.END)
             model = get_peft_model(model, lora_config)
         model.initialize_moe_modules(model_args=model_args)
     else:
@@ -1374,7 +1383,7 @@ def train():
                     model.to(torch.bfloat16)
                 if training_args.fp16:
                     model.to(torch.float16)
-            rank0_print("Adding LoRA adapters...")
+            rank0_print(Color.RED+"Adding LoRA adapters..."+Color.END)
             model = get_peft_model(model, lora_config)
     # ==============================================================================================
 
@@ -1511,7 +1520,7 @@ def train():
         model.config.mm_use_im_patch_token = model_args.mm_use_im_patch_token
         model.initialize_vision_tokenizer(model_args, tokenizer=tokenizer)
 
-    rank0_print('Vision encoder and proj init.\n', model)
+    rank0_print(Color.BLUE+'Vision encoder and proj init.\n'+Color.END, model)
     if training_args.bits in [4, 8]:
         from peft.tuners.lora import LoraLayer
         for name, module in model.named_modules():
@@ -1524,10 +1533,11 @@ def train():
                 if hasattr(module, 'weight'):
                     if training_args.bf16 and module.weight.dtype == torch.float32:
                         module = module.to(torch.bfloat16)
+    rank0_print(Color.PURPLE+'Check trainable params \n'+Color.END, model)                   
     for name, param in model.named_parameters():
         if param.requires_grad:
             rank0_print(name)
-    rank0_print(model)
+    rank0_print(Color.GREEN+'Final model \n'+Color.END, model)
     # sys.exit()
 
     data_module = make_supervised_data_module(tokenizer=tokenizer,
