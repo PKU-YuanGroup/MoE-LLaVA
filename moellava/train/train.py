@@ -1182,20 +1182,20 @@ def train():
             if 'mpt' in model_args.model_name_or_path.lower():
                 config = transformers.AutoConfig.from_pretrained(model_args.model_name_or_path, trust_remote_code=True)
                 config.attn_config['attn_impl'] = training_args.mpt_attn_impl
-                model = LlavaMPTForCausalLM.from_pretrained(
+                TestModel = LlavaMPTForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     config=config,
                     cache_dir=training_args.cache_dir,
                     **bnb_model_from_pretrained_args
                 )
             elif 'qwen' in model_args.model_name_or_path.lower() and '1.5' not in model_args.model_name_or_path.lower():
-                model = LlavaQWenForCausalLM.from_pretrained(
+                TestModel = LlavaQWenForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
                     **bnb_model_from_pretrained_args
                 )
             elif 'qwen' in model_args.model_name_or_path.lower() and '1.5' in model_args.model_name_or_path.lower():
-                model = LlavaQwen1_5ForCausalLM.from_pretrained(
+                TestModel = LlavaQwen1_5ForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
                     # attn_implementation="flash_attention_2",
@@ -1203,7 +1203,7 @@ def train():
                     **bnb_model_from_pretrained_args
                 )
             elif 'openchat' in model_args.model_name_or_path.lower() or 'mistral' in model_args.model_name_or_path.lower():
-                model = LlavaMistralForCausalLM.from_pretrained(
+                TestModel = LlavaMistralForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
                     # attn_implementation="flash_attention_2",
@@ -1211,7 +1211,7 @@ def train():
                     **bnb_model_from_pretrained_args
                 )
             elif 'phi' in model_args.model_name_or_path.lower():
-                model = LlavaPhiForCausalLM.from_pretrained(
+                TestModel = LlavaPhiForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
                     # attn_implementation="flash_attention_2",
@@ -1219,7 +1219,7 @@ def train():
                     **bnb_model_from_pretrained_args
                 )
             elif 'minicpm' in model_args.model_name_or_path.lower():
-                model = LlavaMiniCPMForCausalLM.from_pretrained(
+                TestModel = LlavaMiniCPMForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
                     # attn_implementation="flash_attention_2",
@@ -1227,7 +1227,7 @@ def train():
                     **bnb_model_from_pretrained_args
                 )
             elif 'stablelm' in model_args.model_name_or_path.lower():
-                model = LlavaStablelmForCausalLM.from_pretrained(
+                TestModel = LlavaStablelmForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
                     # attn_implementation="flash_attention_2",
@@ -1235,7 +1235,7 @@ def train():
                     **bnb_model_from_pretrained_args
                 )
             else:
-                model = LlavaLlamaForCausalLM.from_pretrained(
+                TestModel = LlavaLlamaForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
                     # attn_implementation="flash_attention_2",
@@ -1244,13 +1244,13 @@ def train():
                 )
         else:
             if 'qwen' in model_args.model_name_or_path.lower() and '1.5' not in model_args.model_name_or_path.lower():
-                model = MoELLaVAQWenForCausalLM.from_pretrained(
+                TestModel = MoELLaVAQWenForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
                     **bnb_model_from_pretrained_args
                 )
             elif 'qwen' in model_args.model_name_or_path.lower() and '1.5' in model_args.model_name_or_path.lower():
-                model = MoELLaVAQwen1_5ForCausalLM.from_pretrained(
+                TestModel = MoELLaVAQwen1_5ForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
                     # attn_implementation="flash_attention_2",
@@ -1258,7 +1258,7 @@ def train():
                     **bnb_model_from_pretrained_args
                 )
             elif 'phi' in model_args.model_name_or_path.lower():
-                model = MoELLaVAPhiForCausalLM.from_pretrained(
+                TestModel = MoELLaVAPhiForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
                     # attn_implementation="flash_attention_2",
@@ -1266,7 +1266,7 @@ def train():
                     **bnb_model_from_pretrained_args
                 )
             elif 'minicpm' in model_args.model_name_or_path.lower():
-                model = MoELLaVAMiniCPMForCausalLM.from_pretrained(
+                TestModel = MoELLaVAMiniCPMForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
                     # attn_implementation="flash_attention_2",
@@ -1274,7 +1274,7 @@ def train():
                     **bnb_model_from_pretrained_args
                 )
             elif 'openchat' in model_args.model_name_or_path.lower() or 'mistral' in model_args.model_name_or_path.lower():
-                model = MoELLaVAMistralForCausalLM.from_pretrained(
+                TestModel = MoELLaVAMistralForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
                     # attn_implementation="flash_attention_2",
@@ -1282,7 +1282,7 @@ def train():
                     **bnb_model_from_pretrained_args
                 )
             elif 'stablelm' in model_args.model_name_or_path.lower():
-                model = MoELLaVAStablelmForCausalLM.from_pretrained(
+                TestModel = MoELLaVAStablelmForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
                     # attn_implementation="flash_attention_2",
@@ -1290,7 +1290,7 @@ def train():
                     **bnb_model_from_pretrained_args
                 )
             else:
-                model = MoELLaVALlamaForCausalLM.from_pretrained(
+                TestModel = MoELLaVALlamaForCausalLM.from_pretrained(
                     model_args.model_name_or_path,
                     cache_dir=training_args.cache_dir,
                     attn_implementation="flash_attention_2",
@@ -1298,7 +1298,7 @@ def train():
                     **bnb_model_from_pretrained_args
                 )
     else:
-        model = transformers.LlamaForCausalLM.from_pretrained(
+        TestModel = transformers.LlamaForCausalLM.from_pretrained(
             model_args.model_name_or_path,
             cache_dir=training_args.cache_dir,
             # attn_implementation="flash_attention_2",
@@ -1306,23 +1306,23 @@ def train():
             **bnb_model_from_pretrained_args
         )
     rank0_print(Color.YELLOW+"LLM init. firstly\n"+Color.END)
-    model.config.use_cache = False
+    TestModel.config.use_cache = False
 
     if model_args.freeze_backbone:
-        model.model.requires_grad_(False)
+        TestModel.model.requires_grad_(False)
 
     if training_args.bits in [4, 8]:
         from peft import prepare_model_for_kbit_training
-        model.config.torch_dtype = (torch.float32 if training_args.fp16 else (torch.bfloat16 if training_args.bf16 else torch.float32))
-        model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=training_args.gradient_checkpointing)
+        TestModel.config.torch_dtype = (torch.float32 if training_args.fp16 else (torch.bfloat16 if training_args.bf16 else torch.float32))
+        TestModel = prepare_model_for_kbit_training(TestModel, use_gradient_checkpointing=training_args.gradient_checkpointing)
 
     if training_args.gradient_checkpointing:
-        if hasattr(model, "enable_input_require_grads"):
-            model.enable_input_require_grads()
+        if hasattr(TestModel, "enable_input_require_grads"):
+            TestModel.enable_input_require_grads()
         else:
             def make_inputs_require_grad(module, input, output):
                 output.requires_grad_(True)
-            model.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
+            TestModel.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
     # ==============================================================================================
     training_args.moe_enable = model_args.moe_enable
     training_args.only_lora_ffn = model_args.only_lora_ffn
@@ -1333,15 +1333,15 @@ def train():
             if 'qwen' in model_args.model_name_or_path.lower() and '1.5' not in model_args.model_name_or_path.lower():
                 target_modules = [
                     'mlp.w1', 'mlp.w2', 'mlp.c_proj'
-                ] if training_args.only_lora_ffn else find_all_linear_names(model)
+                ] if training_args.only_lora_ffn else find_all_linear_names(TestModel)
             elif 'phi' in model_args.model_name_or_path.lower():
                 target_modules = [
                     'fc1', 'fc2'
-                ] if training_args.only_lora_ffn else find_all_linear_names(model)
+                ] if training_args.only_lora_ffn else find_all_linear_names(TestModel)
             else:
                 target_modules = [
                     'up_proj', 'down_proj', 'gate_proj'
-                ] if training_args.only_lora_ffn else find_all_linear_names(model)
+                ] if training_args.only_lora_ffn else find_all_linear_names(TestModel)
             # modules_to_save = ['wg']  # weight gating for MoE
             lora_config = LoraConfig(
                 r=training_args.lora_r,
@@ -1361,30 +1361,30 @@ def train():
             model_args.train_modules = target_modules
             if training_args.bits == 16:
                 if training_args.bf16:
-                    model.to(torch.bfloat16)
+                    TestModel.to(torch.bfloat16)
                 if training_args.fp16:
-                    model.to(torch.float16)
+                    TestModel.to(torch.float16)
             rank0_print(Color.RED+"Adding LoRA adapters..."+Color.END)
-            model = get_peft_model(model, lora_config)
-        model.initialize_moe_modules(model_args=model_args)
+            TestModel = get_peft_model(TestModel, lora_config)
+        TestModel.initialize_moe_modules(model_args=model_args)
     else:
         if training_args.lora_enable:
             from peft import LoraConfig, get_peft_model
             lora_config = LoraConfig(
                 r=training_args.lora_r,
                 lora_alpha=training_args.lora_alpha,
-                target_modules=find_all_linear_names(model),
+                target_modules=find_all_linear_names(TestModel),
                 lora_dropout=training_args.lora_dropout,
                 bias=training_args.lora_bias,
                 task_type="CAUSAL_LM",
             )
             if training_args.bits == 16:
                 if training_args.bf16:
-                    model.to(torch.bfloat16)
+                    TestModel.to(torch.bfloat16)
                 if training_args.fp16:
-                    model.to(torch.float16)
+                    TestModel.to(torch.float16)
             rank0_print(Color.RED+"Adding LoRA adapters..."+Color.END)
-            model = get_peft_model(model, lora_config)
+            TestModel = get_peft_model(TestModel, lora_config)
     # ==============================================================================================
 
     if 'mpt' in model_args.model_name_or_path:
@@ -1460,14 +1460,14 @@ def train():
             smart_tokenizer_and_embedding_resize(
                 special_tokens_dict=dict(pad_token="[PAD]"),
                 tokenizer=tokenizer,
-                model=model,
+                model=TestModel,
             )
     elif model_args.version == "v0.5":
         tokenizer.pad_token = tokenizer.unk_token
     else:
         tokenizer.pad_token = tokenizer.unk_token
         # =============================================================================================================
-        model.config.pad_token_id = tokenizer.pad_token_id
+        TestModel.config.pad_token_id = tokenizer.pad_token_id
         # =============================================================================================================
         if model_args.version in conversation_lib.conv_templates:
             conversation_lib.default_conversation = conversation_lib.conv_templates[model_args.version]
@@ -1477,18 +1477,18 @@ def train():
     # =============================================================================================================
     if model_args.image_tower is not None or model_args.video_tower is not None:
         # print(model_args)
-        model.get_model().initialize_vision_modules(
+        TestModel.get_model().initialize_vision_modules(
             model_args=model_args,
             fsdp=training_args.fsdp
         )
         if model_args.image_tower is not None:
-            image_tower = model.get_image_tower()
+            image_tower = TestModel.get_image_tower()
             image_tower.to(dtype=torch.bfloat16 if training_args.bf16 else torch.float16, device=training_args.device)
 
             data_args.image_processor = image_tower.image_processor
             data_args.is_multimodal = True
         if model_args.video_tower is not None:
-            video_tower = model.get_video_tower()
+            video_tower = TestModel.get_video_tower()
             video_tower.to(dtype=torch.bfloat16 if training_args.bf16 else torch.float16, device=training_args.device)
 
             data_args.video_processor = video_tower.video_processor
@@ -1496,34 +1496,34 @@ def train():
             data_args.num_frames = video_tower.config.num_frames
     # =============================================================================================================
 
-        model.config.image_aspect_ratio = data_args.image_aspect_ratio
-        model.config.tokenizer_padding_side = tokenizer.padding_side
+        TestModel.config.image_aspect_ratio = data_args.image_aspect_ratio
+        TestModel.config.tokenizer_padding_side = tokenizer.padding_side
         # model.config.tokenizer_model_max_length = tokenizer.model_max_length  # number of video tokens may greater than 2048
 
-        model.config.tune_mm_mlp_adapter = training_args.tune_mm_mlp_adapter = model_args.tune_mm_mlp_adapter
+        TestModel.config.tune_mm_mlp_adapter = training_args.tune_mm_mlp_adapter = model_args.tune_mm_mlp_adapter
         if model_args.tune_mm_mlp_adapter:
-            model.requires_grad_(False)
-            for p in model.get_model().mm_projector.parameters():
+            TestModel.requires_grad_(False)
+            for p in TestModel.get_model().mm_projector.parameters():
                 p.requires_grad = True
 
-        model.config.freeze_mm_mlp_adapter = training_args.freeze_mm_mlp_adapter
+        TestModel.config.freeze_mm_mlp_adapter = training_args.freeze_mm_mlp_adapter
         if training_args.freeze_mm_mlp_adapter:
-            for p in model.get_model().mm_projector.parameters():
+            for p in TestModel.get_model().mm_projector.parameters():
                 p.requires_grad = False
 
         if training_args.bits in [4, 8]:
-            model.get_model().mm_projector.to(dtype=compute_dtype, device=training_args.device)
+            TestModel.get_model().mm_projector.to(dtype=compute_dtype, device=training_args.device)
 
-        model.config.mm_use_im_start_end = data_args.mm_use_im_start_end = model_args.mm_use_im_start_end
-        model.config.mm_projector_lr = training_args.mm_projector_lr
+        TestModel.config.mm_use_im_start_end = data_args.mm_use_im_start_end = model_args.mm_use_im_start_end
+        TestModel.config.mm_projector_lr = training_args.mm_projector_lr
         training_args.use_im_start_end = model_args.mm_use_im_start_end
-        model.config.mm_use_im_patch_token = model_args.mm_use_im_patch_token
-        model.initialize_vision_tokenizer(model_args, tokenizer=tokenizer)
+        TestModel.config.mm_use_im_patch_token = model_args.mm_use_im_patch_token
+        TestModel.initialize_vision_tokenizer(model_args, tokenizer=tokenizer)
 
-    rank0_print(Color.BLUE+'Vision encoder and proj init.\n'+Color.END, model)
+    rank0_print(Color.BLUE+'Vision encoder and proj init.\n'+Color.END, TestModel)
     if training_args.bits in [4, 8]:
         from peft.tuners.lora import LoraLayer
-        for name, module in model.named_modules():
+        for name, module in TestModel.named_modules():
             if isinstance(module, LoraLayer):
                 if training_args.bf16:
                     module = module.to(torch.bfloat16)
@@ -1533,16 +1533,16 @@ def train():
                 if hasattr(module, 'weight'):
                     if training_args.bf16 and module.weight.dtype == torch.float32:
                         module = module.to(torch.bfloat16)
-    rank0_print(Color.PURPLE+'Check trainable params \n'+Color.END, model)                   
-    for name, param in model.named_parameters():
+    rank0_print(Color.PURPLE+'Check trainable params \n'+Color.END, TestModel)                   
+    for name, param in TestModel.named_parameters():
         if param.requires_grad:
             rank0_print(name)
-    rank0_print(Color.GREEN+'Final model \n'+Color.END, model)
+    rank0_print(Color.GREEN+'Final model \n'+Color.END, TestModel)
     # sys.exit()
 
     data_module = make_supervised_data_module(tokenizer=tokenizer,
                                               data_args=data_args)
-    trainer = LLaVATrainer(model=model,
+    trainer = LLaVATrainer(model=TestModel,
                     tokenizer=tokenizer,
                     args=training_args,
                     **data_module)
@@ -1553,31 +1553,31 @@ def train():
         trainer.train()
     trainer.save_state()
 
-    model.config.use_cache = True
+    TestModel.config.use_cache = True
 
     if training_args.lora_enable and not model_args.moe_enable:
         state_dict = get_peft_state_maybe_zero_3(
-            model.named_parameters(), training_args.lora_bias
+            TestModel.named_parameters(), training_args.lora_bias
         )
         non_lora_state_dict = get_peft_state_non_lora_maybe_zero_3(
-            model.named_parameters()
+            TestModel.named_parameters()
         )
         if training_args.local_rank == 0 or training_args.local_rank == -1:
-            model.config.save_pretrained(training_args.output_dir)
-            model.save_pretrained(training_args.output_dir, state_dict=state_dict)
+            TestModel.config.save_pretrained(training_args.output_dir)
+            TestModel.save_pretrained(training_args.output_dir, state_dict=state_dict)
             torch.save(non_lora_state_dict, os.path.join(training_args.output_dir, 'non_lora_trainables.bin'))
     else:
         safe_save_model_for_hf_trainer(trainer=trainer,
                                        output_dir=training_args.output_dir)
         if model_args.moe_enable:
-            ckpt = model.state_dict()
+            ckpt = TestModel.state_dict()
             # import ipdb
             # ipdb.set_trace()
             ckpt = {(k[11:] if k.startswith('base_model.') else k): v for k, v in ckpt.items()}
             if any(k.startswith('model.model.') for k in ckpt):
                 ckpt = {(k[6:] if k.startswith('model.') else k): v for k, v in ckpt.items()}
             torch.save(ckpt, os.path.join(training_args.output_dir, 'pytorch_model.bin'))
-            model.config.save_pretrained(training_args.output_dir)
+            TestModel.config.save_pretrained(training_args.output_dir)
             if training_args.local_rank == 0 or training_args.local_rank == -1:
                 [os.remove(i) for i in glob(os.path.join(training_args.output_dir, 'adapter_*'))]
     # print(model.state_dict().keys())
