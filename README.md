@@ -1,7 +1,7 @@
 <p align="center">
     <img src="https://s11.ax1x.com/2023/12/28/piqvDMV.png" width="250" style="margin-bottom: 0.2;"/>
 <p>
-<h2 align="center"> <a href="https://arxiv.org/abs/2401.15947">MoE-LLaVA: Mixture of Experts for Large Vision-Language Models</a></h2>
+<h2 align="center"> <a href="https://arxiv.org/abs/2401.15947">ViTern-MoE-LLaVA: Intern VIT Mixture of Experts for Large Vision-Language Models</a></h2>
 <h5 align="center"> If you like our project, please give us a star ⭐ on GitHub for latest update.  </h2>
 
 <h5 align="center">
