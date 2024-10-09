@@ -3,6 +3,13 @@ WORKER_HEART_BEAT_INTERVAL = 15
 
 LOGDIR = "."
 
+TRAINING_ARGS_NAME = "training_args.bin"
+TRAINER_STATE_NAME = "trainer_state.json"
+OPTIMIZER_NAME = "optimizer.pt"
+OPTIMIZER_NAME_BIN = "optimizer.bin"
+SCHEDULER_NAME = "scheduler.pt"
+SCALER_NAME = "scaler.pt"
+FSDP_MODEL_NAME = "pytorch_model_fsdp"
 # Model Constants
 IGNORE_INDEX = -100
 

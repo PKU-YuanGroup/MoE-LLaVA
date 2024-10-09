@@ -9,6 +9,7 @@ from transformers.trainer import (
     get_parameter_names,
     has_length,
     ALL_LAYERNORM_LAYERS,
+    TRAINER_STATE_NAME,
     # ShardedDDPOption,
     logger,
 )
@@ -238,7 +239,7 @@ class LLaVATrainer(Trainer):
 
                 skipped = 0
                 for module in opt_model.modules():
-                    if isinstance(module, nn.Embedding):
+                    if isinstance(module, torch.nn.Embedding):
                         skipped += sum({p.data_ptr(): p.numel() for p in module.parameters()}.values())
                         logger.info(f"skipped {module}: {skipped/2**20}M params")
                         manager.register_module_override(module, "weight", {"optim_bits": 32})
@@ -264,7 +265,17 @@ class LLaVATrainer(Trainer):
 
             if self.args.local_rank == 0 or self.args.local_rank == -1:
                 self.model.config.save_pretrained(output_dir)
+                
                 torch.save(weight_to_save, os.path.join(output_dir, f'mm_projector.bin'))
+                if not self.args.save_only_model:
+                    # Save optimizer and scheduler
+                    self._save_optimizer_and_scheduler(output_dir)
+                    # Save RNG state
+                    self._save_rng_state(output_dir)
+                self.state.save_to_json(os.path.join(output_dir, TRAINER_STATE_NAME))
+                if self.args.push_to_hub:
+                    self._push_from_checkpoint(output_dir)
+
         else:
             super(LLaVATrainer, self)._save_checkpoint(model, trial, metrics)
 
