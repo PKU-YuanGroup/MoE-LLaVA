@@ -40,9 +40,6 @@
 
 
 ## 📣 News
-* ⏳⏳⏳ Training a stronger model under a higher image resolution (e.g 768 × 768).
-
-* ⏳⏳⏳ Training MoE-LLaVA-Qwen1.5 to support Chinese better.
 * **[2024.03.16]**  🎉 We release all stage2 models, cheching our [model zoo](#-model-zoo).
 * **[2024.02.03]**  🎉 We release a stronger [MoE-LLaVA-StableLM](https://huggingface.co/LanguageBind/MoE-LLaVA-StableLM-1.8B-4e-384). The average performance is close to LLaVA-1.5-7B by using **2.0B** sparse activated parameters, checking our [model zoo](#-model-zoo).
 * **[2024.02.02]**  🤝 Enjoying the [![Replicate demo and cloud API](https://replicate.com/camenduru/moe-llava/badge)](https://replicate.com/camenduru/moe-llava) and [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/camenduru/MoE-LLaVA-jupyter/blob/main/MoE_LLaVA_jupyter.ipynb), created by [@camenduru](https://github.com/camenduru), who generously supports our research!
